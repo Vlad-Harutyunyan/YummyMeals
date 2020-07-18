@@ -16,12 +16,6 @@ errors_bp = Blueprint(
     static_url_path=satatic_path
 )
 
-# @meals_bp.route('/fill_db')
-# def fill_db():
-#     from .models import fill_all
-#     fill_all()
-#     return 'done'
-    
 
 @errors_bp.app_errorhandler(404)
 def handle_404(err):
