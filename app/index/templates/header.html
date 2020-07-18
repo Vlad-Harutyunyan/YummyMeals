@@ -31,16 +31,8 @@
     </li> 
     <!-- item-has-children -->
 
-    <li class="item-has-children">
-      <a href="#0">Filter by category</a>
-      <ul class="sub-menu">
-        <li><a href="#0">category 1</a></li>
-        <li><a href="#0">category 2</a></li>
-        <li><a href="#0">category 3</a></li>
-        <li><a href="#0">category 4</a></li>
-        <li><a href="#0">category 5</a></li>
-      </ul>
-    </li>
+    <li><a href="{{ url_for('meals.categories_list') }}">All Categories</a></li>
+
     <!-- item-has-children -->
 
     <li class="item-has-children">
@@ -57,6 +49,7 @@
   <!-- navigation -->
 
   <ul class="navigation single-item-wrapper">
+  
     {% if  current_user.username %}
       <li><a href="{{ url_for('users.logout') }}">Logout</a></li>
       <li><a href="{{ url_for('users.account') }}">Account</a></li>
@@ -65,7 +58,9 @@
       <li><a href="{{ url_for('users.register') }}">Register</a></li>
     {% endif %}
     
+    <li><a href="#0"></a></li>
     <li><a href="#0">Support</a></li>
+
   </ul>
   <!-- single-item-wrapper -->
 
