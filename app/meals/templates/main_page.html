@@ -13,7 +13,7 @@ Meal main page
 
 <div class="flexbox">
 
-    {% for meal in meallist %}
+    {% for meal in meallist.items %}
 
         <div class="food-card" style="background-image:url({{meal.img_link}});">
     <div class="food-card-content">
@@ -41,8 +41,12 @@ Meal main page
 
 
     {% endfor %}
-
-  
-</div>
+   {% if prev_url %}
+    <a href="{{ prev_url }}"> Newer meals  </a>
+    {% endif %}
+    {% if next_url %}  
+    <a href="{{ next_url }}">  Older meals </a>
+    {% endif %}
+</div> 
 {% endblock content %}
-   
+    
