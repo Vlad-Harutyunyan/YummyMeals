@@ -1,7 +1,8 @@
-from flask import Flask ,Blueprint ,redirect
+from flask import Flask ,Blueprint ,redirect ,render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
+import os
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -29,17 +30,20 @@ def create_app():
     @login_manager.unauthorized_handler
     def unauthorized_callback():
         return redirect('/user/login')
+ 
 
 
-   
+    
 
     with app.app_context():
         from .users.routes import users_bp
         from .index.routes import index_bp
         from .meals.routes import meals_bp
+        from .errors.routes import errors_bp
 
         # Register Blueprints
-        app.register_blueprint(index_bp)
+        app.register_blueprint(errors_bp)
+        app.register_blueprint(index_bp) 
         app.register_blueprint(users_bp)
         app.register_blueprint(meals_bp)
 
