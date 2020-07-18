@@ -1,0 +1,98 @@
+[
+    {
+        "id": 1,
+        "name": "American"
+    },
+    {
+        "id": 2,
+        "name": "British"
+    },
+    {
+        "id": 3,
+        "name": "Canadian"
+    },
+    {
+        "id": 4,
+        "name": "Chinese"
+    },
+    {
+        "id": 5,
+        "name": "Dutch"
+    },
+    {
+        "id": 6,
+        "name": "Egyptian"
+    },
+    {
+        "id": 7,
+        "name": "French"
+    },
+    {
+        "id": 8,
+        "name": "Greek"
+    },
+    {
+        "id": 9,
+        "name": "Indian"
+    },
+    {
+        "id": 10,
+        "name": "Irish"
+    },
+    {
+        "id": 11,
+        "name": "Italian"
+    },
+    {
+        "id": 12,
+        "name": "Jamaican"
+    },
+    {
+        "id": 13,
+        "name": "Japanese"
+    },
+    {
+        "id": 14,
+        "name": "Kenyan"
+    },
+    {
+        "id": 15,
+        "name": "Malaysian"
+    },
+    {
+        "id": 16,
+        "name": "Mexican"
+    },
+    {
+        "id": 17,
+        "name": "Moroccan"
+    },
+    {
+        "id": 18,
+        "name": "Polish"
+    },
+    {
+        "id": 19,
+        "name": "Russian"
+    },
+    {
+        "id": 20,
+        "name": "Spanish"
+    },
+    {
+        "id": 21,
+        "name": "Thai"
+    },
+    {
+        "id": 22,
+        "name": "Tunisian"
+    },
+    {
+        "id": 23,
+        "name": "Turkish"
+    },
+    {
+        "id": 24,
+        "name": "Vietnamese"
+    }
+]

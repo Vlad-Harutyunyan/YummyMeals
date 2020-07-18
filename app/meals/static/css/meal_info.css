@@ -1,0 +1,215 @@
+body {
+    font-family: "Raleway", sans-serif;
+}
+aside.context {
+    text-align: left;
+    text-transform: none;
+    padding-right: 20px;
+    color: #333;
+}
+aside.context a {
+    text-decoration: none;
+    color: #333;
+    padding: 3px 0;
+    border-bottom: 1px dashed;
+}
+aside.context a:hover {
+    border-bottom: 1px solid;
+}
+footer {
+    text-align: center;
+    width: 100%;
+}
+footer a {
+    text-decoration: none;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1px dashed #333;
+    color: #333;
+    margin: 0 3px;
+}
+footer a:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+footer a .icons {
+    margin-top: 8px;
+    display: inline-block;
+    font-size: 14px;
+}
+.meal_main-content {
+    display: grid;
+    grid-template-areas: "navigation pie-recipe pie-image" "context context pie-image";
+    grid-template-columns: min-content auto 35%;
+    grid-template-rows: auto min-content;
+    margin: auto;
+    width: 100%;
+    min-height: 100vh;
+    max-height: calc(100vh - 4em);
+    background: #fff;
+    box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
+}
+.context__wrapper {
+    grid-area: context;
+    background: #f7f7f7;
+    color: #333;
+    padding: 15px 20px;
+    font: 400 10px "Raleway", sans-serif;
+    display: grid;
+    align-items: center;
+    grid-template-columns: auto max-content;
+}
+.navigation {
+    grid-area: navigation;
+    border-right: 1px solid #eee;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    color: #dbc7b1;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 20px;
+    font: 16px "Playfair Display", serif;
+    text-align: center;
+}
+.pie-image {
+    grid-area: pie-image;
+    background: url("https://meowlivia.s3.us-east-2.amazonaws.com/codepen/Waitress/GettingOutOfMudPie.png") no-repeat left center / cover;
+}
+.pie-name {
+    font: 900 45px Raleway;
+    text-transform: uppercase;
+    margin: 20px 0 5px;
+    letter-spacing: 2px;
+    color: #916953;
+    position: relative;
+}
+.pie-serving {
+    font: 400 16px Raleway;
+    color: #916953;
+    margin: 20px 0;
+    max-width: 300px;
+}
+.pie-serving svg {
+    width: 40px;
+}
+.pie-serving svg path {
+    fill: #916953;
+}
+.pie-serving p {
+    display: inline-block;
+    vertical-align: top;
+    margin: 12px 6px 6px;
+}
+
+.pie-recipe {
+    grid-area: pie-recipe;
+    color: #999;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin: 5px;
+    max-height: 100%;
+    padding: 50px 60px;
+    display: grid;
+    grid-gap: 20px;
+    grid-template-columns: 30px auto;
+    grid-template-rows: repeat(4, max-content);
+    line-height: 1.6;
+}
+.pie-recipe__title {
+    grid-column: span 2;
+}
+.pie-recipe__ingredients {
+    grid-column: span 2;
+    display: flex;
+    flex-wrap: wrap;
+}
+.pie-recipe__ingredients__item {
+    flex: 1;
+    padding: 0 40px 0 0;
+}
+.pie-recipe__ingredients__item h4 {
+    font: italic 18.1818181818px "Playfair Display", serif;
+    color: #d69762;
+    margin: 0 0 10px;
+    margin-top: 30px;
+}
+.pie-recipe__ingredients__item ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.pie-recipe__ingredients__item ul li {
+    padding: 5px 0;
+}
+.pie-recipe__number {
+    font: italic 30px "Playfair Display", serif;
+    color: #d69762;
+    place-self: center;
+    margin-top: -15px;
+}
+.pie-recipe__steps {
+    padding-right: 35px;
+}
+.pie-recipe__subtitle {
+    font: italic 30px "Playfair Display", serif;
+    color: #916953;
+    margin: 45px 0 10px;
+    grid-column: span 2;
+}
+.pie-recipe__tips {
+    grid-column: span 2;
+    margin-top: 65px;
+    position: relative;
+    border: 2px solid #916953;
+    box-shadow: inset 0 0 0 2px #fff, inset 0 0 0 4px #916953;
+    text-align: center;
+    padding: 35px;
+}
+.pie-recipe__tips svg {
+    display: inline-block;
+    padding: 10px;
+    position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: -40px;
+    width: auto;
+    background: #fff;
+    width: 60px;
+    fill: #916953;
+}
+.pie-recipe__tips h4 {
+    font: 900 24px Raleway;
+    text-transform: uppercase;
+    margin: 10px 0 15px;
+    color: #543b2e;
+}
+/* @media screen and (max-width: 768px) {
+    .main-content {
+        margin: 0;
+        max-height: none;
+        grid-template-areas: "pie-image" "pie-recipe" "context";
+        grid-template-columns: auto;
+        grid-template-rows: 300px auto max-content;
+   }
+    .navigation {
+        display: none;
+   }
+    .pie-image {
+        height: 300px;
+        width: 100%;
+   }
+    .pie-recipe {
+        padding: 25px;
+        &__title {
+            margin: 0;
+            text-align: center;
+       }
+        .pie-serving {
+            margin: 20px auto;
+       }
+   }
+}
+ */

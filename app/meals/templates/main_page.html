@@ -1,0 +1,48 @@
+{% extends 'index.html' %}
+
+
+   
+{% block title %}
+Meal main page
+{% endblock title %}
+
+
+
+{% block content %}
+    <link rel="stylesheet" href={{ url_for('meals.static', filename='css/main.css') }}  />
+
+<div class="flexbox">
+
+    {% for meal in meallist %}
+
+        <div class="food-card" style="background-image:url({{meal.img_link}});">
+    <div class="food-card-content">
+      <div class="heading show">
+        <h2>{{meal.name}}</h2>
+      <div class="shadow"></div>
+      </div>
+      <div class="heading author show">
+        <h5>By <a href="#profile" class="profile">Admin</a></h5>
+      <div class="shadow"></div>
+      </div>
+      <div class="hover-content">
+         
+      <div class="food-card-properties">
+        <div><i class="fa fa-clock-o"></i><p>{{meal.area.name}}</p></div>
+        <div><i class="fa fa-star" style="color:yellow"></i><p>{% if meal.tags == None %} - {% else %} {{meal.tags}} {% endif %}</p></div>
+        <div><i class="fa fa-money"></i><p>{{meal.category.name}}</p></div>
+      </div>  
+        <hr>
+        <div class="content">{{meal.instructions}}<div class="show-less"></div></div>
+        <a href={{url_for('meals.meal_info' ,m_id=meal.id) }} class="view-more">View More-></a>
+      </div>
+    </div>
+  </div>
+
+
+    {% endfor %}
+
+  
+</div>
+{% endblock content %}
+   

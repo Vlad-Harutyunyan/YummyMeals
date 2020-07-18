@@ -1,0 +1,522 @@
+/* https://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section, main {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+/* --------------------------------
+
+Primary style
+
+-------------------------------- */
+
+html * {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*:after,
+*:before {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  /* you need to set this to assign to the main element a min height of 100% */
+  
+  height: 100%;
+}
+
+body {
+  font-size: 100%;
+  font-family: "Roboto", sans-serif;
+  color: #505050;
+  background-color: #ededed;
+}
+
+a {
+  color: #72d69a;
+  text-decoration: none;
+  transition: color .2s ease-out;
+}
+
+.img-replace {
+  /* replace text with a background-image */
+  
+  display: inline-block;
+  overflow: hidden;
+  text-indent: 100%;
+  white-space: nowrap;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+/* --------------------------------
+
+Main styles
+
+-------------------------------- */
+
+.main-content {
+  /* set a min-height and a z-index to be sure that the main element completely covers the lateral menu */
+  min-height: 100%;  
+  position: relative;
+  background-color: #ededed;
+  z-index: 2;
+  padding-top: 50px;
+  /* Force Hardware Acceleration in WebKit */
+  
+  -webkit-transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  -webkit-transition-property: -webkit-transform;
+  -moz-transition-property: -moz-transform;
+  transition-property: transform;
+  -webkit-transition-duration: 0.4s;
+  -moz-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+}
+
+.main-content.menu-open {
+  /* translate to show the lateral menu - all content needs to be put in the .main-content to translate*/
+  
+  -webkit-transform: translateX(-260px);
+  -moz-transform: translateX(-260px);
+  -ms-transform: translateX(-260px);
+  -o-transform: translateX(-260px);
+  transform: translateX(-260px);
+}
+
+@media only screen and (min-width: 768px) {
+  .main-content {
+    padding-top: 70px;
+  }
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 50px;
+  width: 100%;
+  background: #f9f9f9;
+  z-index: 3;
+  /* Force Hardware Acceleration in WebKit */
+  
+  -webkit-transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  -webkit-transition-property: -webkit-transform;
+  -moz-transition-property: -moz-transform;
+  transition-property: transform;
+  -webkit-transition-duration: 0.4s;
+  -moz-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+}
+
+header.menu-open {
+  /* translate to show the lateral menu */
+  
+  -webkit-transform: translateX(-260px);
+  -moz-transform: translateX(-260px);
+  -ms-transform: translateX(-260px);
+  -o-transform: translateX(-260px);
+  transform: translateX(-260px);
+}
+
+@media only screen and (min-width: 768px) {
+  header {
+    height: 70px;
+  }
+}
+
+#site-title {
+  display: block;
+  float: left;
+  margin: 12px 0 0 20px;
+  font-size: 1.5em;
+  font-weight: 400;
+}
+.logo-icon{
+    width: 34px;
+    height: 34px;
+}
+#site-title a {
+  color: #585858;
+  text-decoration: none;
+}
+
+#site-title a:hover {
+  color: #b6b6b6;
+}
+
+#site-title img {
+  display: block;
+}
+
+@media only screen and (min-width: 768px) {
+  #site-title {
+    margin: 22px 0 0 30px;
+  }
+}
+
+#nav-trigger {
+  position: relative;
+  margin: 10px 10px 0 0;
+  top: auto;
+  right: auto;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  text-align: right;
+  float: right;
+  -moz-transform: rotate(180deg);
+  -webkit-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+  transform: rotate(180deg);
+  -moz-transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+  -webkit-transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+  -o-transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+#nav-trigger .line {
+  height: 3px;
+  width: 100%;
+  margin-bottom: 4px;
+  background: #585858;
+  -moz-transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+  -webkit-transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+  -o-transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+#nav-trigger .line.l-01 {
+  width: 95%;
+}
+
+#nav-trigger .line.l-02 {
+  width: 80%;
+}
+
+#nav-trigger .line.l-03 {
+  width: 70%;
+}
+
+#nav-trigger .line.l-04 {
+  width: 100%;
+}
+
+#nav-trigger:hover .line.l-01 {
+  width: 80%;
+}
+
+#nav-trigger:hover .line.l-02 {
+  width: 95%;
+}
+
+#nav-trigger:hover .line.l-03 {
+  width: 100%;
+}
+
+#nav-trigger:hover .line.l-04 {
+  width: 70%;
+}
+
+#nav-trigger.is-clicked .line.l-01,
+#nav-trigger.is-clicked .line.l-04 {
+  background-color: transparent;
+}
+
+#nav-trigger.is-clicked .line.l-02,
+#nav-trigger.is-clicked .line.l-03 {
+  width: 100%;
+}
+
+#nav-trigger.is-clicked .line.l-02 {
+  margin-top: 10px;
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+#nav-trigger.is-clicked .line.l-03 {
+  margin-top: -6px;
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+
+#menu-trigger {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 50px;
+}
+
+#menu-trigger .menu-text {
+  height: 100%;
+  text-transform: uppercase;
+  color: #585858;
+  display: none;
+}
+
+#menu-trigger .menu-icon {
+  /* this span is the central line in the menu menu */
+  
+  display: inline-block;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  bottom: auto;
+  right: auto;
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  -moz-transform: translateX(-50%) translateY(-50%);
+  -ms-transform: translateX(-50%) translateY(-50%);
+  -o-transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-50%);
+  width: 18px;
+  height: 2px;
+  background-color: #585858;
+  /* these are the upper and lower lines in the menu menu */
+}
+
+#menu-trigger .menu-icon::before,
+#menu-trigger .menu-icon:after {
+  content: '';
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: inherit;
+  left: 0;
+}
+
+#menu-trigger .menu-icon::before {
+  bottom: 5px;
+}
+
+#menu-trigger .menu-icon::after {
+  top: 5px;
+}
+
+#menu-trigger.is-clicked .menu-icon {
+  background-color: transparent;
+}
+
+#menu-trigger.is-clicked .menu-icon::before,
+#menu-trigger.is-clicked .menu-icon::after {
+  background-color: #585858;
+}
+
+#menu-trigger.is-clicked .menu-icon::before {
+  bottom: 0;
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+#menu-trigger.is-clicked .menu-icon::after {
+  top: 0;
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+
+@media only screen and (min-width: 768px) {
+  #menu-trigger {
+    width: 110px;
+    padding-left: 1.25em;
+  }
+  #menu-trigger .menu-text {
+    display: inline-block;
+    line-height: 74px;
+  }
+  #menu-trigger .menu-icon {
+    left: auto;
+    right: 1.25em;
+    -webkit-transform: translateX(0);
+    -moz-transform: translateX(0);
+    -ms-transform: translateX(0);
+    -o-transform: translateX(0);
+    transform: translateX(0);
+  }
+}
+
+#side-nav {
+  position: fixed;
+  height: 100%;
+  right: 0;
+  top: 0;
+  visibility: hidden;
+  /* the secondary navigation is covered by the main element */
+  
+  z-index: 1;
+  width: 260px;
+  background-color: #f9f9f9;
+  overflow-y: auto;
+  /* Force Hardware Acceleration in WebKit */
+  
+  -webkit-transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  -webkit-transition: -webkit-transform .4s 0s, visibility 0s .4s;
+  -moz-transition: -moz-transform .4s 0s, visibility 0s .4s;
+  transition: transform .4s 0s, visibility 0s .4s;
+  /* this creates the subtle slide in animation of the navigation */
+  
+  -webkit-transform: translateX(80px);
+  -moz-transform: translateX(80px);
+  -ms-transform: translateX(80px);
+  -o-transform: translateX(80px);
+  transform: translateX(80px);
+}
+
+#side-nav .navigation {
+  margin: 10px 0 16px;
+}
+
+#side-nav .sub-menu {
+  padding: 0 10px 20px 15px;
+  display: none;
+}
+
+#side-nav a {
+  display: block;
+  line-height: 1.5em;
+  padding: 0 16px 0 32px;
+  color: #585858;
+}
+
+#side-nav a.current {
+  color: #72d69a;
+}
+
+.no-touch #side-nav a:hover {
+  color: #72d69a;
+}
+
+@media only screen and (min-width: 768px) {
+  #side-nav .navigation {
+    margin: 20px 0;
+  }
+}
+
+#side-nav.menu-open {
+  -webkit-transform: translateX(0);
+  -moz-transform: translateX(0);
+  -ms-transform: translateX(0);
+  -o-transform: translateX(0);
+  transform: translateX(0);
+  visibility: visible;
+  -webkit-transition: -webkit-transform .4s 0s, visibility 0s 0s;
+  -moz-transition: -moz-transform .4s 0s, visibility 0s 0s;
+  transition: transform .4s 0s, visibility 0s 0s;
+  /* smooth the scrolling on touch devices - webkit browsers */
+  
+  -webkit-overflow-scrolling: touch;
+}
+/* style menu items which have a submenu  */
+
+#side-nav .item-has-children > a {
+  position: relative;
+  font-size: 1.5em;
+}
+
+#side-nav .item-has-children > a::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-left: solid 2px #585858;
+  border-bottom: solid 2px #585858;
+  position: absolute;
+  z-index: 5;
+  top: 42%;
+  left: 87%;
+  display: block;
+  transition-property: transform;
+  transition-duration: 0.2s;
+  transform: rotate(-135deg);
+}
+
+#side-nav .item-has-children > a.submenu-open::after {
+  transform: translateY(-25%) rotate(-45deg);
+}
+
+#side-nav p {
+  font-size: 1em;
+  line-height: 1.5;
+  padding: 0 16px 0 32px;
+}
+
+#side-nav p a {
+  padding: 0;
+}
+
+#side-nav .socials {
+  padding: 0 32px;
+}
+
+#side-nav .socials:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+#side-nav .socials a {
+  display: inline-block;
+  font-size: 1.5em;
+  line-height: 72px;
+  padding: 0 .5em 0 0;
+}

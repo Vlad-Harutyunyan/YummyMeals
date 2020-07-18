@@ -1,0 +1,80 @@
+
+
+<link rel="stylesheet" href="{{url_for('index.static',filename='css/header.css') }}">
+
+<header>   
+  <h1 id="site-title"><a style="display:flex;" href="/">YummyMeals</a></h1>
+  <div id="nav-trigger" role="button">
+    <div class="line l-01"></div>
+    <div class="line l-02"></div>
+    <div class="line l-03"></div>
+    <div class="line l-04"></div>
+  </div>
+
+</header>
+
+<!-- main-content -->
+
+<nav id="side-nav">
+  <ul class="navigation">
+    <li class="item-has-children">
+      <a href="#0">Routes</a>
+      <ul class="sub-menu">
+     <li>
+		<a href="{{ url_for('users.login') }}">Users module</a>
+    </li>
+	<li>
+		<a href="{{ url_for('meals.test_route') }}">Meals module</a>
+	</li>
+
+      </ul>
+    </li> 
+    <!-- item-has-children -->
+
+    <li class="item-has-children">
+      <a href="#0">Filter by category</a>
+      <ul class="sub-menu">
+        <li><a href="#0">category 1</a></li>
+        <li><a href="#0">category 2</a></li>
+        <li><a href="#0">category 3</a></li>
+        <li><a href="#0">category 4</a></li>
+        <li><a href="#0">category 5</a></li>
+      </ul>
+    </li>
+    <!-- item-has-children -->
+
+    <li class="item-has-children">
+      <a href="#0">Filter by area</a>
+      <ul class="sub-menu">
+        <li><a href="#0">area 1</a></li>
+        <li><a href="#0">area 2</a></li>
+        <li><a href="#0">area 3</a></li>
+        <li><a href="#0">area 4</a></li>
+      </ul>
+    </li>
+    <!-- item-has-children -->
+  </ul>
+  <!-- navigation -->
+
+  <ul class="navigation single-item-wrapper">
+    {% if  current_user.username %}
+      <li><a href="{{ url_for('users.logout') }}">Logout</a></li>
+      <li><a href="{{ url_for('users.account') }}">Account</a></li>
+    {% else %}
+      <li><a href="{{ url_for('users.login') }}">Login</a></li>
+      <li><a href="{{ url_for('users.register') }}">Register</a></li>
+    {% endif %}
+    
+    <li><a href="#0">Support</a></li>
+  </ul>
+  <!-- single-item-wrapper -->
+
+
+  <div class="navigation socials">
+    <a class="fa fa-twitter" href="#0"></a>
+    <a class="fa fa-github" href="#0"></a>
+    <a class="fa fa-facebook" href="#0"></a>
+    <a class="fa fa-google-plus" href="#0"></a>
+  </div>
+  <!-- socials -->
+</nav>
