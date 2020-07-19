@@ -18,7 +18,7 @@ users_bp = Blueprint(
     static_folder='static',
     static_url_path=satatic_path
 )
-
+  
 
 @users_bp.route('/register', methods=['GET', 'POST'])
 def register():
@@ -73,7 +73,7 @@ def save_prof_picture(form_picture):
     return picture_fn
 
 
-@users_bp.route('/account', methods=['GET', 'POST'])
+@users_bp.route('/account', methods=['POST'])
 @login_required
 def account_post():
     form = UpdateAccountForm()
@@ -90,12 +90,12 @@ def account_post():
                 current_user.image_file = picture_file
             db.session.commit()
             flash("Your account has been updated", 'success')
-        return redirect(url_for('account_get'))
+        return redirect(url_for('users.account_get'))
 
-    return redirect(url_for('account_get'))
+    return redirect(url_for('users.account_get'))
 
 
-@users_bp.route('/account', methods=['GET', 'POST'])
+@users_bp.route('/account', methods=['GET'])
 @login_required
 def account_get():
     form = UpdateAccountForm()
