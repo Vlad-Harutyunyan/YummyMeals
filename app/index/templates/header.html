@@ -52,7 +52,7 @@
   
     {% if  current_user.username %}
       <li><a href="{{ url_for('users.logout') }}">Logout</a></li>
-      <li><a href="{{ url_for('users.account') }}">Account</a></li>
+      <li><a href="{{ url_for('users.account_get') }}">Account</a></li>
     {% else %}
       <li><a href="{{ url_for('users.login') }}">Login</a></li>
       <li><a href="{{ url_for('users.register') }}">Register</a></li>

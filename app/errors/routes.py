@@ -6,7 +6,8 @@ from flask import (
 )
 
 import os
-satatic_path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),'static' ))
+
+satatic_path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static'))
 
 errors_bp = Blueprint(
     'errors',
@@ -20,4 +21,3 @@ errors_bp = Blueprint(
 @errors_bp.app_errorhandler(404)
 def handle_404(err):
     return render_template('404.html'), 404
- 

@@ -1,11 +1,14 @@
-from flask import render_template, url_for, redirect, flash, request ,Blueprint
+from flask import render_template, url_for, redirect, flash, request, Blueprint
 from .forms import RegistrationForm, LoginForm, UpdateAccountForm
 from .models import User, Post
-from flask_login import login_user, current_user, logout_user, login_required 
+from flask_login import login_user, current_user, logout_user, login_required
 from .. import bcrypt
 from .. import db
 import os
-satatic_path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),'static' ))
+from PIL import Image
+import secrets
+
+satatic_path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static'))
 
 users_bp = Blueprint(
     'users',
@@ -15,7 +18,7 @@ users_bp = Blueprint(
     static_folder='static',
     static_url_path=satatic_path
 )
-   
+
 
 @users_bp.route('/register', methods=['GET', 'POST'])
 def register():
@@ -38,7 +41,7 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('index.index'))
     form = LoginForm()
-    if form.validate_on_submit():  
+    if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
@@ -48,7 +51,7 @@ def login():
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html',
                            title='Login', form=form)
-  
+
 
 @users_bp.route('/logout')
 def logout():
@@ -56,20 +59,48 @@ def logout():
     return redirect(url_for('index.index'))
 
 
+def save_prof_picture(form_picture):
+    random_hex = secrets.token_hex(8)
+    _, f_ext = os.path.splitext(form_picture.filename)
+    picture_fn = random_hex + f_ext
+    picture_path = os.path.join(users_bp.root_path, 'static/profile_pics', picture_fn)
+
+    output_size = (125, 125)
+    i = Image.open(form_picture)
+    i.thumbnail(output_size)
+    i.save(picture_path)
+
+    return picture_fn
+
+
 @users_bp.route('/account', methods=['GET', 'POST'])
 @login_required
-def account():
+def account_post():
     form = UpdateAccountForm()
     if form.validate_on_submit():
-        current_user.username = form.username.data
-        current_user.email = form.email.data
-        db.session.commit()
-        flash("Your account has been updated", 'success')
-        return redirect(url_for('users.account'))
-    elif request.method == 'GET':
-        form.username.data = current_user.username
-        form.email.data = current_user.email
-    
+        data_not_changed = (current_user.username != form.username.data)
+        if not data_not_changed and not form.picture.data:
+            flash("No changes", 'success')
+        else:
+            if data_not_changed:
+                current_user.username = form.username.data
+                current_user.email = form.email.data
+            elif form.picture.data:
+                picture_file = save_prof_picture(form.picture.data)
+                current_user.image_file = picture_file
+            db.session.commit()
+            flash("Your account has been updated", 'success')
+        return redirect(url_for('account_get'))
+
+    return redirect(url_for('account_get'))
+
+
+@users_bp.route('/account', methods=['GET', 'POST'])
+@login_required
+def account_get():
+    form = UpdateAccountForm()
+    form.username.data = current_user.username
+    form.email.data = current_user.email
     image_file = url_for('static', filename=f'profile_pics/{current_user.image_file}')
     return render_template('account.html',
                            title='Account', image_file=image_file, form=form)
