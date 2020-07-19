@@ -101,6 +101,6 @@ def account_get():
     form = UpdateAccountForm()
     form.username.data = current_user.username
     form.email.data = current_user.email
-    image_file = url_for('static', filename=f'profile_pics/{current_user.image_file}')
+    image_file = url_for('users.static', filename=f'profile_pics/{current_user.image_file}')
     return render_template('account.html',
                            title='Account', image_file=image_file, form=form)
