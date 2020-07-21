@@ -113,6 +113,8 @@ def new_recipe():
     if form.validate_on_submit():
         meal = Post(title=form.title.data, content=form.content.data)
         print(meal)
+
+        # nerqevi masy vorpes orinaka te vonc kara database um avelacni
     #if form.validate_on_submit():
     #    post = Post(title=form.title.data, content=form.content.data, author=current_user)
     #    db.session.add(post)
