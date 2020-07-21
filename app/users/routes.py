@@ -1,5 +1,5 @@
 from flask import render_template, url_for, redirect, flash, request, Blueprint
-from .forms import RegistrationForm, LoginForm, UpdateAccountForm
+from .forms import RegistrationForm, LoginForm, UpdateAccountForm, PostForm
 from .models import User, Post
 from flask_login import login_user, current_user, logout_user, login_required
 from .. import bcrypt
@@ -7,6 +7,7 @@ from .. import db
 import os
 from PIL import Image
 import secrets
+from .. meals.models import Meal
 
 satatic_path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static'))
 
@@ -104,3 +105,20 @@ def account_get():
     image_file = url_for('users.static', filename=f'profile_pics/{current_user.image_file}')
     return render_template('account.html',
                            title='Account', image_file=image_file, form=form)
+
+@users_bp.route('/new_recipe', methods=['GET', "POST"])
+@login_required
+def new_recipe():
+    form = PostForm()
+    if form.validate_on_submit():
+        meal = Post(title=form.title.data, content=form.content.data)
+        print(meal)
+    #if form.validate_on_submit():
+    #    post = Post(title=form.title.data, content=form.content.data, author=current_user)
+    #    db.session.add(post)
+    #    db.session.commit()
+    #    flash('Your post has been created!', 'success')
+    #    return redirect(url_for('index'))
+    return render_template('new_recipe.html',
+                           title='New Post', form=form, legend='New Post')
+
