@@ -10,22 +10,24 @@
     <div class="line l-03"></div>
     <div class="line l-04"></div>
   </div>
-
 </header>
 
 <!-- main-content -->
 
 <nav id="side-nav">
-  <ul class="navigation">
+  <ul class="nav_navigation">
     <li class="item-has-children">
-      <a href="#0">Routes</a>
+      <a href="#0">User</a>
       <ul class="sub-menu">
-     <li>
-		<a href="{{ url_for('users.login') }}">Users module</a>
-    </li>
-	<li>
-		<a href="{{ url_for('meals.test_route') }}">Meals module</a>
-	</li>
+    {% if  current_user.username %}
+      <li><a href="{{ url_for('users.logout') }}">Logout</a></li>
+      <li><a href="{{ url_for('users.account_get') }}">Account</a></li>
+      <li><a href="{{ url_for('users.new_recipe_get') }}">New Recipe</a></li>
+
+    {% else %}
+      <li><a href="{{ url_for('users.login') }}">Login</a></li>
+      <li><a href="{{ url_for('users.register') }}">Register</a></li>
+    {% endif %}
 
       </ul>
     </li> 
@@ -46,19 +48,11 @@
     </li>
     <!-- item-has-children -->
   </ul>
-  <!-- navigation -->
+  <!-- nav_navigation -->
 
-  <ul class="navigation single-item-wrapper">
+  <ul class="nav_navigation single-item-wrapper">
   
-    {% if  current_user.username %}
-      <li><a href="{{ url_for('users.logout') }}">Logout</a></li>
-      <li><a href="{{ url_for('users.account_get') }}">Account</a></li>
-      <li><a href="{{ url_for('users.new_recipe_get') }}">New Recipe</a></li>
-
-    {% else %}
-      <li><a href="{{ url_for('users.login') }}">Login</a></li>
-      <li><a href="{{ url_for('users.register') }}">Register</a></li>
-    {% endif %}
+    
     
     <li><a href="#0"></a></li>
     <li><a href="#0">Support</a></li>
@@ -67,7 +61,7 @@
   <!-- single-item-wrapper -->
 
 
-  <div class="navigation socials">
+  <div class="nav_navigation socials">
     <a class="fa fa-twitter" href="#0"></a>
     <a class="fa fa-github" href="#0"></a>
     <a class="fa fa-facebook" href="#0"></a>

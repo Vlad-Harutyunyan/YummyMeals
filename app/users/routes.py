@@ -8,7 +8,7 @@ import os
 from PIL import Image
 import secrets
 from ..meals.models import Meal , Ingredient , Category , Area , Meal_ingredient
-
+from .scripts.logic import sort_ingrs_by_alphabet
 
 satatic_path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static'))
 
@@ -122,14 +122,14 @@ def new_recipe_get():
     #    db.session.commit()
     #    flash('Your post has been created!', 'success')
     #    return redirect(url_for('index'))
-
     context = { 
         'ingr' : Ingredient.query.all(),
         'areas' : Area.query.all(),
         'categ' : Category.query.all(),
     }
+    alphabetic_sorted_ingrs = sort_ingrs_by_alphabet(context['ingr'])
     return render_template('new_recipe.html',
-                           title='New Post', legend='New Post' , context = context)
+                           title='New Post', legend='New Post' , context = context, alp = alphabetic_sorted_ingrs )
 
 
 
@@ -151,6 +151,8 @@ def new_recipe_post():
         'categ' : Category.query.all(),
     }
 
+    alphabetic_sorted_ingrs = sort_ingrs_by_alphabet(context['ingr'])
+    
     meal_info = {
            'name': request.form.get('title'),
            'inctruction': request.form.get('content'),
@@ -174,21 +176,22 @@ def new_recipe_post():
             tags = None,
             video_link = None,
         )
-
         db.session.add(meal)
-
-        for x in meal_info ['ingredients']  :
+        
+        for x in meal_info['ingredients']  :
+            print(meal_info['ingredients'])
             meal_ingr = Meal_ingredient(meal_id = meal.id , ingredient_id = Ingredient.query.filter_by(name = x).first().id)
             db.session.add(meal_ingr)
-        db.session.commit()
-
+            db.session.commit()  
+            
+        db.session.commit()  
         return redirect(url_for('meals.meal_info', m_id = meal.id))
 
     else:
         error = 'Please fill all Fields '
         return render_template('new_recipe.html',
             title='New Post', legend='New Post' , context = context ,
-            error = error)
+            error = error , alp = alphabetic_sorted_ingrs)
     return render_template('new_recipe.html',
-                           title='New Post', legend='New Post' , context = context)
+                           title='New Post', legend='New Post' , context = context, alp = alphabet_sort_ingrs)
 

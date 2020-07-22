@@ -401,7 +401,7 @@ header.menu-open {
   right: 0;
   top: 0;
   visibility: hidden;
-  /* the secondary navigation is covered by the main element */
+  /* the secondary nav_navigation is covered by the main element */
   
   z-index: 1;
   width: 260px;
@@ -414,7 +414,7 @@ header.menu-open {
   -webkit-transition: -webkit-transform .4s 0s, visibility 0s .4s;
   -moz-transition: -moz-transform .4s 0s, visibility 0s .4s;
   transition: transform .4s 0s, visibility 0s .4s;
-  /* this creates the subtle slide in animation of the navigation */
+  /* this creates the subtle slide in animation of the nav_navigation */
   
   -webkit-transform: translateX(80px);
   -moz-transform: translateX(80px);
@@ -423,7 +423,7 @@ header.menu-open {
   transform: translateX(80px);
 }
 
-#side-nav .navigation {
+#side-nav .nav_navigation {
   margin: 10px 0 16px;
 }
 
@@ -448,9 +448,9 @@ header.menu-open {
 }
 
 @media only screen and (min-width: 768px) {
-  #side-nav .navigation {
+  #side-nav .nav_navigation {
     margin: 20px 0;
-  }
+  } 
 }
 
 #side-nav.menu-open {
