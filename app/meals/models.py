@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker , relationship
 from .. import db
 import os
 import json
-
+from ..users.models import User
 
 class Area(db.Model):
     __tablename__ = 'area'
@@ -44,12 +44,15 @@ class Meal(db.Model):
     name = Column(String)
     category_id =  Column(Integer, ForeignKey('category.id'))
     area_id = Column(Integer, ForeignKey('area.id'))
+    author_id = Column(Integer, ForeignKey('user.id'), default = 1)
     instructions = Column(String)
-    img_link = Column(String)
+    img_link = Column(String , default = 'default.jpg')
     tags = Column(String)
     video_link = Column(String)
     area = relationship("Area")
     category = relationship("Category")
+    user = relationship("User")
+
 
 path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),"..",".."))
 

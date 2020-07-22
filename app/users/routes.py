@@ -7,7 +7,8 @@ from .. import db
 import os
 from PIL import Image
 import secrets
-from .. meals.models import Meal
+from ..meals.models import Meal , Ingredient , Category , Area , Meal_ingredient
+
 
 satatic_path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static'))
 
@@ -106,9 +107,9 @@ def account_get():
     return render_template('account.html',
                            title='Account', image_file=image_file, form=form)
 
-@users_bp.route('/new_recipe', methods=['GET', "POST"])
+@users_bp.route('/new_recipe', methods=["GET"])
 @login_required
-def new_recipe():
+def new_recipe_get():
     form = PostForm()
     if form.validate_on_submit():
         meal = Post(title=form.title.data, content=form.content.data)
@@ -121,6 +122,73 @@ def new_recipe():
     #    db.session.commit()
     #    flash('Your post has been created!', 'success')
     #    return redirect(url_for('index'))
+
+    context = { 
+        'ingr' : Ingredient.query.all(),
+        'areas' : Area.query.all(),
+        'categ' : Category.query.all(),
+    }
     return render_template('new_recipe.html',
-                           title='New Post', form=form, legend='New Post')
+                           title='New Post', legend='New Post' , context = context)
+
+
+
+
+@users_bp.route('/new_recipe', methods=["POST"])
+@login_required
+def new_recipe_post():
+        # nerqevi masy vorpes orinaka te vonc kara database um avelacni
+    #if form.validate_on_submit():
+    #    post = Post(title=form.title.data, content=form.content.data, author=current_user)
+    #    db.session.add(post)
+    #    db.session.commit()
+    #    flash('Your post has been created!', 'success')
+    #    return redirect(url_for('index'))
+
+    context = { 
+        'ingr' : Ingredient.query.all(),
+        'areas' : Area.query.all(),
+        'categ' : Category.query.all(),
+    }
+
+    meal_info = {
+           'name': request.form.get('title'),
+           'inctruction': request.form.get('content'),
+           'country':request.form.get('area'),
+           'category':request.form.get('category'),
+           'ingredients':request.form.getlist('ingredients'),
+       }
+
+    #validate data
+    if meal_info['name'] and meal_info['inctruction'] and \
+        meal_info['country'] and meal_info['category'] and \
+        meal_info ['ingredients'] :
+        
+        meal = Meal(
+            id = Meal.query.order_by(Meal.id.desc()).first().id+1, #get last meal id in db
+            name = meal_info['name'],
+            category_id =  Category.query.filter_by(name=meal_info['category']).first().id,
+            area_id =  Area.query.filter_by(name=meal_info['country']).first().id,
+            author_id = current_user.id,
+            instructions = meal_info['inctruction'],
+            tags = None,
+            video_link = None,
+        )
+
+        db.session.add(meal)
+
+        for x in meal_info ['ingredients']  :
+            meal_ingr = Meal_ingredient(meal_id = meal.id , ingredient_id = Ingredient.query.filter_by(name = x).first().id)
+            db.session.add(meal_ingr)
+        db.session.commit()
+
+        return redirect(url_for('meals.meal_info', m_id = meal.id))
+
+    else:
+        error = 'Please fill all Fields '
+        return render_template('new_recipe.html',
+            title='New Post', legend='New Post' , context = context ,
+            error = error)
+    return render_template('new_recipe.html',
+                           title='New Post', legend='New Post' , context = context)
 

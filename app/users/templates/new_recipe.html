@@ -1,43 +1,49 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
     <div class="content-section">
         <form method="POST" action="">
-            {{ form.hidden_tag() }}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Join Us Today </legend>
+                {% if error %}
+                    <p class=error><strong>Error:</strong> {{ error }}
+                {% endif %}
+                <legend class="border-bottom mb-4">Add Your Recipe </legend>
+                select area
+                <select name ='area'>
+                    {% for area in  context.areas %}
+                        <option value={{area.name}}>
+                        {{area.name}}
+                        </option>
+                    {% endfor %}
+                </select>
 
+                select category
+                <select name='category'>
+                    {% for categ in  context.categ %}
+                        <option value={{categ.name}}>
+                        {{categ.name}}
+                        </option>
+                    {% endfor %}
+                </select>
+               
                 <div class="form-group">
-                    {{ form.title.label(class="form-control-label") }}
-                    {% if form.title.errors %}
-                        {{ form.title(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.title.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.title(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    {{ form.content.label(class="form-control-label") }}
-                    {% if form.content.errors %}
-                        {{ form.content(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.content.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.content(class="form-control form-control-lg") }}
-                    {% endif %}
+                title
+                <input type="text" name='title'></input>
+                 content
+                <input type="text" name='content'></input>
+
                 </div>
 
             </fieldset>
-            <div class="form-group">
-                {{ form.submit(class="btn btn-outline-info") }}
-            </div>
+            
+            Select ingredients <br/>
+                {% for ingr in context.ingr %}
+                <input type="checkbox" id={{ingr.name}} name="ingredients" value="{{ingr.name}}">
+                <label for={{ingr.name}}> {{ingr.name}}</label>
+                {% endfor %}
+
+             <input type="submit"  value='add recipe'></input>
         </form>
     </div>
 

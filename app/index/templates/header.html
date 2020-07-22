@@ -53,7 +53,7 @@
     {% if  current_user.username %}
       <li><a href="{{ url_for('users.logout') }}">Logout</a></li>
       <li><a href="{{ url_for('users.account_get') }}">Account</a></li>
-      <li><a href="{{ url_for('users.new_recipe') }}">New Recipe</a></li>
+      <li><a href="{{ url_for('users.new_recipe_get') }}">New Recipe</a></li>
 
     {% else %}
       <li><a href="{{ url_for('users.login') }}">Login</a></li>
