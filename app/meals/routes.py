@@ -79,5 +79,5 @@ def meal_info(m_id):
     meal = Meal.query.filter_by(id=m_id).first()
 
     ingredients = Meal_ingredient.query.filter_by(meal_id=m_id).all()
-    return render_template('meal_info.html', meal = meal,ingredients = ingredients)
+    return render_template('meal_info.html', meal = meal, ingredients = ingredients)
 

@@ -9,6 +9,10 @@ import pandas as pd
 
 thisfolder = os.path.dirname(os.path.abspath(__file__))
 
+def to_unquie_id(this_id):
+    return int(f'{this_id}{int(datetime.now().timestamp())}')//3
+
+
 def list_to_json_file(path,res):
     with open(path, 'w')  as outfile:
         json.dump(res, outfile, indent = 4,
@@ -29,7 +33,7 @@ def parse_categories():
     categ_list = []
     for x in categ :
         categ_obj =  {
-            "id":int(x['idCategory']),
+            "id":to_unquie_id(int(x['idCategory'])),
             "name":x['strCategory'],
             "img_link":x['strCategoryThumb'],
             "description":x['strCategoryDescription'],
@@ -52,7 +56,7 @@ def parse_ingredients():
             i['strDescription']=""
     for x in ingredients :
         ingr_obj =  {
-            "id":int(x['idIngredient']),
+            "id":to_unquie_id(int(x['idIngredient'])),
             "name":x['strIngredient'],
             "description":x['strDescription'],
         }
@@ -70,7 +74,7 @@ def parse_areas():
     for x in areas :
         if x['strArea'] != 'Unknown':
             area_obj =  {
-                "id":cnt_id,
+                "id":to_unquie_id(cnt_id),
                 "name":x['strArea'],
             }
             areas_list.append(area_obj)
@@ -111,8 +115,9 @@ def parse_meals():
     cnt_id = 1
     ingr_meal = []
     for meal in data :
+        meal_unique_id = to_unquie_id(int(meal[0]['idMeal']))
         meal_obj = {
-            'id':cnt_id,
+            'id': meal_unique_id,
             'name':meal[0]['strMeal'],
             'category_id':filter_json('name',meal[0]['strCategory'],f"{thisfolder}/categories.json"),
             'area_id':filter_json('name',meal[0]['strArea'],f"{thisfolder}/areas.json"),
@@ -128,7 +133,7 @@ def parse_meals():
                 ingr_id = filter_json('name',meal[0][f'strIngredient{x}'],f"{thisfolder}/ingredients.json")
                 if ingr_id :
                     obj = {
-                        'meal_id':cnt_id,
+                        'meal_id':meal_unique_id,
                         'ingredient_id':ingr_id
                     }
                     ingr_meal.append(obj)
@@ -153,29 +158,8 @@ def parse_all():
     parse_areas()
     parse_meals()
 
-
-def prep_lists():
-    meals=prep_query("parsed_meals.json", ("id","name","category_id", "area_id", "like_count", "instructions","img_link", "tags", "video_link"))
-    print("meals", meals)
-    write_to_txt(f"{thisfolder}/final_lists/meals.txt",meals)
-    ingredient=prep_query("ingredients.json",("id","name","description"))
-    print("ingredient", ingredient)
-    write_to_txt(f"{thisfolder}/final_lists/ingredient.txt",ingredient)
-    meal_ingredient=prep_query("ingredient_list.json",("meal_id", "ingredient_id"))
-    print("meal_ingredient", meal_ingredient)
-    write_to_txt(f"{thisfolder}/final_lists/meal_ingredient.txt",meal_ingredient)
-    categories=prep_query("categories.json",("id", "name", "img_link", "description"))
-    print("categories", categories)
-    write_to_txt(f"{thisfolder}/final_lists/categories.txt",categories)
-    area=prep_query("areas.json",("id", "name"))
-    print("area",area)
-    write_to_txt(f"{thisfolder}/final_lists/area.txt",area)
-    # unparsed_meals=prep_query("unparse_meals.json", ("idMeal","strMeal","strArea","strInstructions","strMealThumb","strTags","strYoutube","strIngredient1", 	"strIngredient2", 	"strIngredient3", 	"strIngredient4", 	"strIngredient5", 	"strIngredient6", 	"strIngredient7", 	"strIngredient8", 	"strIngredient9", 	"strIngredient10", 	"strIngredient11", 	"strIngredient12", 	"strIngredient13", 	"strIngredient14", 	"strIngredient15", 	"strIngredient16", 	"strIngredient17", 	"strIngredient18", 	"strIngredient19", 	"strIngredient20", "strMeasure1", 	"strMeasure2", 	"strMeasure3", 	"strMeasure4", 	"strMeasure5", 	"strMeasure6", 	"strMeasure7", 	"strMeasure8", 	"strMeasure9", 	"strMeasure10", 	"strMeasure11", 	"strMeasure12", 	"strMeasure13", 	"strMeasure14", 	"strMeasure15", 	"strMeasure16", 	"strMeasure17", 	"strMeasure18", 	"strMeasure19", 	"strMeasure20", "dateModified"))
-    # print("unparsed_meals", meals)
-    # write_to_txt(f"{thisfolder}/final_lists/unparsed_meals.txt",unparsed_meals)
-
 def prep_query(file_name,fields):
-    with open (file_name,encoding="utf8") as jf :
+    with open (f'{thisfolder}/{file_name}',encoding="utf8") as jf :
         list1  = json.load(jf)
     list_new=[]
     for i in range (len(list1)):
@@ -186,6 +170,26 @@ def prep_query(file_name,fields):
                 list_new[j].append(v)
     return list_new
 
+def prep_lists():
+    meals=prep_query("parsed_meals.json", ("id","name","category_id", "area_id", "like_count", "instructions","img_link", "tags", "video_link"))
+    write_to_txt(f"{thisfolder}/final_lists/meals.txt",meals)
+
+    ingredient=prep_query("ingredients.json",("id","name","description"))
+    write_to_txt(f"{thisfolder}/final_lists/ingredient.txt",ingredient)
+
+    meal_ingredient=prep_query("ingredient_list.json",("meal_id", "ingredient_id"))
+    write_to_txt(f"{thisfolder}/final_lists/meal_ingredient.txt",meal_ingredient)
+
+    categories=prep_query("categories.json",("id", "name", "img_link", "description"))
+    write_to_txt(f"{thisfolder}/final_lists/categories.txt",categories)
+
+    area=prep_query("areas.json",("id", "name"))
+    write_to_txt(f"{thisfolder}/final_lists/area.txt",area)
+    
+    # unparsed_meals=prep_query("unparse_meals.json", ("idMeal","strMeal","strArea","strInstructions","strMealThumb","strTags","strYoutube","strIngredient1", 	"strIngredient2", 	"strIngredient3", 	"strIngredient4", 	"strIngredient5", 	"strIngredient6", 	"strIngredient7", 	"strIngredient8", 	"strIngredient9", 	"strIngredient10", 	"strIngredient11", 	"strIngredient12", 	"strIngredient13", 	"strIngredient14", 	"strIngredient15", 	"strIngredient16", 	"strIngredient17", 	"strIngredient18", 	"strIngredient19", 	"strIngredient20", "strMeasure1", 	"strMeasure2", 	"strMeasure3", 	"strMeasure4", 	"strMeasure5", 	"strMeasure6", 	"strMeasure7", 	"strMeasure8", 	"strMeasure9", 	"strMeasure10", 	"strMeasure11", 	"strMeasure12", 	"strMeasure13", 	"strMeasure14", 	"strMeasure15", 	"strMeasure16", 	"strMeasure17", 	"strMeasure18", 	"strMeasure19", 	"strMeasure20", "dateModified"))
+    # print("unparsed_meals", meals)
+    # write_to_txt(f"{thisfolder}/final_lists/unparsed_meals.txt",unparsed_meals)
+
 
 def main():
     parse_all()
@@ -194,11 +198,13 @@ def main():
     current_time = now.strftime("%H:%M:%S")
     print("last updated at  ", current_time)
 
-if __name__=="__main__" :
-     schedule.every(600).minutes.do(main)
-     while True:
-         schedule.run_pending()
-         time.sleep(1)
+# main()
+
+# if __name__ == "__main__" :
+#     schedule.every(600).minutes.do(main)
+#     while True:
+#         schedule.run_pending()
+#         time.sleep(1)
 
 
 

@@ -3,10 +3,14 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 import os
+from flask_script import Manager
+from flask_migrate import Migrate, MigrateCommand
+
 
 db = SQLAlchemy()
 login_manager = LoginManager()
 bcrypt = Bcrypt()
+migrate = Migrate()
 
 
 def create_app():
@@ -16,7 +20,6 @@ def create_app():
     app.config['SECRET_KEY'] = "not_secret_key"
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///main.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    
     login_manager.login_view = 'login'
     login_manager.login_message_category = 'info'
 
@@ -26,14 +29,15 @@ def create_app():
     login_manager.init_app(app)
     bcrypt.init_app(app)
     
+    manager = Manager(app)
+    manager.add_command('db', MigrateCommand)
+    migrate.init_app(app, db)
+
     #handle login_requerd for blueprint
     @login_manager.unauthorized_handler
     def unauthorized_callback():
         return redirect('/user/login')
  
-
-
-    
 
     with app.app_context():
         from .users.routes import users_bp

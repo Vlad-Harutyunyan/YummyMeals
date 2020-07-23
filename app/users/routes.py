@@ -180,9 +180,9 @@ def new_recipe_post():
         
         for x in meal_info['ingredients']  :
             print(meal_info['ingredients'])
-            meal_ingr = Meal_ingredient(meal_id = meal.id , ingredient_id = Ingredient.query.filter_by(name = x).first().id)
+            meal_ingr = Meal_ingredient( by_user = 1 , meal_id = meal.id ,ingredient_id = Ingredient.query.filter_by(name = x).first().id)
             db.session.add(meal_ingr)
-            db.session.commit()  
+            db.session.commit()    
             
         db.session.commit()  
         return redirect(url_for('meals.meal_info', m_id = meal.id))
