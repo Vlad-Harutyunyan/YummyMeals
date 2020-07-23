@@ -25,4 +25,12 @@ visit 127.0.0.1/home in browser
 
 
 
+------- Migration System -------
+After changing database model , write this commands in project folder 
+
+1 : flask db init 
+
+2 : flask db migrate
+
+3 : flask db upgrade
 
