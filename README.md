@@ -1,6 +1,7 @@
 # YummyMeals
 
 Here's our ACA second course final Flask project. 
+
 Authors: Vlad Harutyunyan, Hayk Sahakyan, Zhora Karyan and Ruzanna Ordyan
 
 Project setup instruction ‘
