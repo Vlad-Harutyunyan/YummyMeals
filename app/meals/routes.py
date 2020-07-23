@@ -22,11 +22,11 @@ meals_bp = Blueprint(
 )
 
 
-# @meals_bp.route('/fill_db')
-# def fill_db():
-#     from .models import fill_all
-#     fill_all()
-#     return 'done'
+@meals_bp.route('/fill_db')
+def fill_db():
+    from .fill_db import fill_all
+    fill_all()
+    return 'done'
     
 
 @meals_bp.route('/')
