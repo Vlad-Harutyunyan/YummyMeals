@@ -10,6 +10,20 @@ satatic_path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__fi
 from .models import Meal ,Ingredient , Category , Area , Meal_ingredient
 from .. import db
 from flask_paginate import Pagination, get_page_parameter
+import re
+
+
+def name_correct(name):
+    matches = re.finditer(" ", name)
+    list1 = [match.start() for match in matches]
+    name1=name[0]
+    for i in range (0,len(name)-1):
+        if i in list1:
+            name1+=name[i]+name[i+1].upper()
+        else:
+            name1+=name[i+1].lower()
+    name1=name1.replace("  "," ")
+    return(name1)
 
 
 from ..users.forms import CommentForm
@@ -58,6 +72,19 @@ def test_route():
 def categories_list():
     categories = Category.query.all()
     return render_template('category_list.html', categories = categories)
+
+
+
+@meals_bp.route('/search/<meal_name>/')
+def meal_search(meal_name):
+    meal_name=name_correct(meal_name)
+    meal = Meal.query.filter_by(name=meal_name).first()
+    if meal :
+        ingredients = Meal_ingredient.query.filter_by(meal_id=meal.id).all()
+        return render_template('meal_info.html', meal = meal, ingredients = ingredients)
+    else :
+        return redirect('/meal')
+
 
 
 @meals_bp.route('/category/<int:c_id>/')
