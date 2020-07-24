@@ -12,6 +12,11 @@ from .. import db
 from flask_paginate import Pagination, get_page_parameter
 
 
+from ..users.forms import CommentForm
+from ..users.models import UserComments
+from flask_login import current_user
+
+
 meals_bp = Blueprint(
     'meals',
     __name__,
@@ -74,10 +79,24 @@ def meals_by_category(c_id):
         
     )
 
-@meals_bp.route('/meal_info/<int:m_id>/')
+
+@meals_bp.route('/meal_info/<int:m_id>/', methods=['GET'])
 def meal_info(m_id):
     meal = Meal.query.filter_by(id=m_id).first()
-
     ingredients = Meal_ingredient.query.filter_by(meal_id=m_id).all()
-    return render_template('meal_info.html', meal = meal, ingredients = ingredients)
+    form = CommentForm()
+    return render_template('meal_info.html', meal=meal, ingredients=ingredients, form=form)
+
+
+@meals_bp.route('/meal_info/<int:m_id>/', methods=['POST'])
+def meal_info_post(m_id):
+    form = CommentForm()
+    if form.is_submitted():
+        comment = UserComments(content=form.content.data, user_id=current_user.id, meal_id=m_id)
+        db.session.add(comment)
+        db.session.commit()
+        return redirect(url_for('meals.meal_info', m_id=m_id))
+
+
+
 

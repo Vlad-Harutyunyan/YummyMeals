@@ -70,3 +70,12 @@ class PostForm(FlaskForm):
     area = TextAreaField('area', validators=[DataRequired()])
     caegory = TextAreaField('category', validators=[DataRequired()])
     submit = SubmitField('Post')
+
+
+class CommentForm(FlaskForm):
+    content = TextAreaField('Content',
+                            validators=[DataRequired()])
+    username = StringField('Username',
+                           validators=[DataRequired(), Length(min=2, max=20)]
+                           )
+    submit = SubmitField('Add Comment')
