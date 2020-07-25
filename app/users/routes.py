@@ -195,3 +195,8 @@ def new_recipe_post():
     return render_template('new_recipe.html',
                            title='New Post', legend='New Post' , context = context, alp = alphabet_sort_ingrs)
 
+
+@users_bp.route('/favourites', methods=['GET'])
+@login_required
+def favourites():
+    return render_template('favourites.html')

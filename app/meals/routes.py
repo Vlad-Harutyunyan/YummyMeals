@@ -9,6 +9,9 @@ import os
 satatic_path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),'static' ))
 from .models import Meal ,Ingredient , Category , Area , Meal_ingredient
 from .. import db
+
+from ..users.models import User_Favorite
+
 from flask_paginate import Pagination, get_page_parameter
 import re
 
@@ -106,13 +109,41 @@ def meals_by_category(c_id):
         
     )
 
+@meals_bp.route('/add-favorite/<int:meal_id>', methods=['GET'])
+#@login_required
+def add_favorite(meal_id):
+    check = False
+
+    bb = db.session.query(User_Favorite).filter(
+        User_Favorite.meal_id.like(meal_id),
+        User_Favorite.user_id.like(current_user.id)).first()
+
+    if not bb:
+        check = False
+        user_favorite = User_Favorite(
+            user_id = current_user.id,
+            meal_id = meal_id
+            )
+
+        db.session.add(user_favorite)
+        db.session.commit()
+    else:
+        check = True
+        db.session.delete(bb)
+        db.session.commit()
+    return redirect(url_for('meals.meal_info', m_id = meal_id))
+
 
 @meals_bp.route('/meal_info/<int:m_id>/', methods=['GET'])
 def meal_info(m_id):
     meal = Meal.query.filter_by(id=m_id).first()
     ingredients = Meal_ingredient.query.filter_by(meal_id=m_id).all()
     form = CommentForm()
-    return render_template('meal_info.html', meal=meal, ingredients=ingredients, form=form)
+    check = db.session.query(User_Favorite).filter(
+        User_Favorite.meal_id.like(m_id),
+        User_Favorite.user_id.like(current_user.id)
+    ).first()
+    return render_template('meal_info.html', meal=meal, ingredients=ingredients, check=check, form=form)
 
 
 @meals_bp.route('/meal_info/<int:m_id>/', methods=['POST'])
@@ -123,7 +154,6 @@ def meal_info_post(m_id):
         db.session.add(comment)
         db.session.commit()
         return redirect(url_for('meals.meal_info', m_id=m_id))
-
 
 
 

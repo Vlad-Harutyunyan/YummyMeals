@@ -18,6 +18,18 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f"User('{self.username}','{self.email}','{self.image_file}')"
 
+
+class User_Favorite(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id =  db.Column(db.Integer, db.ForeignKey('user.id'))
+    meal_id =  db.Column(db.Integer, db.ForeignKey('meal.id'))
+    meal = db.relationship('Meal')
+    user = db.relationship('User')
+
+    def __repr__(self):
+        return f"User_Favorite('{self.user_id}','{self.meal_id}')"
+
+
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
