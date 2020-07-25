@@ -81,9 +81,15 @@ def meal_search(meal_name):
     meal_name = name_correct(meal_name)
     meal = Meal.query.filter_by(name=meal_name).first()
     if meal:
+        form = CommentForm()
+        check = False
+        page = request.args.get('page', 1, type=int)
+        comments = UserComments.query.filter(UserComments.meal_id == meal.id).paginate(per_page=2, page=page)
         ingredients = Meal_ingredient.query.filter_by(meal_id=meal.id).all()
-        return render_template('meal_info.html', meal=meal, ingredients=ingredients)
+        return render_template('meal_info.html', meal=meal, ingredients=ingredients,
+                           form=form,check = check,comments=comments,page=page)
     else:
+
         return redirect('/meal')
 
 
