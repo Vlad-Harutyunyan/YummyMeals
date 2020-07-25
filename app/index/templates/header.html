@@ -4,6 +4,17 @@
 
 <header>   
   <h1 id="site-title"><a style="display:flex;" href="/">YummyMeals</a></h1>
+
+<div class="search-form">
+
+<p class="head_search_txt">Search</p>
+ <form  method = 'GET' action="{{url_for('meals.meal_search')}}">
+    <input  class = "head_search_sbmit"type = 'submit' value="search"></input>
+    <input class="head_search_inp" type='text' name="meal_name"></input>   
+    <button style = "outline:none;" class="head_search_btn" type = 'submit'></button>
+  </form>
+</div> 
+ 
   <div id="nav-trigger" role="button">
     <div class="line l-01"></div>
     <div class="line l-02"></div>
@@ -28,7 +39,8 @@
       <li><a href="{{ url_for('users.login') }}">Login</a></li>
       <li><a href="{{ url_for('users.register') }}">Register</a></li>
     {% endif %}
-
+    
+    
       </ul>
     </li> 
     <!-- item-has-children -->

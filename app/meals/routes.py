@@ -15,7 +15,7 @@ from ..users.models import User_Favorite
 
 from flask_paginate import Pagination, get_page_parameter
 import re
-
+from flask_login import login_required
 
 def name_correct(name):
     matches = re.finditer(" ", name)
@@ -76,8 +76,8 @@ def categories_list():
     return render_template('category_list.html', categories=categories)
 
 
-@meals_bp.route('/search/<meal_name>/')
-def meal_search(meal_name):
+@meals_bp.route('/search_by_fullname/<meal_name>/')
+def meal_search_by_fullname(meal_name):
     meal_name = name_correct(meal_name)
     meal = Meal.query.filter_by(name=meal_name).first()
     if meal:
@@ -89,7 +89,27 @@ def meal_search(meal_name):
         return render_template('meal_info.html', meal=meal, ingredients=ingredients,
                            form=form,check = check,comments=comments,page=page)
     else:
+        return redirect('/meal')
 
+
+@meals_bp.route('/search/')
+def meal_search():
+    meal_name =  request.args.get('meal_name')
+    page = request.args.get('page', 1, type=int)
+    meallist = db.session.query(Meal).filter(Meal.name.contains(meal_name.lower())).paginate(page, 6, False)
+    if meallist:
+        next_url = url_for('meals.test_route', page=meallist.next_num) \
+            if meallist.has_next else None
+        prev_url = url_for('meals.test_route', page=meallist.prev_num) \
+            if meallist.has_prev else None
+            
+        return render_template(
+        'main_page.html',
+        meallist=meallist,
+        next_url=next_url,
+        prev_url=prev_url,
+    )
+    else:
         return redirect('/meal')
 
 
@@ -114,7 +134,7 @@ def meals_by_category(c_id):
 
 
 @meals_bp.route('/add-favorite/<int:meal_id>', methods=['GET'])
-# @login_required
+@login_required
 def add_favorite(meal_id):
     check = False
 
@@ -143,19 +163,23 @@ def meal_info(m_id):
     meal = Meal.query.filter_by(id=m_id).first()
     ingredients = Meal_ingredient.query.filter_by(meal_id=m_id).all()
     form = CommentForm()
-    check = db.session.query(User_Favorite).filter(
-        User_Favorite.meal_id.like(m_id),
-        User_Favorite.user_id.like(current_user.id)
-    ).first()
-
+    try :
+        check = db.session.query(User_Favorite).filter(
+            User_Favorite.meal_id.like(m_id),
+            User_Favorite.user_id.like(current_user.id)
+        ).first()
+    except :
+        check = False
     page = request.args.get('page', 1, type=int)
-    comments = UserComments.query.filter(UserComments.meal_id == m_id).paginate(per_page=2, page=page)
+    comments = UserComments.query.filter(UserComments.meal_id == m_id).paginate(per_page=5, page=page)
+    fav_count = len(db.session.query(User_Favorite).filter(User_Favorite.meal_id.like(m_id)).all())
     return render_template('meal_info.html',
                            meal=meal, ingredients=ingredients, check=check,
-                           form=form, comments=comments, page=page, m_id=m_id)
+                           form=form, comments=comments, page=page, m_id=m_id ,fav_count = fav_count)
 
 
 @meals_bp.route('/meal_info/<int:m_id>/', methods=['POST'])
+@login_required
 def meal_info_post(m_id):
     form = CommentForm()
     if form.is_submitted():

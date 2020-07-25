@@ -12,10 +12,17 @@ Meal main page
     <link rel="stylesheet" href={{ url_for('meals.static', filename='css/main.css') }}  />
 
 <div class="flexbox">
-
+  {% if meallist.items|length == 0  %}
+    <p>Nothing Found !</p>
+  {% endif %}
     {% for meal in meallist.items %}
-
-        <div class="food-card" style="background-image:url({{meal.img_link}});">
+        <div class="food-card" style="background-image:url(
+          {% if meal.author_id != 1 %}
+            {{url_for('meals.static' ,filename = meal.img_link )}}
+          {% else %}
+            {{meal.img_link}}
+          {% endif %}
+          );">
     <div class="food-card-content">
       <div class="heading show">
         <h2>{{meal.name}}</h2>
@@ -28,9 +35,9 @@ Meal main page
       <div class="hover-content">
          
       <div class="food-card-properties">
-        <div><i class="fa fa-clock-o"></i><p>{{meal.area.name}}</p></div>
-        <div><i class="fa fa-star" style="color:yellow"></i><p>{% if meal.tags == None %} - {% else %} {{meal.tags}} {% endif %}</p></div>
-        <div><i class="fa fa-money"></i><p>{{meal.category.name}}</p></div>
+        <div><i class="fa fa-globe" aria-hidden="true"></i><p>{{meal.area.name}}</p></div>
+        <div><i class="fa fa-tag" aria-hidden="true"></i><p>{% if meal.tags == None %} - {% else %} {{meal.tags}} {% endif %}</p></div>
+        <div><i class="fa fa-cutlery" aria-hidden="true"></i><p>{{meal.category.name}}</p></div>
       </div>  
         <hr>
         <div class="content">{{meal.instructions}}<div class="show-less"></div></div>
@@ -41,12 +48,17 @@ Meal main page
 
 
     {% endfor %}
-   {% if prev_url %}
+</div> 
+
+<div class="nav_btns">
+{% if prev_url %}
     <a href="{{ prev_url }}"> Newer meals  </a>
     {% endif %}
     {% if next_url %}  
     <a href="{{ next_url }}">  Older meals </a>
     {% endif %}
-</div> 
+</div>
+   
+
 {% endblock content %}
     

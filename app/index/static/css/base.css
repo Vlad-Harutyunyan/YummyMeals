@@ -1,6 +1,7 @@
 *{
     margin: 0;
     padding: 0;
+    outline: none;
     box-sizing: border-box;
 }
 
@@ -15,4 +16,7 @@
 }
 ::-webkit-scrollbar-thumb:hover {
     background: #d69762;
+}
+body{
+    background-color: #ededed;
 }

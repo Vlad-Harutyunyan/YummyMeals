@@ -33,7 +33,7 @@ div.show > h1,div.show > h2,div.show > h3,div.show > h4,div.show > h5,div.show >
 hr{background:#ffffff45;border:none;padding:0.5px;}
 .food-card{position:relative;width:300px;height:300px;margin:20px 20px;border-radius:5px;box-shadow:0 0 10px 1px #00000045;background:black no-repeat right top ;background-size:auto 300px;color:white;overflow:hidden;}
 .view-more{font-size:13px;color:white;}
-.flexbox{display:flex;justify-content:center;vertical-align:middle;flex-wrap:wrap;width:90%;margin:5%;}
+.flexbox{display:flex;justify-content:center;vertical-align:middle;flex-wrap:wrap;}
 .food-card-content{background:black;padding:20px 30px;opacity:0.66;transition:0.5s ease all;}
 .hover-content{max-height:0;transition:0.5s ease-out all;overflow:hidden;}
 .food-card:hover .hover-content{max-height:300px;}
@@ -47,3 +47,10 @@ hr{background:#ffffff45;border:none;padding:0.5px;}
 .food-card{transform:scale(0.9);transition:0.5s all ease;}
 .food-card:hover{transform:scale(1);background-size:auto 310px;}
 .profile{color:white;}
+
+
+.nav_btns{
+  width: 100%;
+  text-align: center;
+  margin: 40px auto;
+}

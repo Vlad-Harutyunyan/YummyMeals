@@ -37,8 +37,15 @@ def create_app():
     @login_manager.unauthorized_handler
     def unauthorized_callback():
         return redirect('/user/login')
- 
+    
+    @app.template_filter('formatdatetime')
+    def format_datetime(value, format="%d %b %Y %I:%M %p"):
+        """Format a date time to (Default): d Mon YYYY HH:MM P"""
+        if value is None:
+            return ""
+        return value.strftime(format)
 
+        
     with app.app_context():
         from .users.routes import users_bp
         from .index.routes import index_bp
