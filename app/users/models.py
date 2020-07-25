@@ -13,7 +13,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
-    post = db.relationship('Post', backref='author', lazy=True)
+    comment = db.relationship('UserComments', backref='author', lazy=True)
 
     def __repr__(self):
         return f"User('{self.username}','{self.email}','{self.image_file}')"
@@ -48,3 +48,5 @@ class UserComments(db.Model):
     meal_id = db.Column(db.Integer, db.ForeignKey('meal.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
+    def __repr__(self):
+        return f"UserComments('{self.id}','{self.content}','{self.meal_id}','{self.user_id}')"
