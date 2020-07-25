@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<link rel="stylesheet" href= {{url_for('users.static' , filename = "user_profile.css" ) }} > </link>
+<div class="container">   
+    <div class="user-profile">
+        <div class="profile-header-background" style="background:url({{url_for('meals.static' , filename = "default.jpg")}}); width:100%; height:350px;background-size:cover;margin:0px auto;"></div> 
+        <div class="row">
+            <div class="col-md-4">
+                <div class="profile-info-left">
+                    <div class="text-center">
+                        <img src="{{url_for('users.static' ,filename='profile_pics/'+user.image_file) }}" alt="Avatar" class="avatar img-circle">
+                        <h2>{{user.username}}</h2>
+                    </div>
+                    <div class="section">
+                        <h3>About Me</h3>
+                        <p>Email - {{user.email}} </p>
+                    </div>
+                    <div class="section">
+                        <h3>Statistics</h3>
+                        <p><span class="badge">{{user_meals|length}}</span> Recipe Added</p>
+                        <p><span class="badge">{{ufm|length}}</span> Favorites Recipes</p>
+                        <p><span class="badge">{{comments|length}}</span> Comments</p>
+                    </div>
+                    <div class="section">
+                        <h3>Social</h3>
+                        <ul class="list-unstyled list-social">
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="profile-info-right">
+                    <ul class="nav nav-pills nav-pills-custom-minimal custom-minimal-bottom">
+                        <li class="active"><a href="#activities" data-toggle="tab">ACTIVITIES - comments</a></li>
+                        <li><a href="#followers" data-toggle="tab">My Favorites Recipes</a></li>
+                        <li><a href="#following" data-toggle="tab">My Recipes</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <!-- activities -->
+                                 <div class="tab-pane fade in active" id="activities">
+
+                       {% for comment in comments %}
+                            <div class="media activity-item">
+                                <a href="#" class="pull-left">
+                                    <img src={% if comment.meal.author_id != 1%}{{url_for('meals.static' , filename = comment.meal.img_link )}}{% else %}{{comment.meal.img_link}}{% endif %} alt="Avatar" class="media-object avatar">
+                                </a>
+                                <div class="media-body">
+                                    <p class="activity-title"><a href="#">{{user.username}}</a> comment <a href="{{url_for('meals.meal_info' , m_id = comment.meal.id )}}"> {{comment.meal.name}} </a> <small class="text-muted">- {{comment.date_posted|timeagofilter}}</small></p>
+                                    <small class="text-muted">{{comment.date_posted|formatdatetime}}</small>
+                                </div>
+                            </div>
+                       
+                       {% endfor %}
+                       </div>
+                        <!-- followers -->
+                        <div class="tab-pane fade" id="followers">
+                        {% for favorite in ufm %}  
+                            <div class="media user-follower">
+                                <img src="{% if favorite.meal.author_id != 1%}{{url_for('meals.static' , filename = favorite.meal.img_link )}}{% else %}{{favorite.meal.img_link}}{% endif %}" class="media-object pull-left">
+                                <div class="media-body">
+                                    <a href="{{url_for('meals.meal_info' , m_id = favorite.meal.id)}}">{{favorite.meal.name}}<br><span class="text-muted username">@{{favorite.meal.category.name}}</span></a>
+
+                                        {% if current_user.id == user.id %}
+                                                <a  style = "color:#fff" href = "{{url_for('meals.add_favorite' , meal_id = favorite.meal.id)}} " type="button" class="btn btn-sm btn-toggle-following pull-right"><i class="fa fa-checkmark-round"></i> <span>Remove</span></a>
+                                        {% endif %}
+
+                                </div>
+                            </div>
+                        {% endfor %}
+                        </div>
+                        
+                        <!-- end followers -->
+                        <!-- following -->
+                        <div class="tab-pane fade" id="following">
+                        {% for meal in user_meals %}
+                            <div class="media user-following">
+                                    <img src={% if meal.author_id != 1%}{{url_for('meals.static' , filename = meal.img_link )}}{% else %}{{meal.img_link}}{% endif %} alt="User Avatar" class="media-object pull-left">
+                                    <div class="media-body">
+                                        <a href="{{url_for('meals.add_favorite'  , meal_id = meal.id)}}">{{meal.name}}<br><span class="text-muted username">@{{meal.category.name}}</span></a>
+                                       {% if current_user.id == user.id %}
+                                            <!--
+                                         <a href="{{url_for('users.remove_meal' , m_id = meal.id , u_id = user.id)}}" style="color:#fff" type="button" class="btn btn-sm btn-danger pull-right"><i class="fa fa-close-round"></i> Delete </a>
+                                            -->
+                                       {% endif %}
+                                    
+                                    </div>
+                            </div>
+                        {% endfor %}
+                           
+                        </div>
+                        <!-- end following -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

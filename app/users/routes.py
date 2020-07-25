@@ -1,13 +1,13 @@
 from flask import render_template, url_for, redirect, flash, request, Blueprint
 from .forms import RegistrationForm, LoginForm, UpdateAccountForm, PostForm
-from .models import User, Post
+from .models import User, Post , User_Favorite ,UserComments
 from flask_login import login_user, current_user, logout_user, login_required
 from .. import bcrypt
 from .. import db
 import os
 from PIL import Image
 import secrets
-from ..meals.models import Meal , Ingredient , Category , Area , Meal_ingredient
+from ..meals.models import Meal , Ingredient , Category , Area , Meal_ingredient 
 from .scripts.logic import sort_ingrs_by_alphabet
 
 satatic_path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static'))
@@ -200,3 +200,27 @@ def new_recipe_post():
 @login_required
 def favourites():
     return render_template('favourites.html')
+
+@users_bp.route('/user_profile/<int:u_id>', methods=['GET'])
+def users_profiles(u_id) :
+    user = db.session.query(User).filter(User.id.like(u_id)).first()
+    user_favorite_meals = db.session.query(User_Favorite).filter(User_Favorite.user_id.like(u_id)).all()
+    user_meals = db.session.query(Meal).filter(Meal.author_id.like(u_id)).all()
+    comments = db.session.query(UserComments).filter(UserComments.user_id.like(u_id)).all()
+    return render_template(
+        'user_profile.html' , 
+        user = user ,
+        ufm = user_favorite_meals ,
+        user_meals = user_meals ,
+        comments = comments )
+
+
+@users_bp.route('/remove_meal/<int:m_id>/<int:u_id>', methods=['GET'])
+def remove_meal(m_id,u_id) :
+    meal = db.session.query(Meal).filter(Meal.id.like(m_id)).first()
+    if meal.author_id == current_user.id :
+        db.session.delete(meal)  
+        db.session.commit()
+        return redirect(url_for('users.users_profiles' , u_id = u_id))
+    else :
+        return 'You can not delete another user recipe'

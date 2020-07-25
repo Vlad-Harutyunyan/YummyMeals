@@ -36,9 +36,9 @@ class Meal_ingredient(db.Model):
 
     id = Column(Integer, primary_key=True)
     by_user = Column(Integer, default = 0 )
-    meal_id = Column(String,ForeignKey('meal.id'))
+    meal_id = Column(String,ForeignKey('meal.id', ondelete='CASCADE'))
     ingredient_id = Column(String,ForeignKey('ingredient.id'))
-    meal = relationship("Meal")
+    meal = relationship("Meal", backref="meal_ingredients", passive_deletes=True)
     ingredient = relationship("Ingredient")
 
 class Meal(db.Model):

@@ -29,11 +29,10 @@ Meal main page
       <div class="shadow"></div>
       </div>
       <div class="heading author show">
-        <h5>By <a href="#profile" class="profile">{{meal.user.username}}</a></h5>
+        <h5>By <a href="{{url_for('users.users_profiles' , u_id = meal.user.id)}}" class="profile">{{meal.user.username}}</a></h5>
       <div class="shadow"></div>
       </div>
       <div class="hover-content">
-         
       <div class="food-card-properties">
         <div><i class="fa fa-globe" aria-hidden="true"></i><p>{{meal.area.name}}</p></div>
         <div><i class="fa fa-tag" aria-hidden="true"></i><p>{% if meal.tags == None %} - {% else %} {{meal.tags}} {% endif %}</p></div>
