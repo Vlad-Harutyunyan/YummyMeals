@@ -155,7 +155,12 @@ def add_favorite(meal_id):
         check = True
         db.session.delete(bb)
         db.session.commit()
-    return redirect(url_for('meals.meal_info', m_id=meal_id))
+    print(request.referrer)
+
+    if 'meal/meal_info' in request.referrer :
+        return redirect(url_for('meals.meal_info', m_id=meal_id))
+    else :
+        return redirect(url_for('users.users_profiles', u_id=current_user.id))
 
 
 @meals_bp.route('/meal_info/<int:m_id>/', methods=['GET'])
