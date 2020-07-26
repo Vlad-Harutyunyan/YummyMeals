@@ -14,6 +14,15 @@
                         <img src="{{url_for('users.static' ,filename='profile_pics/'+user.image_file) }}" alt="Avatar" class="avatar img-circle">
                         <h2>{{user.username}}</h2>
                     </div>
+                     <div class="action-buttons">
+                        <div class="row">
+                        {% if user.id == current_user.id %}
+                           <div class="col-xs-6">
+                                <a href="{{url_for('users.account_get')}}" class="btn btn-success btn-block"><i class="fa fa-plus-round"></i> Settings </a>
+                            </div> 
+                        {% endif %}
+                        </div>
+                    </div>
                     <div class="section">
                         <h3>About Me</h3>
                         <p>Email - {{user.email}} </p>
@@ -80,7 +89,7 @@
                             <div class="media user-following">
                                     <img src={% if meal.author_id != 1%}{{url_for('meals.static' , filename = meal.img_link )}}{% else %}{{meal.img_link}}{% endif %} alt="User Avatar" class="media-object pull-left">
                                     <div class="media-body">
-                                        <a href="{{url_for('meals.add_favorite'  , meal_id = meal.id)}}">{{meal.name}}<br><span class="text-muted username">@{{meal.category.name}}</span></a>
+                                        <a href="{{url_for('meals.meal_info'  , m_id = meal.id)}}">{{meal.name}}<br><span class="text-muted username">@{{meal.category.name}}</span></a>
                                        {% if current_user.id == user.id %}
                                             <!--
                                          <a href="{{url_for('users.remove_meal' , m_id = meal.id , u_id = user.id)}}" style="color:#fff" type="button" class="btn btn-sm btn-danger pull-right"><i class="fa fa-close-round"></i> Delete </a>
