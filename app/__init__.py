@@ -6,6 +6,7 @@ import os
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 from datetime import datetime
+from flask_mail import Mail
  
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -15,13 +16,23 @@ migrate = Migrate()
 
 def create_app():
     """Construct the core app object."""
-   
+    global app, mail
+
     app = Flask(__name__)
     app.config['SECRET_KEY'] = "not_secret_key"
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///main.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     login_manager.login_view = 'login'
     login_manager.login_message_category = 'info'
+
+    app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
+    app.config['MAIL_PORT'] = 587
+    app.config['MAIL_USE_TLS'] = True
+
+    app.config['MAIL_USERNAME'] = os.environ.get('USER_EMAIL')
+    app.config['MAIL_PASSWORD'] = os.environ.get('USER_EMAIL_PASSWORD')
+
+    mail = Mail(app)
 
 
     # Initialize Plugins

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% for comment in comments %}
+      <article class="media content-section">
+          <img class="rounded_circle article-img" src="{{url_for('users.static' ,filename='profile_pics/'+comment.user.image_file ) }}">
+        <div class="media-body">
+          <div class="article-metadata">
+            <a class="mr-2" >{{ comment.author.username }}</a>
+            <small class="text-muted">{{ comment.date_posted.strftime('%Y-%m-%d') }}</small>
+            {% if comment.author == current_user %}
+              <div>
+                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('users.update_comment', comment_id=comment.id) }}">Update</a>
+                <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
+              </div>
+            <!-- Modal -->
+              <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="deleteModalLabel">Delete Post?</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <form action="{{ url_for('users.delete_comment', comment_id=comment.id) }}" method="POST">
+                        <input class="btn btn-danger" type="submit" value="Delete">
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+          <h2 class="article-title">{{ comment.title }}</h2>
+          <p class="article-content">{{ comment.content }}</p>
+        </div>
+      </article>
+
+{% endfor %}
+
+{% endblock content %}

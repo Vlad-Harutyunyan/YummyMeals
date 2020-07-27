@@ -1,14 +1,18 @@
-from flask import render_template, url_for, redirect, flash, request, Blueprint
-from .forms import RegistrationForm, LoginForm, UpdateAccountForm, PostForm
-from .models import User, Post , User_Favorite ,UserComments
+from flask import (render_template, url_for, redirect,
+                   flash, request, Blueprint, abort)
+from .forms import (RegistrationForm, LoginForm, UpdateAccountForm,
+                    CommentForm, RequestResetForm, ResetPasswordForm)
+from .models import User, User_Favorite ,UserComments
 from flask_login import login_user, current_user, logout_user, login_required
-from .. import bcrypt
-from .. import db
+from .. import bcrypt, mail, db
 import os
 from PIL import Image
 import secrets
 from ..meals.models import Meal , Ingredient , Category , Area , Meal_ingredient 
 from .scripts.logic import sort_ingrs_by_alphabet
+from datetime import datetime
+from flask_mail import Message
+
 
 satatic_path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static'))
 
@@ -110,18 +114,6 @@ def account_get():
 @users_bp.route('/new_recipe', methods=["GET"])
 @login_required
 def new_recipe_get():
-    form = PostForm()
-    if form.validate_on_submit():
-        meal = Post(title=form.title.data, content=form.content.data)
-        print(meal)
-
-        # nerqevi masy vorpes orinaka te vonc kara database um avelacni
-    #if form.validate_on_submit():
-    #    post = Post(title=form.title.data, content=form.content.data, author=current_user)
-    #    db.session.add(post)
-    #    db.session.commit()
-    #    flash('Your post has been created!', 'success')
-    #    return redirect(url_for('index'))
     context = { 
         'ingr' : Ingredient.query.all(),
         'areas' : Area.query.all(),
@@ -132,19 +124,9 @@ def new_recipe_get():
                            title='New Post', legend='New Post' , context = context, alp = alphabetic_sorted_ingrs )
 
 
-
-
 @users_bp.route('/new_recipe', methods=["POST"])
 @login_required
 def new_recipe_post():
-        # nerqevi masy vorpes orinaka te vonc kara database um avelacni
-    #if form.validate_on_submit():
-    #    post = Post(title=form.title.data, content=form.content.data, author=current_user)
-    #    db.session.add(post)
-    #    db.session.commit()
-    #    flash('Your post has been created!', 'success')
-    #    return redirect(url_for('index'))
-
     context = { 
         'ingr' : Ingredient.query.all(),
         'areas' : Area.query.all(),
@@ -201,6 +183,7 @@ def new_recipe_post():
 def favourites():
     return render_template('favourites.html')
 
+
 @users_bp.route('/user_profile/<int:u_id>', methods=['GET'])
 def users_profiles(u_id) :
     user = db.session.query(User).filter(User.id.like(u_id)).first()
@@ -224,3 +207,110 @@ def remove_meal(m_id,u_id) :
         return redirect(url_for('users.users_profiles' , u_id = u_id))
     else :
         return 'You can not delete another user recipe'
+
+
+@users_bp.route('/<string:username>/comments')
+def user_comments(username):
+    page = request.args.get('page', 1, type=int)
+    user = User.query.filter_by(username=username).first_or_404()
+    comments = UserComments.query \
+        .filter_by(author=user) \
+        .order_by(UserComments.date_posted.desc()) \
+        .paginate(page=page, per_page=2)
+    return redirect(url_for('users.comments',
+                            user_id=user.id, comments=comments))
+
+
+@users_bp.route('/<int:user_id>/comments')
+def comments(user_id):
+    comments = UserComments.query.\
+        filter_by(user_id=user_id).\
+        order_by(UserComments.date_posted.desc()).all()
+    return render_template('comments.html',
+                           user_id=user_id, comments=comments)
+
+
+@users_bp.route("/update/<int:comment_id>", methods=['GET', 'POST'])
+@login_required
+def update_comment(comment_id):
+    comment = UserComments.query.get_or_404(comment_id)
+    if comment.author != current_user:
+        abort(403)
+    form = CommentForm()
+    if form.is_submitted():
+        comment.content = form.content.data
+        comment.date_posted = datetime.utcnow()
+        db.session.commit()
+        flash('Your comment has been updated!', 'success')
+        return redirect(url_for('users.user_comments', username=comment.user_id))
+    elif request.method == "GET":
+        form.content.data = comment.content
+
+    return render_template('update_comment.html', form=form, legend="Update Comment")
+
+
+@users_bp.route("/delete/<int:comment_id>", methods=['POST'])
+@login_required
+def delete_comment(comment_id):
+    comment = UserComments.query.get_or_404(comment_id)
+    if comment.author != current_user:
+        abort(403)
+    db.session.delete(comment)
+    db.session.commit()
+    flash('Your comment has been deleted!', 'success')
+    return redirect(url_for('users.users_comments', username=comment.user_id))
+
+
+def send_reset_email(user):
+    token = user.get_reset_token()
+    msg = Message('Password Reset Request',
+                  sender='noreply@demo.com',
+                  recipients=[user.email])
+    msg.body = f'''To reset your password, visit the following link:
+{url_for('users.reset_token', token=token, _external=True)}
+
+If you did not make this request then simply ignore this email and no changes will be made.
+'''
+    mail.send(msg)
+
+
+@users_bp.route("/reset_password", methods=['GET', 'POST'])
+def reset_request():
+    if current_user.is_authenticated:
+        return redirect(url_for('index.index'))
+    form = RequestResetForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        send_reset_email(user)
+        flash('An email has been sent with instructions to reset your password.', 'info')
+        return redirect(url_for('users.login'))
+    return render_template('reset_request.html',
+                           title='Reset Password', form=form)
+
+
+@users_bp.route("/reset_password/<token>", methods=['GET', 'POST'])
+def reset_token(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('index.index'))
+    user = User.verify_reset_token(token)
+    if user is None:
+        flash('That is an invalid or expired token', 'warning')
+        return redirect(url_for('users.reset_request'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user.password = hashed_password
+        db.session.commit()
+        flash('Your password has been updated! You are now able to log in', 'success')
+        return redirect(url_for('users.login'))
+    return render_template('reset_token.html',
+                           title='Reset Password', form=form)
+
+
+
+
+
+
+
+
+

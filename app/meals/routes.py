@@ -2,7 +2,7 @@ from flask import (
     Blueprint,
     url_for,
     redirect,
-    render_template, request
+    render_template, request, flash
 )
 
 import os
@@ -176,7 +176,10 @@ def meal_info(m_id):
     except :
         check = False
     page = request.args.get('page', 1, type=int)
-    comments = UserComments.query.filter(UserComments.meal_id == m_id).paginate(per_page=5, page=page)
+    comments = UserComments.query.\
+        filter(UserComments.meal_id == m_id).\
+        order_by(UserComments.date_posted.desc()).\
+        paginate(per_page=2, page=page)
     fav_count = len(db.session.query(User_Favorite).filter(User_Favorite.meal_id.like(m_id)).all())
     return render_template('meal_info.html',
                            meal=meal, ingredients=ingredients, check=check,

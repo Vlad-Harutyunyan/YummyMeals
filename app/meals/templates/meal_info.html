@@ -88,17 +88,17 @@ Meal main page
         <div class="pie-recipe__tips__text"> 
             <div class="comments-container">
                 <h1>Comments</h1>
-                <p>Total | {{comments.items|length}} comment</p>
+                <p>Total | {{comments.total}} comment</p>
                     {% for comment in comments.items %}
                                 <ul id="comments-list" class="comments-list">
                                     <li>
                                         <div class="comment-main-level">
                                             <!-- Avatar -->
-                                            <div class="comment-avatar"><img src={{url_for('users.static' ,filename="profile_pics/"+comment.user.image_file ) }} alt=""></div>
+                                            <div class="comment-avatar"><img src="{{url_for('users.static' ,filename='profile_pics/'+comment.user.image_file ) }}" alt=""></div>
                                             <!-- Contenedor del Comentario -->
                                             <div class="comment-box">
                                                 <div class="comment-head">
-                                                    <h6 class="comment-name by-author"><a href="#">{{comment.user.username}}</a></h6>
+                                                    <h6 class="comment-name by-author"><a href="{{ url_for('users.user_comments', username=comment.author.username) }}">{{comment.user.username}}</a></h6>
                                                     <span>{{comment.date_posted|formatdatetime}} </span>
                                                 </div>
                                                 <div class="comment-content">
@@ -106,21 +106,23 @@ Meal main page
                                                 </div>
                                             </div>
                                         </div>
-                            {% endfor %}
-                            </div>
-                        </div>
-                             {% for page_num in comments.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
-                                {% if page_num %}
-                                    {% if comments.page == page_num %}
-                                        <a class="btn btn-info mb-4" href="{{ url_for('meals.meal_info', m_id=m_id, page=page_num) }}">{{ page_num }}</a>
-                                    {% else %}
-                                        <a class="btn btn-outline-info mb-4" href="{{ url_for('meals.meal_info', m_id=m_id, page=page_num) }}">{{ page_num }}</a>
-                                    {% endif %}
-                                {% else %}
-                                    ...
-                                {% endif %}
-                            {% endfor %}
-                    </div>
-                </div>
+                                    </li>
+                                </ul>
+                    {% endfor %}
+            </div>
+            </div>
+                 {% for page_num in comments.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                    {% if page_num %}
+                        {% if comments.page == page_num %}
+                            <a class="btn btn-info mb-4" href="{{ url_for('meals.meal_info', m_id=m_id, page=page_num) }}">{{ page_num }}</a>
+                        {% else %}
+                            <a class="btn btn-outline-info mb-4" href="{{ url_for('meals.meal_info', m_id=m_id, page=page_num) }}">{{ page_num }}</a>
+                        {% endif %}
+                    {% else %}
+                        ...
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
 {% endblock content %}
    
