@@ -57,7 +57,7 @@ def index():
     for x in fav:
         if x.category_id in updated_list:
             print("ok")
-            msg = Message('Hello', sender='yummymealbook@gmail.com',
+            msg = Message('New Recipe', sender='yummymealbook@gmail.com',
                           recipients=[f'{User.query.filter(User.id==x.user_id).first().email}'])
             msg.body = f'Hello dear {User.query.filter(User.id==x.user_id).first().username}!  We have good news for you!   A new recipe for your selected category "{Category.query.filter(Category.id==x.category_id).first().name}" has arrived!'
             mail.send(msg)
