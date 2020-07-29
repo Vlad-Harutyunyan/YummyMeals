@@ -67,7 +67,7 @@ def fill_meals_to_db():
         a = Meal(id=i[0],name=i[1], category_id=i[2], area_id=i[3], instructions=i[5], img_link=i[6], tags=i[7],
                  video_link=i[8])
         db.session.add(a)
-        db.session.commit() 
+        db.session.commit()
 
 def fill_meal_ingredient_to_db():
     meal_ingredient=read_from_txt(f"{thisfolder}/final_lists/meal_ingredient.txt",'meal_ingredient')
@@ -85,10 +85,10 @@ def fill_meal_ingredient_to_db():
 
 
 def fill_all():
-    fill_areas_to_db()
-    fill_meal_ingredient_to_db()
-    fill_categories_to_db()
-    fill_ingredients_to_db()
+    # fill_areas_to_db()
+    # fill_meal_ingredient_to_db()
+    # fill_categories_to_db()
+    # fill_ingredients_to_db()
     fill_meals_to_db()
     print('All done successfuly!')
 #

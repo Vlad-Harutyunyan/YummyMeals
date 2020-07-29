@@ -6,33 +6,20 @@ from flask import (
 )
 
 import os
-
 satatic_path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static'))
 from .models import Meal, Ingredient, Category, Area, Meal_ingredient
 from .. import db
-
-from ..users.models import User_Favorite
-
+from ..users.models import User_Favorite, User_Favorite_Category, User
 from flask_paginate import Pagination, get_page_parameter
 import re
 from flask_login import login_required
-
-def name_correct(name):
-    matches = re.finditer(" ", name)
-    list1 = [match.start() for match in matches]
-    name1 = name[0]
-    for i in range(0, len(name) - 1):
-        if i in list1:
-            name1 += name[i] + name[i + 1].upper()
-        else:
-            name1 += name[i + 1].lower()
-    name1 = name1.replace("  ", " ")
-    return (name1)
-
-
+# from .send_msg import Mail,app, send_mail
+from flask_mail import Mail, Message
+from .lib.funct import name_correct
 from ..users.forms import CommentForm
 from ..users.models import UserComments
 from flask_login import current_user
+
 
 meals_bp = Blueprint(
     'meals',
@@ -102,7 +89,7 @@ def meal_search():
             if meallist.has_next else None
         prev_url = url_for('meals.test_route', page=meallist.prev_num) \
             if meallist.has_prev else None
-            
+
         return render_template(
         'main_page.html',
         meallist=meallist,
@@ -196,3 +183,47 @@ def meal_info_post(m_id):
         db.session.commit()
         return redirect(url_for('meals.meal_info',
                                 m_id=m_id))
+
+
+@meals_bp.route('/add-favorite-category/<int:category_id>', methods=['GET'])
+@login_required
+def add_favorite_category(category_id):
+    # Check = False
+
+    bb = db.session.query(User_Favorite_Category).filter(
+        User_Favorite_Category.category_id.like(category_id),
+        User_Favorite_Category.user_id.like(current_user.id)).first()
+
+    if not bb:
+        check = False
+        user_favorite_category = User_Favorite_Category(
+            user_id=current_user.id,
+            category_id=category_id
+        )
+
+        db.session.add(user_favorite_category)
+        db.session.commit()
+        print(check)
+    else:
+        check = True
+        db.session.delete(bb)
+        db.session.commit()
+        print(check)
+    return redirect(url_for('meals.categories_list'))
+
+
+@meals_bp.route('/search/<meal_name>/')
+def meal_search_name(meal_name):
+    meal_name = name_correct(meal_name)
+    meal = Meal.query.filter_by(name=meal_name).first()
+    if meal:
+        form = CommentForm()
+        check = False
+        page = request.args.get('page', 1, type=int)
+        comments = UserComments.query.filter(UserComments.meal_id == meal.id).paginate(per_page=2, page=page)
+        ingredients = Meal_ingredient.query.filter_by(meal_id=meal.id).all()
+        return render_template('meal_info.html', meal=meal, ingredients=ingredients,
+                           form=form,check = check,comments=comments,page=page)
+    else:
+
+        return redirect('/meal')

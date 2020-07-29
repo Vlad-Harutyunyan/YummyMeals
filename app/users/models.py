@@ -1,5 +1,5 @@
 from datetime import datetime
-from .. import db, login_manager, app
+from .. import db, login_manager,app
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
@@ -30,7 +30,7 @@ class User(db.Model, UserMixin):
         return User.query.get(user_id)
 
     def __repr__(self):
-        return f"User('{self.username}','{self.email}','{self.image_file}')"
+        return f"User('{self.id}','{self.username}','{self.email}','{self.image_file}')"
 
 
 class User_Favorite(db.Model):
@@ -66,3 +66,14 @@ class UserComments(db.Model):
        
     def __repr__(self):
         return f"UserComments('{self.id}','{self.content}','{self.meal_id}','{self.user_id}')"
+
+
+class User_Favorite_Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id =  db.Column(db.Integer, db.ForeignKey('user.id'))
+    category_id =  db.Column(db.Integer, db.ForeignKey('category.id'))
+    category = db.relationship('Category')
+    user = db.relationship('User')
+
+    def __repr__(self):
+        return f"User_Favorite_Category('{self.user_id}','{self.category_id}')"

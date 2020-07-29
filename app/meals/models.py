@@ -5,6 +5,7 @@ import os
 import json
 from .. import db
 from ..users.models import User
+from datetime import datetime
 
 
 class Area(db.Model):
@@ -36,9 +37,9 @@ class Meal_ingredient(db.Model):
 
     id = Column(Integer, primary_key=True)
     by_user = Column(Integer, default = 0 )
-    meal_id = Column(String,ForeignKey('meal.id', ondelete='CASCADE'))
+    meal_id = Column(String,ForeignKey('meal.id'))
     ingredient_id = Column(String,ForeignKey('ingredient.id'))
-    meal = relationship("Meal", backref="meal_ingredients", passive_deletes=True)
+    meal = relationship("Meal")
     ingredient = relationship("Ingredient")
 
 class Meal(db.Model):
@@ -53,9 +54,11 @@ class Meal(db.Model):
     img_link = Column(String , default = 'default.jpg')
     tags = Column(String)
     video_link = Column(String)
+    date_posted = Column(db.DateTime, nullable=False, default=datetime.utcnow())
     area = relationship("Area")
     category = relationship("Category")
     user = relationship("User")
+
 
 
 
