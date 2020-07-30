@@ -7,12 +7,14 @@ from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 from datetime import datetime
 from flask_mail import Mail
+from flask_admin import Admin
+
 
 db = SQLAlchemy()
 login_manager = LoginManager()
 bcrypt = Bcrypt()
 migrate = Migrate()
-
+admin = Admin(name='Admin_panel', template_mode='bootstrap3')
 
 
 def create_app():
@@ -43,6 +45,8 @@ def create_app():
     manager = Manager(app)
     manager.add_command('db', MigrateCommand)
     migrate.init_app(app, db)
+    
+
 
     # handle login_requerd for blueprint
     @login_manager.unauthorized_handler
@@ -95,12 +99,27 @@ def create_app():
             return str(int(day_diff / 30)) + " months ago"
         return str(int(day_diff / 365)) + " years ago"
 
+
+    #admin panel 
+
+
+
+
     with app.app_context():
         from .users.routes import users_bp
         from .index.routes import index_bp
         from .meals.routes import meals_bp
         from .errors.routes import errors_bp
         from .mail.routes import mail_bp
+
+        #admin panel register
+        from .admin_panel import routes
+        from .admin_panel.routes import AdminIndexPage
+        admin.init_app(app,index_view=AdminIndexPage(
+        name='Home',
+        url='/admin/',
+        ))
+
 
         # Register Blueprints
         app.register_blueprint(errors_bp)
@@ -110,5 +129,5 @@ def create_app():
         app.register_blueprint(mail_bp)
 
         db.create_all()
-
+  
         return app

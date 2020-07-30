@@ -6,13 +6,10 @@
             <div class="media-body">
                 <h2 class="account-heading">{{ current_user.username }}</h2>
                 <p class="text-secondary">{{ current_user.email }}</p>
-                <span><a href="{{ url_for('users.favourites') }}">My Favourites &#11088</a></span>
             </div>
         </div>
-
-
             <form method="POST" action="" enctype="multipart/form-data">
-                {{ form.hidden_tag() }}
+                {{ form.hidden_tag() }} 
                 <fieldset class="form-group">
                     <legend class="border-bottom mb-4">Account Info</legend>
                     <div class="form-group">

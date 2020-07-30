@@ -94,11 +94,37 @@ Meal main page
                                     <li>
                                         <div class="comment-main-level">
                                             <!-- Avatar -->
+                                            
                                             <div class="comment-avatar"><img src="{{url_for('users.static' ,filename='profile_pics/'+comment.user.image_file ) }}" alt=""></div>
                                             <!-- Contenedor del Comentario -->
+                                               {% if comment.author == current_user %}
+                                            <div>
+                                                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('users.update_comment', comment_id=comment.id) }}">Update</a>
+                                                <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
+                                            </div>
+                                            <!-- Modal -->
+                                            <div class="modal fade " id="deleteModal" tabindex="1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" style = "margin: 120px auto; z-index:10;" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                    <h5 class="modal-title" id="deleteModalLabel">Delete Post?</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <form action="{{ url_for('users.delete_comment', comment_id=comment.id) }}" method="POST">
+                                                        <input class="btn btn-danger" type="submit" value="Delete">
+                                                    </form>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            </div>
+                                            {% endif %}
                                             <div class="comment-box">
                                                 <div class="comment-head">
-                                                    <h6 class="comment-name by-author"><a href="{{ url_for('users.user_comments', username=comment.author.username) }}">{{comment.user.username}}</a></h6>
+                                                    <h6 class="comment-name by-author"><a href="{{ url_for('users.users_profiles', u_id=comment.author.id) }}">{{comment.user.username}}</a></h6>
                                                     <span>{{comment.date_posted|formatdatetime}} </span>
                                                 </div>
                                                 <div class="comment-content">

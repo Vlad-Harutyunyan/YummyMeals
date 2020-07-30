@@ -30,6 +30,12 @@ meals_bp = Blueprint(
     static_url_path=satatic_path
 )
 
+def get_fav_catgories(category_id):
+    check = db.session.query(User_Favorite_Category).filter(
+        User_Favorite_Category.category_id.like(category_id),
+        User_Favorite_Category.user_id.like(current_user.id)).first()
+    return check
+
 
 @meals_bp.route('/fill_db')
 def fill_db():
@@ -60,8 +66,9 @@ def test_route():
 @meals_bp.route('/categories')
 def categories_list():
     categories = Category.query.all()
-    return render_template('category_list.html', categories=categories)
-
+    checker = db.session.query(Category).join(User_Favorite_Category).filter_by(user_id = current_user.id).all() 
+    return render_template('category_list.html', categories=categories , checker = checker)
+  
 
 @meals_bp.route('/search_by_fullname/<meal_name>/')
 def meal_search_by_fullname(meal_name):
@@ -109,6 +116,7 @@ def meals_by_category(c_id):
         if meallist.has_next else None
     prev_url = url_for('meals.meals_by_category', c_id=c_id, page=meallist.prev_num) \
         if meallist.has_prev else None
+
 
     return render_template(
 
@@ -203,12 +211,11 @@ def add_favorite_category(category_id):
 
         db.session.add(user_favorite_category)
         db.session.commit()
-        print(check)
     else:
         check = True
         db.session.delete(bb)
         db.session.commit()
-        print(check)
+
     return redirect(url_for('meals.categories_list'))
 
 

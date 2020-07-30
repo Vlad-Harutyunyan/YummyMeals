@@ -15,6 +15,12 @@ class User(db.Model, UserMixin):
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
     comment = db.relationship('UserComments', backref='author', lazy=True)
+    is_admin = db.Column(db.Boolean , default = False)
+    
+    def check_admin_rights(self):
+        if self.is_admin:
+            return True
+        return False
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(app.config['SECRET_KEY'], expires_sec)
@@ -37,7 +43,7 @@ class User_Favorite(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id =  db.Column(db.Integer, db.ForeignKey('user.id' ,ondelete='CASCADE'))
     meal_id =  db.Column(db.Integer, db.ForeignKey('meal.id'))
-    meal = db.relationship('Meal', backref="user_favorite", passive_deletes=True)
+    meal = db.relationship('Meal', backref="user_favorite")
     user = db.relationship('User')
 
     def __repr__(self):
@@ -61,9 +67,8 @@ class UserComments(db.Model):
     content = db.Column(db.Text, nullable=False)
     meal_id = db.Column(db.Integer, db.ForeignKey('meal.id' , ondelete='CASCADE'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    meal = db.relationship('Meal', backref="usercomments", passive_deletes=True)
+    meal = db.relationship('Meal', backref="usercomments")
     user = db.relationship('User')
-       
     def __repr__(self):
         return f"UserComments('{self.id}','{self.content}','{self.meal_id}','{self.user_id}')"
 

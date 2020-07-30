@@ -242,7 +242,7 @@ def update_comment(comment_id):
         comment.date_posted = datetime.utcnow()
         db.session.commit()
         flash('Your comment has been updated!', 'success')
-        return redirect(url_for('users.user_comments', username=comment.user_id))
+        return redirect(url_for('meals.meal_info', m_id=comment.meal_id))
     elif request.method == "GET":
         form.content.data = comment.content
 
@@ -253,13 +253,15 @@ def update_comment(comment_id):
 @login_required
 def delete_comment(comment_id):
     comment = UserComments.query.get_or_404(comment_id)
+    m_id = comment.meal_id
     if comment.author != current_user:
         abort(403)
     db.session.delete(comment)
     db.session.commit()
     flash('Your comment has been deleted!', 'success')
-    return redirect(url_for('users.users_comments', username=comment.user_id))
+    return redirect(url_for('meals.meal_info', m_id=m_id))
 
+ 
 
 def send_reset_email(user):
     token = user.get_reset_token()

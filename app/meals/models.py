@@ -35,7 +35,7 @@ class Ingredient(db.Model):
 class Meal_ingredient(db.Model):
     __tablename__ = 'meal_ingredient'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key = True)
     by_user = Column(Integer, default = 0 )
     meal_id = Column(String,ForeignKey('meal.id'))
     ingredient_id = Column(String,ForeignKey('ingredient.id'))
