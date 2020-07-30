@@ -35,7 +35,7 @@ visit 127.0.0.1/home in browser
 
 After changing database model , write this commands in project folder 
 
-1 : flask db init 
+1 : flask db init or flask db stamp head (if migration folder alredy exsist)
 
 2 : flask db migrate
 
