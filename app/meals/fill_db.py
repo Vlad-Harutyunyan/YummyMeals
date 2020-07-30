@@ -91,7 +91,3 @@ def fill_all():
     # fill_ingredients_to_db()
     fill_meals_to_db()
     print('All done successfuly!')
-#
-#
-# fill_all()
-# delete_Area_data()
