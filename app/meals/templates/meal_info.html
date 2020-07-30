@@ -49,8 +49,12 @@ Meal main page
                 <h4>Ingredients</h4>
                 <ul>
                     {% for ingredient in ingredients %}
-                    
-                        <li> {{ingredient.ingredient.name}}</li>
+						   {% if ingredient.ingredient.description %}
+                           <li>    <a href ="{{ url_for('meals.ingr_info', ing_id=ingredient.ingredient_id) }}">{{ingredient.ingredient.name}}</a> </li>
+					      {% else %}
+						         <li>    {{ingredient.ingredient.name}} </li>
+					      {% endif%}		
+																						 
                     {% endfor %}
                 </ul>
             </div>
