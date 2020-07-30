@@ -41,3 +41,6 @@ After changing database model , write this commands in project folder
 
 3 : [flask db upgrade]
 
+
+test
+
