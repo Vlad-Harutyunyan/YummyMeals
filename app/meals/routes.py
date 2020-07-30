@@ -221,16 +221,24 @@ def add_favorite_category(category_id):
 
 @meals_bp.route('/search/<meal_name>/')
 def meal_search_name(meal_name):
-    meal_name = name_correct(meal_name)
-    meal = Meal.query.filter_by(name=meal_name).first()
-    if meal:
-        form = CommentForm()
-        check = False
-        page = request.args.get('page', 1, type=int)
-        comments = UserComments.query.filter(UserComments.meal_id == meal.id).paginate(per_page=2, page=page)
-        ingredients = Meal_ingredient.query.filter_by(meal_id=meal.id).all()
-        return render_template('meal_info.html', meal=meal, ingredients=ingredients,
-                           form=form,check = check,comments=comments,page=page)
-    else:
-
+    if not meal_name in name_correct(meal_name):
         return redirect('/meal')
+    else:
+        for name1 in name_correct(meal_name):
+            meal = Meal.query.filter_by(name=name1).first()
+            if meal:
+                form = CommentForm()
+                check = False
+                page = request.args.get('page', 1, type=int)
+                comments = UserComments.query.filter(UserComments.meal_id == meal.id).paginate(per_page=2, page=page)
+                ingredients = Meal_ingredient.query.filter_by(meal_id=meal.id).all()
+                return redirect(url_for('meals.meal_info',m_id=meal.id))
+
+
+@meals_bp.route('/ingredient/<int:ing_id>/')
+@login_required
+def ingr_info(ing_id):
+    ingredient = Ingredient.query.filter_by(id=int(ing_id)).first()
+    return render_template('ingredient_info.html', name=ingredient.name, description=ingredient.description )
+            
+            
