@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1 class="mb-3">Comments by {{ user.username }} ({{ comments.total }})</h1>    {% for comment in comments.items %}
+            <article class="media content-section">
+                <img class="rounded_circle article-img" src="{{ url_for('static', filename='profile_pics/' + comment.author.image_file) }}">
+              <div class="media-body">
+                <div class="article-metadata">
+                  <a class="mr-2" href="{{ url_for('users.user_comments', username=comment.author.username) }}">{{ comment.author.username }}</a>
+                  <small class="text-muted">{{ comment.date_posted.strftime('%Y-%m-%d') }}</small>
+                </div>
+                <p class="article-content">{{ comment.content }}</p>
+              </div>
+            </article>
+    {% endfor %}
+    {% for page_num in comments.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+            {% if comments.page == page_num %}
+                <a class="btn btn-info mb-4" href="{{ url_for('users.user_comments', username=user.username, page=page_num) }}">{{ page_num }}</a>
+            {% else %}
+                <a class="btn btn-outline-info mb-4" href="{{ url_for('users.user_comments', username=user.username, page=page_num) }}">{{ page_num }}</a>
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}
+
+{% endblock content %}

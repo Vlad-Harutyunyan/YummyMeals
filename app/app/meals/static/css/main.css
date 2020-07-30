@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+html{
+  font-family:"Open Sans",sans-serif;
+  height:100%;
+  width:100%;
+  background:whitesmoke;
+}
+div.show{position:relative;overflow:hidden;width:fit-content;}
+div.show > h1,div.show > h2,div.show > h3,div.show > h4,div.show > h5,div.show > p{animation:1s show-slow ease-in;}
+.shadow{position:absolute;bottom:0;height:15px;width:100%;background:#BBB;transform:translateY(101%);}
+.show > .shadow{animation:zoop 0.8s ease-in;}
+@keyframes zoop{
+  0%{transform:translateY(101%);}
+  70%{transform:translateY(40%);}
+  100%{transform:translateY(-100%);}
+}
+@keyframes show-slow{
+  0%{opacity:0;}
+  60%{opacity:0;transform:translateY(100%);}
+  100%{opacity:1;transform:translateY(0%);};
+}
+.heading > *{margin:0;padding:4px 0;line-height:1.125;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px;}
+.author > h5{opacity:0.56;line-height:1.25;}
+.content{opacity:0.45;font-size:12px;height:15vh;overflow:hidden;line-height:1.66;margin:10px 0 5px;position:relative;}
+.content > .show-less{
+    width:100%;
+    height:50%;
+    position:absolute;
+    bottom:0;
+    left:0;
+    background: linear-gradient(180deg,transparent,black);
+}
+hr{background:#ffffff45;border:none;padding:0.5px;}
+.food-card{position:relative;width:300px;height:300px;margin:20px 20px;border-radius:5px;box-shadow:0 0 10px 1px #00000045;background:black no-repeat right top ;background-size:auto 300px;color:white;overflow:hidden;}
+.view-more{font-size:13px;color:white;}
+.flexbox{display:flex;justify-content:center;vertical-align:middle;flex-wrap:wrap;}
+.food-card-content{background:black;padding:20px 30px;opacity:0.66;transition:0.5s ease all;}
+.hover-content{max-height:0;transition:0.5s ease-out all;overflow:hidden;}
+.food-card:hover .hover-content{max-height:300px;}
+.food-card:hover .food-card-content{max-height:300px;}
+.food-card-properties{text-align:center;padding:10px 5px;}
+.food-card-properties > div{border-right:1px solid #ffffff45;width:fit-content;padding:0 10px;display:inline-block;}
+.food-card-properties > div:last-child{border-right:none;}
+.food-card-properties > div > i{font-size:16px;}
+.food-card-properties > div > p{font-size:10px;margin:0;}
+
+.food-card{transform:scale(0.9);transition:0.5s all ease;}
+.food-card:hover{transform:scale(1);background-size:auto 310px;}
+.profile{color:white;}
+
+
+.nav_btns{
+  width: 100%;
+  text-align: center;
+  margin: 40px auto;
+}
