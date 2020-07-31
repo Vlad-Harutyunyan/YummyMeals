@@ -31,6 +31,7 @@
                         <h3>Statistics</h3>
                         <p><span class="badge">{{user_meals|length}}</span> Recipe Added</p>
                         <p><span class="badge">{{ufm|length}}</span> Favorites Recipes</p>
+						<p><span class="badge">{{ufc|length}}</span> Favorites Categories</p>
                         <p><span class="badge">{{comments|length}}</span> Comments</p>
                     </div>
                     <div class="section">
@@ -46,7 +47,9 @@
                     <ul class="nav nav-pills nav-pills-custom-minimal custom-minimal-bottom">
                         <li class="active"><a href="#activities" data-toggle="tab">ACTIVITIES - comments</a></li>
                         <li><a href="#followers" data-toggle="tab">My Favorite Recipes</a></li>
+						<li><a href="#followed" data-toggle="tab">My Favorite Categories</a></li>
                         <li><a href="#following" data-toggle="tab">My Recipes</a></li>  
+						
                     </ul>
                     <div class="tab-content">
                         <!-- activities -->
@@ -64,7 +67,8 @@
                             </div>
                        
                        {% endfor %}
-                       </div>
+					   
+					    </div>
                         <!-- followers -->
                         <div class="tab-pane fade" id="followers">
                         {% for favorite in ufm %}  
@@ -81,8 +85,30 @@
                             </div>
                         {% endfor %}
                         </div>
+					    <!-- end followers -->
+						
+						
+
+						
+                        <!-- followed -->
+                        <div class="tab-pane fade" id="followed">
+                        {% for favorite in ufc %} 
+ 
+                            <div class="media user-follower">
+                                <img src="{{favorite.category.img_link}}" class="media-object pull-left">
+								<div class="media-body">
+								<a href="{{url_for('meals.meals_by_category', c_id = favorite.category_id)}}">@{{favorite.category.name}}<br><span class="text-muted username"</a>
+
+                                        {% if current_user.id == user.id %}
+                                                <a  style = "color:#fff" href = "{{url_for('meals.add_favorite_category' , category_id = favorite.category_id)}} " type="button" class="btn btn-sm btn-toggle-following pull-right"><i class="fa fa-checkmark-round"></i> <span>Remove</span></a>
+                                        {% endif %}
+								</div>
+                                
+                            </div>
+                        {% endfor %}
+                        </div>
                         
-                        <!-- end followers -->
+                        <!-- end followed -->
                         <!-- following -->
                         <div class="tab-pane fade" id="following">
                         {% for meal in user_meals %}
