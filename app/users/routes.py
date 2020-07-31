@@ -190,10 +190,12 @@ def users_profiles(u_id) :
     user_favorite_meals = db.session.query(User_Favorite).filter(User_Favorite.user_id.like(u_id)).all()
     user_meals = db.session.query(Meal).filter(Meal.author_id.like(u_id)).all()
     comments = db.session.query(UserComments).filter(UserComments.user_id.like(u_id)).all()
+    favorite_categories = db.session.query(User_Favorite_Category).filter(User_Favorite_Category.user_id.like(u_id)).all()    
     return render_template(
         'user_profile.html' , 
         user = user ,
         ufm = user_favorite_meals ,
+        ufc = favorite_categories,
         user_meals = user_meals ,
         comments = comments )
 
