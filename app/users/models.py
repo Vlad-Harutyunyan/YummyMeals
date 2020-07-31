@@ -69,9 +69,19 @@ class UserComments(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     meal = db.relationship('Meal', backref="usercomments")
     user = db.relationship('User')
+
     def __repr__(self):
         return f"UserComments('{self.id}','{self.content}','{self.meal_id}','{self.user_id}')"
 
+class Support_Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    content = db.Column(db.Text, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship('User')
+
+    def __repr__(self):
+        return f"Support Message -  '{self.id}','{self.user.id}','{self.content}' "
 
 class User_Favorite_Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)

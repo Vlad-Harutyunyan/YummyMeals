@@ -31,8 +31,8 @@
                         <h3>Statistics</h3>
                         <p><span class="badge">{{user_meals|length}}</span> Recipe Added</p>
                         <p><span class="badge">{{ufm|length}}</span> Favorites Recipes</p>
-						<p><span class="badge">{{ufc|length}}</span> Favorites Categories</p>
                         <p><span class="badge">{{comments|length}}</span> Comments</p>
+                        <p><span class="badge">{{ufc|length}}</span> Favorites Categories</p>
                     </div>
                     <div class="section">
                         <h3>Social</h3>
@@ -47,9 +47,8 @@
                     <ul class="nav nav-pills nav-pills-custom-minimal custom-minimal-bottom">
                         <li class="active"><a href="#activities" data-toggle="tab">ACTIVITIES - comments</a></li>
                         <li><a href="#followers" data-toggle="tab">My Favorite Recipes</a></li>
-						<li><a href="#followed" data-toggle="tab">My Favorite Categories</a></li>
                         <li><a href="#following" data-toggle="tab">My Recipes</a></li>  
-						
+                        <li><a href="#followed" data-toggle="tab">My Favorite Categories</a></li>
                     </ul>
                     <div class="tab-content">
                         <!-- activities -->
@@ -67,8 +66,7 @@
                             </div>
                        
                        {% endfor %}
-					   
-					    </div>
+                       </div>
                         <!-- followers -->
                         <div class="tab-pane fade" id="followers">
                         {% for favorite in ufm %}  
@@ -85,12 +83,28 @@
                             </div>
                         {% endfor %}
                         </div>
-					    <!-- end followers -->
-						
-						
+                        
+                        <!-- end followers -->
+                        <!-- following -->
+                        <div class="tab-pane fade" id="following">
+                        {% for meal in user_meals %}
+                            <div class="media user-following">
+                                    <img src={% if meal.author_id != 1%}{{url_for('meals.static' , filename = meal.img_link )}}{% else %}{{meal.img_link}}{% endif %} alt="User Avatar" class="media-object pull-left">
+                                    <div class="media-body">
+                                        <a href="{{url_for('meals.meal_info'  , m_id = meal.id)}}">{{meal.name}}<br><span class="text-muted username">@{{meal.category.name}}</span></a>
+                                       {% if current_user.id == user.id %}
+                                            <!--
+                                         <a href="{{url_for('users.remove_meal' , m_id = meal.id , u_id = user.id)}}" style="color:#fff" type="button" class="btn btn-sm btn-danger pull-right"><i class="fa fa-close-round"></i> Delete </a>
+                                            -->
+                                       {% endif %}
+                                    
+                                    </div>
+                            </div>
+                        {% endfor %}
 
-						
-                        <!-- followed -->
+                        </div>
+                        <!-- end following -->
+                 <!-- followed -->
                         <div class="tab-pane fade" id="followed">
                         {% for favorite in ufc %} 
  
@@ -109,25 +123,7 @@
                         </div>
                         
                         <!-- end followed -->
-                        <!-- following -->
-                        <div class="tab-pane fade" id="following">
-                        {% for meal in user_meals %}
-                            <div class="media user-following">
-                                    <img src={% if meal.author_id != 1%}{{url_for('meals.static' , filename = meal.img_link )}}{% else %}{{meal.img_link}}{% endif %} alt="User Avatar" class="media-object pull-left">
-                                    <div class="media-body">
-                                        <a href="{{url_for('meals.meal_info'  , m_id = meal.id)}}">{{meal.name}}<br><span class="text-muted username">@{{meal.category.name}}</span></a>
-                                       {% if current_user.id == user.id %}
-                                            <!--
-                                         <a href="{{url_for('users.remove_meal' , m_id = meal.id , u_id = user.id)}}" style="color:#fff" type="button" class="btn btn-sm btn-danger pull-right"><i class="fa fa-close-round"></i> Delete </a>
-                                            -->
-                                       {% endif %}
-                                    
-                                    </div>
-                            </div>
-                        {% endfor %}
-                           
                         </div>
-                        <!-- end following -->
                     </div>
                 </div>
             </div>

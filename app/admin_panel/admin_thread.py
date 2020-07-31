@@ -1,5 +1,7 @@
 from flask import current_app
 from threading import Thread
+
+
 class FlaskThread(Thread):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

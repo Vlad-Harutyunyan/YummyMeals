@@ -102,3 +102,9 @@ class ResetPasswordForm(FlaskForm):
 
 
 
+class SupportForm(FlaskForm):
+    content = TextAreaField('Content',
+                            validators=[DataRequired()])
+    submit = SubmitField('Submit Comment')
+
+

@@ -15,6 +15,7 @@ import re
 from flask_login import login_required
 # from .send_msg import Mail,app, send_mail
 from flask_mail import Mail, Message
+from .lib.funct import name_correct
 from ..users.forms import CommentForm
 from ..users.models import UserComments
 from flask_login import current_user
@@ -34,13 +35,6 @@ def get_fav_catgories(category_id):
         User_Favorite_Category.category_id.like(category_id),
         User_Favorite_Category.user_id.like(current_user.id)).first()
     return check
-
-
-@meals_bp.route('/fill_db')
-def fill_db():
-    from .fill_db import fill_all
-    fill_all()
-    return 'done'
 
 
 @meals_bp.route('/')
@@ -215,18 +209,27 @@ def add_favorite_category(category_id):
         db.session.delete(bb)
         db.session.commit()
 
-    return redirect(url_for('meals.categories_list'))
+    if 'meal/categories' in request.referrer :
+        return redirect(url_for('meals.categories_list'))
+    else : 
+        return redirect(url_for('users.users_profiles', u_id=current_user.id))
+   
 
 
 @meals_bp.route('/search/<meal_name>/')
-@login_required
 def meal_search_name(meal_name):
-    meal = Meal.query.filter(Meal.name.contains (str(meal_name).lower())).first()
-    print(str(meal_name).lower())
-    if meal:
-        return redirect(url_for('meals.meal_info', m_id=meal.id))
-    else:
+    if not meal_name in name_correct(meal_name):
         return redirect('/meal')
+    else:
+        for name1 in name_correct(meal_name):
+            meal = Meal.query.filter_by(name=name1).first()
+            if meal:
+                form = CommentForm()
+                check = False
+                page = request.args.get('page', 1, type=int)
+                comments = UserComments.query.filter(UserComments.meal_id == meal.id).paginate(per_page=2, page=page)
+                ingredients = Meal_ingredient.query.filter_by(meal_id=meal.id).all()
+                return redirect(url_for('meals.meal_info',m_id=meal.id))
 
 
 @meals_bp.route('/ingredient/<int:ing_id>/')
