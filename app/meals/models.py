@@ -15,6 +15,8 @@ class Area(db.Model):
     id = Column(Integer, primary_key=True)
     name = Column(String)
 
+    def __repr__(self):
+            return f"Area '{self.name}','{self.id}' "
 
 class Category(db.Model):
     __tablename__ = 'category'
@@ -24,6 +26,10 @@ class Category(db.Model):
     img_link =  Column(String)
     description = Column(String)
 
+    def __repr__(self):
+            return f"Category '{self.name}','{self.description}' "
+
+
 class Ingredient(db.Model):
     __tablename__ = 'ingredient'
 
@@ -31,6 +37,8 @@ class Ingredient(db.Model):
     name = Column(String)
     description = Column(String)
  
+    def __repr__(self):
+            return f"Ingredient '{self.name} , {self.description}'  "
 
 class Meal_ingredient(db.Model):
     __tablename__ = 'meal_ingredient'
@@ -41,6 +49,10 @@ class Meal_ingredient(db.Model):
     ingredient_id = Column(String,ForeignKey('ingredient.id'))
     meal = relationship("Meal")
     ingredient = relationship("Ingredient")
+
+    def __repr__(self):
+            return f"Meal ingr '{self.meal.name}','{self.ingredient.name}' "
+
 
 class Meal(db.Model):
     __tablename__ = 'meal'
@@ -54,12 +66,13 @@ class Meal(db.Model):
     img_link = Column(String , default = 'default.jpg')
     tags = Column(String)
     video_link = Column(String)
-    date_posted = Column(db.DateTime, nullable=False, default=datetime.utcnow())
+    date_posted = Column(db.DateTime, nullable=False, default=datetime.utcnow)
     area = relationship("Area")
     category = relationship("Category")
     user = relationship("User")
 
-
+    def __repr__(self):
+            return f"Meal '{self.id}','{self.name}','{self.user.username}','{self.date_posted}'  "
 
 
 

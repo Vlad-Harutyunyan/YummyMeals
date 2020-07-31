@@ -43,8 +43,7 @@ mail_bp = Blueprint(
 )
 
 
-@mail_bp.route('/')
-def index():
+def mail_send():
     app=current_app._get_current_object()
     mail=Mail(app)
     fav=User_Favorite_Category.query.all()

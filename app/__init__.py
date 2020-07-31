@@ -113,10 +113,9 @@ def create_app():
         from .mail.routes import mail_bp
 
         #admin panel register
-        from .admin_panel import routes
-        from .admin_panel.routes import AdminIndexPage
+        from .admin_panel.routes import AdminIndexPage , adm
         admin.init_app(app,index_view=AdminIndexPage(
-        name='Home',
+        name='Main',
         url='/admin/',
         ))
 
@@ -127,7 +126,8 @@ def create_app():
         app.register_blueprint(users_bp)
         app.register_blueprint(meals_bp)
         app.register_blueprint(mail_bp)
-
+        app.register_blueprint(adm)
+ 
         db.create_all()
   
         return app
