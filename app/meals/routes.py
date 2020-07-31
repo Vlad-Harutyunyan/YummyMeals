@@ -15,7 +15,6 @@ import re
 from flask_login import login_required
 # from .send_msg import Mail,app, send_mail
 from flask_mail import Mail, Message
-from .lib.funct import name_correct
 from ..users.forms import CommentForm
 from ..users.models import UserComments
 from flask_login import current_user
