@@ -2,7 +2,7 @@ from flask import (render_template, url_for, redirect,
                    flash, request, Blueprint, abort)
 from .forms import (RegistrationForm, LoginForm, UpdateAccountForm,
                     CommentForm, RequestResetForm, ResetPasswordForm)
-from .models import User, User_Favorite ,UserComments
+from .models import User, User_Favorite , UserComments, User_Favorite_Category
 from flask_login import login_user, current_user, logout_user, login_required
 from .. import bcrypt, mail, db
 import os
