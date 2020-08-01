@@ -14,12 +14,12 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 bcrypt = Bcrypt()
 migrate = Migrate()
+mail = Mail()
 admin = Admin(name='Admin_panel', template_mode='bootstrap3')
 
 
 def create_app():
     """Construct the core app object."""
-    global app, mail
 
     app = Flask(__name__)
     app.config['SECRET_KEY'] = "not_secret_key"
@@ -32,15 +32,16 @@ def create_app():
     app.config['MAIL_USE_TLS'] = False
     app.config['MAIL_USE_SSL'] = True
 
-    login_manager.login_view = 'login'
+    login_manager.login_view = 'users.login'
     login_manager.login_message_category = 'info'
 
-    mail = Mail(app)
+    #mail = Mail(app)
 
     # Initialize Plugins
     db.init_app(app)
     login_manager.init_app(app)
     bcrypt.init_app(app)
+    mail.init_app(app)
 
     manager = Manager(app)
     manager.add_command('db', MigrateCommand)
