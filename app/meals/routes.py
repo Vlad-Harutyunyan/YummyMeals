@@ -1,3 +1,6 @@
+import os
+import re
+
 from flask import (
     Blueprint,
     url_for,
@@ -5,21 +8,22 @@ from flask import (
     render_template, request, flash
 )
 
-import os
-satatic_path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static'))
+from flask_paginate import Pagination, get_page_parameter
+from flask_login import login_required
+from flask_mail import Mail, Message
+from flask_login import current_user
+
 from .models import Meal, Ingredient, Category, Area, Meal_ingredient
 from .. import db
 from ..users.models import User_Favorite, User_Favorite_Category, User
-from flask_paginate import Pagination, get_page_parameter
-import re
-from flask_login import login_required
-# from .send_msg import Mail,app, send_mail
-from flask_mail import Mail, Message
 from .lib.funct import name_correct
 from ..users.forms import CommentForm
 from ..users.models import UserComments
-from flask_login import current_user
 
+stat_path = os.path.abspath(os.path.join(
+os.path.dirname(
+os.path.abspath(__file__)),
+'static'))
 
 meals_bp = Blueprint(
     'meals',
@@ -27,7 +31,7 @@ meals_bp = Blueprint(
     template_folder='templates',
     url_prefix='/meal',
     static_folder='static',
-    static_url_path=satatic_path
+    static_url_path=stat_path
 )
 
 def get_fav_catgories(category_id):
@@ -99,6 +103,29 @@ def meal_search():
     else:
         return redirect('/meal')
 
+@meals_bp.route('/search_by_username/')
+def meal_search_by_username():
+    u_name =  request.args.get('srch_user_username')
+    page = request.args.get('page', 1, type=int)
+    meallist = None 
+    if isinstance(u_name,str) and not u_name.isdecimal():
+        meallist = db.session.query(Meal).join(User).filter(User.username.contains(u_name.lower())).paginate(page, 6, False)
+    elif u_name.isdecimal():
+        meallist = db.session.query(Meal).join(User).filter(User.id.like(int(u_name))).paginate(page, 6, False)
+    if meallist:    
+        next_url = url_for('meals.test_route', page=meallist.next_num) \
+            if meallist.has_next else None
+        prev_url = url_for('meals.test_route', page=meallist.prev_num) \
+            if meallist.has_prev else None
+        
+        return render_template(
+        'main_page.html',
+        meallist=meallist,
+        next_url=next_url,
+        prev_url=prev_url,
+    )
+    else:
+        return redirect('/meal')
 
 @meals_bp.route('/category/<int:c_id>/')
 def meals_by_category(c_id):
