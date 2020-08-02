@@ -274,7 +274,7 @@ def update_comment(comment_id):
     form = CommentForm()
     if form.is_submitted():
         comment.content = form.content.data
-        comment.date_posted = datetime.utcnow()
+        comment.date_posted = datetime.now()
         db.session.commit()
         flash('Your comment has been updated!', 'success')
         return redirect(url_for('meals.meal_info', m_id=comment.meal_id))

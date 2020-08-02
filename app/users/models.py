@@ -4,6 +4,7 @@ from .. import db, login_manager
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -16,7 +17,7 @@ class User(db.Model, UserMixin):
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
     comment = db.relationship('UserComments', backref='author', lazy=True)
-    is_admin = db.Column(db.Boolean , default = False)
+    is_admin = db.Column(db.Boolean, default=False)
     
     def check_admin_rights(self):
         if self.is_admin:
@@ -51,20 +52,9 @@ class User_Favorite(db.Model):
         return f"User_Favorite('{self.user_id}','{self.meal_id}')"
 
 
-class Post(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    content = db.Column(db.Text, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-
-    def __repr__(self):
-        return f"Post('{self.title}','{self.date_posted}')"
-
-
 class UserComments(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.now)
     content = db.Column(db.Text, nullable=False)
     meal_id = db.Column(db.Integer, db.ForeignKey('meal.id' , ondelete='CASCADE'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -73,6 +63,7 @@ class UserComments(db.Model):
 
     def __repr__(self):
         return f"UserComments('{self.id}','{self.content}','{self.meal_id}','{self.user_id}')"
+
 
 class Support_Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
