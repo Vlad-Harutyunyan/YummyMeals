@@ -60,7 +60,7 @@
                                     <img src={% if comment.meal.author_id != 1%}{{url_for('meals.static' , filename = comment.meal.img_link )}}{% else %}{{comment.meal.img_link}}{% endif %} alt="Avatar" class="media-object avatar">
                                 </a>
                                 <div class="media-body">
-                                    <p class="activity-title"><a href="#">{{user.username}}</a> comment <a href="{{url_for('meals.meal_info' , m_id = comment.meal.id )}}"> {{comment.meal.name}} </a> <small class="text-muted">- {{comment.date_posted|timeagofilter}}</small></p>
+                                    <p class="activity-title"><a href="{{url_for('users.users_profiles', u_id=u_id)}}">{{user.username}}</a> comment <a href="{{url_for('meals.meal_info' , m_id = comment.meal.id )}}"> {{comment.meal.name}} </a> <small class="text-muted">- {{comment.date_posted|timeagofilter}}</small></p>
                                     <small class="text-muted">{{comment.date_posted|formatdatetime}}</small>
                                 </div>
                             </div>

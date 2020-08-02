@@ -217,12 +217,6 @@ def new_recipe_post():
             context=context,
             error=error,
             alp=alphabetic_sorted_ingrs)
-    return render_template(
-        'new_recipe.html',
-        title='New Post',
-        legend='New Post',
-        context=context,
-        alp=alphabet_sort_ingrs)
 
 
 @users_bp.route('/favourites', methods=['GET'])
@@ -232,6 +226,7 @@ def favourites():
 
 
 @users_bp.route('/user_profile/<int:u_id>', methods=['GET'])
+@login_required
 def users_profiles(u_id: int):
     user = db.session.query(User).\
         filter(User.id.like(u_id)).first()
@@ -250,10 +245,13 @@ def users_profiles(u_id: int):
         ufm=user_favorite_meals,
         ufc=favorite_categories,
         user_meals=user_meals,
-        comments=comments)
+        comments=comments,
+        u_id=u_id
+    )
 
 
 @users_bp.route('/remove_meal/<int:m_id>/<int:u_id>', methods=['GET'])
+@login_required
 def remove_meal(m_id: int, u_id: int):
     meal = db.session.query(Meal).\
         filter(Meal.id.like(m_id)).first()
@@ -265,28 +263,6 @@ def remove_meal(m_id: int, u_id: int):
             u_id=u_id))
     else:
         return 'You can not delete another user recipe'
-
-
-@users_bp.route('/<string:username>/comments')
-def user_comments(username):
-    page = request.args.get('page', 1, type=int)
-    user = User.query.filter_by(username=username).first_or_404()
-    comments = UserComments.query \
-        .filter_by(author=user) \
-        .order_by(UserComments.date_posted.desc()) \
-        .paginate(page=page, per_page=2)
-
-    return redirect(url_for('users.comments',
-                            user_id=user.id, comments=comments))
-
-
-@users_bp.route('/<int:user_id>/comments')
-def comments(user_id):
-    comments = UserComments.query.\
-        filter_by(user_id=user_id).\
-        order_by(UserComments.date_posted.desc()).all()
-    return render_template('comments.html',
-                           user_id=user_id, comments=comments)
 
 
 @users_bp.route("/update/<int:comment_id>", methods=['GET', 'POST'])
