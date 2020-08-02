@@ -63,17 +63,16 @@
   <!-- nav_navigation -->
 
   <ul class="nav_navigation single-item-wrapper">
-  
-    
-    
     <li><a href="#0"></a></li>
     <li><a href="{{ url_for('users.support_get') }}">Support</a></li>
-
-
   </ul>
   <!-- single-item-wrapper -->
-
-
+  <hr/>
+  <form class="form-inline" method = 'GET' action="{{url_for('meals.meal_search_by_username')}}">
+    <label for='srch_by_username' class = 'badge badge-primary text-wrap' style="margin:10px 0" >Search Recipe <br/> by user username</label>
+        <input id="srch_by_username" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name = "srch_user_username">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
   <div class="nav_navigation socials">
     <a class="fa fa-twitter" href="#0"></a>
     <a class="fa fa-github" href="#0"></a>
