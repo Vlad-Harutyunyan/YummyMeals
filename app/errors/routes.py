@@ -1,3 +1,5 @@
+import os
+
 from flask import (
     Blueprint,
     url_for,
@@ -5,9 +7,8 @@ from flask import (
     render_template
 )
 
-import os
-
-satatic_path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static'))
+satatic_path = os.path.abspath(os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), 'static'))
 
 errors_bp = Blueprint(
     'errors',

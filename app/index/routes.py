@@ -1,3 +1,5 @@
+import os
+
 from flask import (
     Flask,
     g,
@@ -6,9 +8,10 @@ from flask import (
     render_template,
     Blueprint
 )
-import os
 from flask_login import current_user
-satatic_path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),'static' ))
+
+satatic_path = os.path.abspath(os.path.join(os.path.dirname(
+    os.path.abspath(__file__)), 'static'))
 
 index_bp = Blueprint(
     'index',
@@ -17,10 +20,9 @@ index_bp = Blueprint(
     url_prefix='/',
     static_folder='static',
     static_url_path=satatic_path
-) 
- 
+)
+
 
 @index_bp.route('/')
-def index():  
+def index():
     return render_template('index.html')
-
