@@ -71,8 +71,8 @@ class Meal(db.Model):
     user = relationship("User")
 
     def __repr__(self):
-            return f"Meal '{self.id}', '{self.name}', '{self.user.username}', /
-            /'{self.date_posted}'"
+            return f"Meal '{self.id}', '{self.name}', '{self.user.username}'," \
+                   f"'{self.date_posted}'"
 
 path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                     "..", ".."))
