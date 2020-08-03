@@ -1,8 +1,10 @@
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+
 from datetime import datetime
 from flask import current_app
-from .. import db, login_manager
 from flask_login import UserMixin
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+
+from .. import db, login_manager
 
 
 @login_manager.user_loader
@@ -14,11 +16,12 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
+    image_file = db.Column(
+        db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
     comment = db.relationship('UserComments', backref='author', lazy=True)
     is_admin = db.Column(db.Boolean, default=False)
-    
+
     def check_admin_rights(self):
         if self.is_admin:
             return True
@@ -38,13 +41,15 @@ class User(db.Model, UserMixin):
         return User.query.get(user_id)
 
     def __repr__(self):
-        return f"User('{self.id}','{self.username}','{self.email}','{self.image_file}')"
+        return f"User('{self.id}','{self.username}'," \
+               f"'{self.email}','{self.image_file}')"
 
 
 class User_Favorite(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id =  db.Column(db.Integer, db.ForeignKey('user.id' ,ondelete='CASCADE'))
-    meal_id =  db.Column(db.Integer, db.ForeignKey('meal.id'))
+    user_id = db.Column(
+        db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'))
+    meal_id = db.Column(db.Integer, db.ForeignKey('meal.id'))
     meal = db.relationship('Meal', backref="user_favorite")
     user = db.relationship('User')
 
@@ -56,29 +61,33 @@ class UserComments(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.now)
     content = db.Column(db.Text, nullable=False)
-    meal_id = db.Column(db.Integer, db.ForeignKey('meal.id' , ondelete='CASCADE'), nullable=False)
+    meal_id = db.Column(db.Integer, db.ForeignKey(
+        'meal.id', ondelete='CASCADE'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     meal = db.relationship('Meal', backref="usercomments")
     user = db.relationship('User')
 
     def __repr__(self):
-        return f"UserComments('{self.id}','{self.content}','{self.meal_id}','{self.user_id}')"
+        return f"UserComments('{self.id}','{self.content}'," \
+               f"'{self.meal_id}','{self.user_id}')"
 
 
 class Support_Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date_posted = db.Column(db.DateTime, nullable=False,
+                            default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = db.relationship('User')
 
     def __repr__(self):
-        return f"Support Message -  '{self.id}','{self.user.id}','{self.content}' "
+        return f"Support Message-'{self.id}','{self.user.id}','{self.content}'"
+
 
 class User_Favorite_Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id =  db.Column(db.Integer, db.ForeignKey('user.id'))
-    category_id =  db.Column(db.Integer, db.ForeignKey('category.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
     category = db.relationship('Category')
     user = db.relationship('User')
 
