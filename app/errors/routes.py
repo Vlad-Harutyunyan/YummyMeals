@@ -2,8 +2,6 @@ import os
 
 from flask import (
     Blueprint,
-    url_for,
-    redirect,
     render_template
 )
 
@@ -20,6 +18,16 @@ errors_bp = Blueprint(
 )
 
 
+@errors_bp.app_errorhandler(403)
+def handle_403(err):
+    return render_template('403.html'), 403
+
+
 @errors_bp.app_errorhandler(404)
 def handle_404(err):
     return render_template('404.html'), 404
+
+
+@errors_bp.app_errorhandler(500)
+def handle_500(err):
+    return render_template('500.html'), 500
