@@ -1,11 +1,13 @@
+import os
+
+from datetime import datetime
+
 from flask import Flask, Blueprint, redirect, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
-import os
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
-from datetime import datetime
 from flask_mail import Mail
 from flask_admin import Admin
 
@@ -35,9 +37,9 @@ def create_app():
     login_manager.login_view = 'users.login'
     login_manager.login_message_category = 'info'
 
-    #mail = Mail(app)
+# mail = Mail(app)
 
-    # Initialize Plugins
+# Initialize Plugins
     db.init_app(app)
     login_manager.init_app(app)
     bcrypt.init_app(app)
@@ -46,10 +48,9 @@ def create_app():
     manager = Manager(app)
     manager.add_command('db', MigrateCommand)
     migrate.init_app(app, db)
-    
 
 
-    # handle login_requerd for blueprint
+# handle login_requerd for blueprint
     @login_manager.unauthorized_handler
     def unauthorized_callback():
         return redirect('/user/login')
@@ -101,10 +102,7 @@ def create_app():
         return str(int(day_diff / 365)) + " years ago"
 
 
-    #admin panel 
-
-
-
+# admin panel
 
     with app.app_context():
         from .users.routes import users_bp
@@ -113,22 +111,21 @@ def create_app():
         from .errors.routes import errors_bp
         from .mail.routes import mail_bp
 
-        #admin panel register
-        from .admin_panel.routes import AdminIndexPage , adm
-        admin.init_app(app,index_view=AdminIndexPage(
-        name='Main',
-        url='/admin/',
-        ))
+# admin panel register
+        from .admin_panel.routes import AdminIndexPage, adm
+        admin.init_app(app, index_view=AdminIndexPage(
+            name='Main',
+            url='/admin/',
+            ))
 
 
-        # Register Blueprints
+# Register Blueprints
         app.register_blueprint(errors_bp)
         app.register_blueprint(index_bp)
         app.register_blueprint(users_bp)
         app.register_blueprint(meals_bp)
         app.register_blueprint(mail_bp)
         app.register_blueprint(adm)
- 
+
         db.create_all()
-  
         return app
