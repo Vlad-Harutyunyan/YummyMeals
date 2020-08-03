@@ -10,6 +10,7 @@ from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 from flask_mail import Mail
 from flask_admin import Admin
+from app.config import Config
 
 
 db = SQLAlchemy()
@@ -24,20 +25,11 @@ def create_app():
     """Construct the core app object."""
 
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = "not_secret_key"
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///main.db'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-    app.config['MAIL_PORT'] = 465
-    app.config['MAIL_USERNAME'] = 'yummymealbook@gmail.com'
-    app.config['MAIL_PASSWORD'] = '789456123yummy'
-    app.config['MAIL_USE_TLS'] = False
-    app.config['MAIL_USE_SSL'] = True
+    app.config.from_object(Config)
 
     login_manager.login_view = 'users.login'
     login_manager.login_message_category = 'info'
 
-# mail = Mail(app)
 
 # Initialize Plugins
     db.init_app(app)
