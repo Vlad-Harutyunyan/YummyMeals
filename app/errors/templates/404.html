@@ -1,28 +1,6 @@
+{% extends 'error_main.html' %}
 
-<link rel='stylesheet' href={{url_for('errors.static',filename='css/404.css')}} />
-  
-<div class="container">
-    <div class="caption">
-        <div class="hat-cont">
-            <div class="lines"></div>
-            <div class="hat"></div>
-            <div class="left"></div> 
-            <div class="top"></div>
-            <div class="left-opp"></div>
-        </div>
-        <div class="head-text">Recipe Not Found !</div>
-    </div>
-    <div class="head">
-        <div class="pan-wrapper">
-            <div class="center">
-                <div class="sub-center">
-                    <div class="egg">
-                        <div class="yolk"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="handle"></div>
-            <div class="handle-sub"></div>
-        </div>
-    </div>
-</div>
+{% block content %}
+    We couldn't find that page (404)
+{% endblock content %}
+
