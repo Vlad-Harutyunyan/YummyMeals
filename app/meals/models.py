@@ -10,7 +10,6 @@ from ..users.models import User
 
 class Area(db.Model):
     __tablename__ = 'area'
-    __tablename__ = 'area'
     id = Column(Integer, primary_key=True)
     name = Column(String)
 
@@ -73,6 +72,7 @@ class Meal(db.Model):
     def __repr__(self):
             return f"Meal '{self.id}', '{self.name}', '{self.user.username}'," \
                    f"'{self.date_posted}'"
+
 
 path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                     "..", ".."))
