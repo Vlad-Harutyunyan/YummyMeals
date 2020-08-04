@@ -1,0 +1,54 @@
+
+
+
+  <!-- Site footer -->
+    <footer class="site-footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12 col-md-6">
+            <h6>About</h6>
+            <p class="text-justify">Here's our ACA second course final Flask project. <br/>
+            Authors: Vlad Harutyunyan, Hayk Sahakyan, <br/> Zhora Karyan and Ruzanna Ordyan</p>
+          </div>
+
+          <div class="col-xs-6 col-md-3">
+            <h6>Categories</h6>
+            <ul class="footer-links">
+                <li><a href="{{ url_for('meals.categories_list') }}">All Categories</a></li>
+            </ul>
+          </div>
+
+          <div class="col-xs-6 col-md-3">
+            <h6>Quick Links</h6>
+            <ul class="footer-links">
+             {% if  current_user.username %}
+                <li><a href="{{ url_for('users.logout') }}">Logout</a></li>
+                <li><a href="{{ url_for('users.account_get') }}">Settings</a></li>
+                <li><a href="{{ url_for('users.users_profiles' , u_id = current_user.id) }}">My profile</a></li>
+                <li><a href="{{ url_for('users.new_recipe_get') }}">New Recipe</a></li>
+                <li><a href="{{ url_for('users.support_get') }}">Support</a></li>
+                {% else %} 
+                <li><a href="{{ url_for('users.login') }}">Login</a></li>
+                <li><a href="{{ url_for('users.register') }}">Register</a></li>
+
+            {% endif %}
+            </ul>
+          </div>
+        </div>
+        <hr>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8 col-sm-6 col-xs-12">
+            <p class="copyright-text">Copyright &copy; 2020 All Rights Reserved
+            </p>
+          </div>
+
+          <div class="col-md-4 col-sm-6 col-xs-12">
+            <ul class="social-icons">
+              <li><a class="dribbble" href="https://github.com/Vlad-Harutyunyan/YummyMeals"><i class="fa fa-github"></i></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+</footer>

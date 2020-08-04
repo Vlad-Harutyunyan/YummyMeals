@@ -49,7 +49,7 @@ a:active {
     opacity: .6;
 }
 
-.fa:before {
+.product-card .fa:before {
     color: #fff;
     position: absolute;
     top: 15px;

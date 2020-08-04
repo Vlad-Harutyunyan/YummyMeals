@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Home page
+{% endblock title %}
+
+{% block content %}
+<link rel="stylesheet" href="{{url_for('index.static',filename='css/index.css') }}">
+<h3 class = "head_title">Recipes for You<h3/>
+
+<div class="cont s--inactive">
+  <!-- cont inner start -->
+  <div class="cont__inner">
+
+
+  {% for rec in range(tops|length)  %}
+   <!-- el start -->
+    <div class="el">
+      <div class="el__overflow">
+        <div class="el__inner">
+          <div class="el__bg" style="background:url('{{tops[rec].img_link}}');background-size: cover"></div>
+          <div class="el__preview-cont">
+            <h2 class="el__heading">{{tops[rec].name}}</h2>
+          </div>
+          <div class="el__content">
+            <div class="el__text">{{tops[rec].name}}</div>
+            <div class="el__text_descr">{{tops[rec].instructions}}</div>
+            <div class="el__text_btn">
+            <a class="btn btn-info" href={{url_for('meals.meal_info' , m_id=tops[rec].id)}}> More info </a>
+            </div>
+            <div class="el__close-btn"></div>
+          </div>
+        </div>
+      </div>
+      <div class="el__index">
+        <div class="el__index-back">{{rec+1}}</div>
+        <div class="el__index-front">
+          <div class="el__index-overlay" data-index="{{rec+1}}">{{rec+1}}</div>
+        </div>
+      </div>
+    </div>
+    <!-- el end -->
+  
+  {% endfor %}
+
+  </div>
+  <!-- cont inner end -->
+</div>
+
+{% endblock content %}
