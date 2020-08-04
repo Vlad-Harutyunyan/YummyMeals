@@ -1,6 +1,6 @@
 import os
 import random
-
+from operator import itemgetter
 from flask import (
     Flask,
     g,
@@ -10,8 +10,7 @@ from flask import (
     Blueprint
 )
 from flask_login import current_user
-from sqlalchemy import func, desc, and_ , select
-
+from sqlalchemy import func, desc, and_, select
 from .. import db
 from ..meals.models import Meal
 from ..users.models import UserComments, User_Favorite, User
@@ -31,6 +30,13 @@ index_bp = Blueprint(
 
 @index_bp.route('/')
 def index():
-    tops = db.session.query(Meal).order_by(func.random()).limit(5).all()
-    
-    return render_template('index_page.html',tops=tops) 
+    mydict = {}
+    for record in User_Favorite.query.all():
+        mydict[record.meal_id] = len(User_Favorite.query.
+                                     filter_by(meal_id=record.meal_id).all())
+    print(mydict)
+    res = dict(sorted(mydict.items(), key=itemgetter(1), reverse=True)[:5])
+    print(list(res.keys()))
+    tops = Meal.query.filter(Meal.id.in_(list(res.keys()))).all()
+    tops = sorted(tops, key=lambda o: list(res.keys()).index(o.id))
+    return render_template('index_page.html', tops=tops)
