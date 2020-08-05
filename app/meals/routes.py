@@ -73,6 +73,14 @@ def categories_list():
         checker=checker)
 
 
+@meals_bp.route('/areas')
+def areas_list():
+    areas = Area.query.all()
+    return render_template(
+        'areas_list.html',
+        areas=areas)
+
+
 @meals_bp.route('/search_by_fullname/<meal_name>/')
 def meal_search_by_fullname(meal_name):
     meal_name = name_correct(meal_name)
@@ -145,6 +153,31 @@ def meal_search_by_username():
             prev_url=prev_url)
     else:
         return redirect('/meal')
+
+
+@meals_bp.route('/areas/<int:a_id>/')
+def meals_by_countrys(a_id: int):
+    page = request.args.get('page', 1, type=int)
+
+    meallist = Meal.query.filter_by(area_id=a_id).paginate(page, 6, False)
+    next_url = url_for(
+        'meals.meals_by_countrys',
+        a_id=a_id,
+        page=meallist.next_num)\
+        if meallist.has_next else None
+    prev_url = url_for(
+        'meals.meals_by_countrys',
+        a_id=a_id,
+        page=meallist.prev_num)\
+        if meallist.has_prev else None
+
+    return render_template(
+        'main_page.html',
+        meallist=meallist,
+        next_url=next_url,
+        prev_url=prev_url,
+
+    )
 
 
 @meals_bp.route('/category/<int:c_id>/')
