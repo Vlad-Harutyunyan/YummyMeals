@@ -27,10 +27,8 @@ index_bp = Blueprint(
     static_url_path=static_path
 )
 
-
 @index_bp.route('/')
 def index():
-    auth = True if current_user.is_authenticated else False
     mydict = {}
     for record in User_Favorite.query.all():
         mydict[record.meal_id] = len(User_Favorite.query.
@@ -38,5 +36,5 @@ def index():
     res = dict(sorted(mydict.items(), key=itemgetter(1), reverse=True)[:5])
     tops = Meal.query.filter(Meal.id.in_(list(res.keys()))).all()
     tops = sorted(tops, key=lambda o: list(res.keys()).index(o.id))
-    return render_template('index_page.html', tops=tops, auth=auth)
+    return render_template('index_page.html', tops=tops)
 
