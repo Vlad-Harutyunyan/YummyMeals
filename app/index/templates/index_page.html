@@ -6,7 +6,12 @@ Home page
 
 {% block content %}
 <link rel="stylesheet" href="{{url_for('index.static',filename='css/index.css') }}">
-<h3 class = "head_title">Recipes for You<h3/>
+<h3 class = "head_title">Recipes for You<h3/>{% if auth == False%}
+
+{% if auth == False%}
+<h4 class = "head_title">To access hundreds of colorful recipes from all around the world, 
+<br>cooking secrets, and much much more ... you just need to sign up!</h4>
+{% endif%}
 
 <div class="cont s--inactive">
   <!-- cont inner start -->
