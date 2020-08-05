@@ -78,6 +78,7 @@ class Support_Message(db.Model):
                             default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    adm_checked = db.Column(db.Boolean, default=False)
     user = db.relationship('User')
 
     def __repr__(self):
