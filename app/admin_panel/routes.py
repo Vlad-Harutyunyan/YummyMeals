@@ -33,6 +33,7 @@ class AdminIndexPage(AdminIndexView):
 
         page = request.args.get('page', 1, type=int)
         users_msgs = db.session.query(Support_Message)\
+            .filter(Support_Message.adm_checked.is_(False))\
             .order_by(Support_Message.date_posted.desc()).\
             paginate(per_page=5, page=page)
 
