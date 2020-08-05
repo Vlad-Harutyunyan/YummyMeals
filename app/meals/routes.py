@@ -20,7 +20,7 @@ from .lib.funct import name_correct
 from ..users.forms import CommentForm
 from ..users.models import UserComments
 
-satatic_path = os.path.abspath(
+static_path = os.path.abspath(
                                 os.path.join(
                                     os.path.dirname(
                                         os.path.abspath(__file__)), 'static'))
@@ -31,7 +31,7 @@ meals_bp = Blueprint(
     template_folder='templates',
     url_prefix='/meal',
     static_folder='static',
-    static_url_path=stat_path
+    static_url_path=static_path
 )
 
 
