@@ -34,9 +34,7 @@ def index():
     for record in User_Favorite.query.all():
         mydict[record.meal_id] = len(User_Favorite.query.
                                      filter_by(meal_id=record.meal_id).all())
-    print(mydict)
     res = dict(sorted(mydict.items(), key=itemgetter(1), reverse=True)[:5])
-    print(list(res.keys()))
-    tops = Meal.query.filter(Meal.id.in_(list(res.keys()))).all()
+    tops = Meal.query.filter(Meal.id.in_(list(res.keys()))).all() 
     tops = sorted(tops, key=lambda o: list(res.keys()).index(o.id))
     return render_template('index_page.html', tops=tops)
