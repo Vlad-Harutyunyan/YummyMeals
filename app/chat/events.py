@@ -4,26 +4,26 @@ from .. import socketio
 
 clients = []
 
-@socketio.on('connect')
-def handle_connect():
-    clients.append(request.sid)
-
-@socketio.on('disconnect')
-def handle_disconnect():
-    clients.remove(request.sid)
+# @socketio.on('connect')
+# def handle_connect():
+#     clients.append(request.sid)
 
 
+    
 def send_message(client_id, data):
     socketio.emit('output', data, room=client_id)
+  
     print('sending message "{}" to client "{}".'.format(data, client_id))
 
 @socketio.on('joined', namespace='/')
 def joined(message):
     """Sent by clients when they enter a room.
     A status message is broadcast to all people in the room."""
+    clients.append(request.sid)
+    # print(f'join - {session.get("name")}')
     room = session.get('room')
     join_room(room)
-    emit('status', {'msg': session.get('name') + ' has entered the room.'}, room=room)
+    emit('status', {'msg': session.get('name') + ' has entered the room.','clients_count':int(len(clients))}, room=room)
 
 
 @socketio.on('text', namespace='/')
@@ -42,3 +42,11 @@ def left(message):
     leave_room(room)
     emit('status', {'msg': session.get('name') + ' has left the room.'}, room=room)
 
+@socketio.on('disconnect')
+def handle_disconnect():
+    # print(f'leave - {session.get("name")}')
+    clients.remove(request.sid)
+    room = session.get('room')
+    leave_room(room)
+    
+    emit('user_leave', {'msg': session.get('name') + ' has leave the room.','clients_count':int(len(clients))}, room=room)
