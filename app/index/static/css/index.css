@@ -379,3 +379,21 @@ body {
     color: #393939;
     font-style: italic;
 }
+
+#text {
+
+}
+#text::placeholder {
+    padding: 20px;
+    color: #393939;
+}
+.chat_sidebar {
+    margin-left: 20px;
+    -webkit-box-shadow: 11px 9px 11px -6px rgba(164,173,168,1);
+    -moz-box-shadow: 11px 9px 11px -6px rgba(164,173,168,1);
+    box-shadow: 11px 9px 11px -6px rgba(164,173,168,1); 
+    margin-bottom: 20px;
+}
+.chat_sidebar h1 {
+    margin-bottom: 10px;
+}
