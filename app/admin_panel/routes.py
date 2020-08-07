@@ -23,9 +23,6 @@ static_path = os.path.abspath(os.path.join(os.path.dirname(
 adm = Blueprint(
     'adm', __name__, template_folder='templates', url_prefix='/admin')
 
-MAX_QSIZE = 5
-BUFF_SIZE = 5
-
 
 class AdminIndexPage(AdminIndexView):
     @expose('/')
