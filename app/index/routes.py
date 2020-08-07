@@ -1,6 +1,7 @@
 import os
 import random
 from operator import itemgetter
+import json
 
 from flask import (
     Flask,
@@ -51,8 +52,6 @@ def index():
 
     session['name'] = name
     session['room'] = room
-    online_count = len(events.clients)
-    print(online_count)
     name = session.get('name', '')
     room = session.get('room', '')
     
@@ -60,5 +59,4 @@ def index():
         'index_page.html',
         tops=tops,
         name=name,
-        room=room,
-        online_count=online_count)
+        room=room)
