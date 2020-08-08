@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+    <link rel="stylesheet" href={{ url_for('users.static', filename='friend_request.css') }}  />
+
+
+{% if  f_ship_requests|length == 0 %}
+    <p class="text text-info" style="text-align:center;font-size:20px; margin 50px auto"> Friend Requests doesnt find</p>
+{% endif %}
+
+{% for fr in f_ship_requests %}
+<div class="fr_reqs_main_wrapp">
+    <div class="fr_reqs_inner_wrapper">
+        <div id="fb">
+            <div id="fb-top">
+                <p><b>Friend Requests</b><span>Find Friends &bull; Settings</span></p>
+            </div>
+            <img src={{url_for('users.static',filename= 'profile_pics/'+fr.sender.image_file)}} height="100" width="100" alt="Avatar">
+            <p id="info"><b>{{fr.sender.username}}</b> <br> <span>{{fr.request_date|timeagofilter}}</p>
+            <div id="button-block">
+                <a href={{url_for('users.confirme_friend_request' , f_ship_id = fr.id)}} id="confirm">Confirm</a>
+                <a href = {{url_for('users.add_to_friends' , f_id = fr.sender.id)}} id="delete">Delete Request</a>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+</div>
+
+{% endblock content %}

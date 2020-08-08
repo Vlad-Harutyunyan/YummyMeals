@@ -35,7 +35,8 @@
       <li><a href="{{ url_for('users.account_get') }}">Settings</a></li>
       <li><a href="{{ url_for('users.users_profiles' , u_id = current_user.id) }}">My profile</a></li>
       <li><a href="{{ url_for('users.new_recipe_get') }}">New Recipe</a></li>
-    {% else %} 
+      <li><a href="{{ url_for('users.user_firend_requsts') }}">Friend Requests</a></li>
+    {% else %}
       <li><a href="{{ url_for('users.login') }}">Login</a></li>
       <li><a href="{{ url_for('users.register') }}">Register</a></li>
     {% endif %}

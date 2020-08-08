@@ -78,7 +78,6 @@ class Support_Message(db.Model):
                             default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    adm_checked = db.Column(db.Boolean, default=False)
     user = db.relationship('User')
 
     def __repr__(self):
@@ -94,3 +93,35 @@ class User_Favorite_Category(db.Model):
 
     def __repr__(self):
         return f"User_Favorite_Category('{self.user_id}','{self.category_id}')"
+
+
+class Friendship(db.Model):
+    id = db.Column(db.Text, primary_key=True)
+    requesting_user_id = db.Column(
+        db.Integer, 
+        db.ForeignKey('user.id'),
+        nullable=False)
+    receiving_user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('user.id'),
+        nullable=False)
+    status = db.Column(
+        db.Boolean,
+        default=False)
+    request_date = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=datetime.now)
+    approve_date = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=datetime.now)
+    sender = db.relationship(
+        User,
+        foreign_keys=[requesting_user_id],
+        backref='sent')
+    receiver = db.relationship(
+        User,
+        foreign_keys=[receiving_user_id],
+        backref='received')
+

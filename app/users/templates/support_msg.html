@@ -6,6 +6,7 @@
   {% if messages %}
     <ul class=flashes>
     {% for message in messages %}
+    {{message[1]}}
     {% endfor %}
     </ul>
   {% endif %}

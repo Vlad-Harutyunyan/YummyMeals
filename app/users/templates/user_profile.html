@@ -19,8 +19,23 @@
                         {% if user.id == current_user.id %}
                            <div class="col-xs-6">
                                 <a href="{{url_for('users.account_get')}}" class="btn btn-success btn-block"><i class="fa fa-plus-round"></i> Settings </a>
-                            </div> 
+                            </div>
                         {% endif %}
+
+                        {% if  user.id != current_user.id and not check_fship %}
+                            <div class="col-xs-6">
+                                <a href="{{url_for('users.add_to_friends' , f_id = user.id)}}" class="btn btn-primary"><i class="fa fa-plus-round"></i> Send friend request</a>
+                            </div> 
+                        {% elif user.id != current_user.id and  not check_fship.status %}
+                             <div class="col-xs-6">
+                                <a href="{{url_for('users.add_to_friends' , f_id = user.id)}}" class="btn btn-danger"><i class="fa fa-plus-round"></i> Remove friend request </a>
+                            </div>
+                        {% elif user.id != current_user.id and  check_fship.status %}
+                            <div class="col-xs-6">
+                                <a href="{{url_for('users.add_to_friends' , f_id = user.id)}}" class="btn btn-danger"><i class="fa fa-plus-round"></i> Remove from friends </a>
+                            </div>
+                        {% endif %}
+                        
                         </div>
                     </div>
                     <div class="section">
@@ -123,6 +138,7 @@
                         </div>
                         
                         <!-- end followed -->
+
                         </div>
                     </div>
                 </div>

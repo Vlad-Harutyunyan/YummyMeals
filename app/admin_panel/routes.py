@@ -7,7 +7,7 @@ from ..mail.routes import mail_send
 from ..meals.fill_db import fill_all
 from .. import admin, db
 from ..users.models import User, UserComments, User_Favorite,\
-    User_Favorite_Category, Support_Message
+    User_Favorite_Category, Support_Message ,Friendship
 
 from flask import render_template, Blueprint, abort,\
     redirect, flash, current_app, request
@@ -23,6 +23,9 @@ static_path = os.path.abspath(os.path.join(os.path.dirname(
 adm = Blueprint(
     'adm', __name__, template_folder='templates', url_prefix='/admin')
 
+MAX_QSIZE = 5
+BUFF_SIZE = 5
+
 
 class AdminIndexPage(AdminIndexView):
     @expose('/')
@@ -30,7 +33,6 @@ class AdminIndexPage(AdminIndexView):
 
         page = request.args.get('page', 1, type=int)
         users_msgs = db.session.query(Support_Message)\
-            .filter(Support_Message.adm_checked.is_(False))\
             .order_by(Support_Message.date_posted.desc()).\
             paginate(per_page=5, page=page)
 
@@ -81,3 +83,5 @@ admin.add_views(IndexView(Area, db.session))
 admin.add_views(IndexView(Ingredient, db.session))
 admin.add_views(IndexView(Meal_ingredient, db.session))
 admin.add_views(IndexView(Support_Message, db.session))
+admin.add_views(IndexView(Friendship, db.session))
+

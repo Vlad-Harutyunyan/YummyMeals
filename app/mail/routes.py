@@ -23,16 +23,6 @@ satatic_path = os.path.abspath(os.path.join(os.path.dirname(
     os.path.abspath(__file__)), 'static'))
 
 
-class threadClass:
-    def __init__(self):
-        thread = threading.Thread(target=self.run, args=())
-        thread.daemon = True
-        thread.start()
-
-# This might take several minutes to complete
-    def run(self):
-        someHeavyFunction()
-
 mail_bp = Blueprint(
     'mail',
     __name__,

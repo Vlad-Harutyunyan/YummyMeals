@@ -17,7 +17,8 @@ from .forms import (
                             ResetPasswordForm, SupportForm)
 from .models import (
                             User, User_Favorite, UserComments,
-                            Support_Message, User_Favorite_Category)
+                            Support_Message, User_Favorite_Category,
+                            Friendship)
 from .. import bcrypt, mail, db
 from ..meals.models import Meal, Ingredient, Category, Area, Meal_ingredient
 from .scripts.logic import sort_ingrs_by_alphabet
@@ -36,6 +37,7 @@ users_bp = Blueprint(
     static_folder='static',
     static_url_path=satatic_path
 )
+
 
 
 @users_bp.route('/register', methods=['GET', 'POST'])
@@ -238,7 +240,16 @@ def users_profiles(u_id: int):
         filter(UserComments.user_id.like(u_id)).all()
     favorite_categories = db.session.query(User_Favorite_Category).\
         filter(User_Favorite_Category.user_id.like(u_id)).all()
-
+    check_fship = None
+    if current_user.id != u_id :
+        check_fship = db.session.query(Friendship).\
+            filter(
+                Friendship.requesting_user_id.like(current_user.id),
+                Friendship.receiving_user_id.like(u_id)).first()  or db.session.query(Friendship).\
+            filter(
+                Friendship.requesting_user_id.like(u_id),
+                Friendship.receiving_user_id.like(current_user.id)).first()
+    
     return render_template(
         'user_profile.html',
         user=user,
@@ -246,8 +257,64 @@ def users_profiles(u_id: int):
         ufc=favorite_categories,
         user_meals=user_meals,
         comments=comments,
-        u_id=u_id
+        u_id=u_id,
+        check_fship=check_fship,
     )
+
+
+@users_bp.route('/friend-requests/')
+@login_required
+def user_firend_requsts():
+    f_ship_requests = db.session.query(Friendship).\
+        filter(
+                Friendship.receiving_user_id.like(current_user.id),
+                Friendship.status.is_(False)).all()
+    return render_template(
+        'firend_requests.html',
+        f_ship_requests=f_ship_requests)
+
+
+@users_bp.route('/confireme-friend-request/<f_ship_id>')
+def confirme_friend_request(f_ship_id):
+    q = db.session.query(Friendship).filter(Friendship.id == f_ship_id).first()
+    q.status = True
+    db.session.commit()
+    return redirect(url_for('users.user_firend_requsts'))
+
+
+@users_bp.route('/add-to-friends/<int:f_id>')
+@login_required
+def add_to_friends(f_id):
+    if f_id != current_user.id:
+        check = db.session.query(Friendship).\
+            filter(
+                Friendship.requesting_user_id.like(current_user.id),
+                Friendship.receiving_user_id.like(f_id)).first() or db.session.query(Friendship).\
+            filter(
+                Friendship.requesting_user_id.like(f_id),
+                Friendship.receiving_user_id.like(current_user.id)).first()
+        if not check:        
+            f_ship = Friendship(
+                id = f'fship{current_user.id}-{f_id}',
+                requesting_user_id=current_user.id,
+                receiving_user_id=f_id,
+                status=False,
+                )
+            db.session.add(f_ship)
+            db.session.commit()
+        else :
+            db.session.delete(check)
+            db.session.commit()
+    else:
+        return 'You cant add to friends yourself !'
+
+    if 'user/friend-requests' in request.referrer:
+        return redirect(url_for('users.user_firend_requsts'))
+    else:
+        return redirect(url_for('users.users_profiles', u_id=f_id))    
+
+
+
 
 
 @users_bp.route('/remove_meal/<int:m_id>/<int:u_id>', methods=['GET'])
@@ -267,7 +334,7 @@ def remove_meal(m_id: int, u_id: int):
 
 @users_bp.route("/update/<int:comment_id>", methods=['GET', 'POST'])
 @login_required
-def update_comment(comment_id):
+def update_comment(comment_id: int):
     comment = UserComments.query.get_or_404(comment_id)
     if comment.author != current_user:
         abort(403)
