@@ -16,7 +16,6 @@ from flask_login import current_user
 from .models import Meal, Ingredient, Category, Area, Meal_ingredient
 from .. import db
 from ..users.models import User_Favorite, User_Favorite_Category, User
-from .lib.funct import name_correct
 from ..users.forms import CommentForm
 from ..users.models import UserComments
 
