@@ -4,7 +4,7 @@ Here's our ACA second course final Flask project.
 
 Authors: Vlad Harutyunyan, Hayk Sahakyan, Zhora Karyan and Ruzanna Ordyan
 
-## Project setup instruction ‘
+## Project setup instruction
 Stable python version for application - python 3.7 - 3.7.7
 
 
