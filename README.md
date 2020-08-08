@@ -4,9 +4,11 @@ Here's our ACA second course final Flask project.
 
 Authors: Vlad Harutyunyan, Hayk Sahakyan, Zhora Karyan and Ruzanna Ordyan
 
-Project setup instruction ‘
+## Project setup instruction ‘
+Stable python version for application - python 3.7 - 3.7.7
 
-—-    1 step     —-
+
+###### —-    1 step     —-
 
 commands
 
@@ -15,7 +17,7 @@ Or
 pip install -r requirements.txt (Windows)
 
 
-—-    2 step     —-
+###### —-    2 step     —-
 
 commands
 
@@ -24,23 +26,19 @@ Or
 python wsgi.py (Windows)
 
 
-—-    3 step     —-
+###### —-    3 step     —-
 
 visit 127.0.0.1/home in browser
 
 
 
 
-------- Migration System -------
+## ------- Migration System -------
 
 After changing database model , write this commands in project folder 
 
-1 : [flask db init] OR -  [flask db stamp head] (if migration folder alredy exsist)
+###### 1 : [flask db init] OR -  [flask db stamp head] (if migration folder alredy exsist)
 
-2 : [flask db migrate]
+###### 2 : [flask db migrate]
 
-3 : [flask db upgrade]
-
-
-test
-
+###### 3 : [flask db upgrade]
