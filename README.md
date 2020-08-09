@@ -1,6 +1,7 @@
 # YummyMeals
-![Logo](https://github.com/Vlad-Harutyunyan/YummyMeals/blob/master/app/index/static/media/logo1.png)
-
+<p align="center">
+  <img width="460" height="300" src="https://github.com/Vlad-Harutyunyan/YummyMeals/blob/master/app/index/static/media/logo1.png">
+</p>
 Here's our ACA second course final Flask project. 
 
 Authors: Vlad Harutyunyan, Hayk Sahakyan, Zhora Karyan and Ruzanna Ordyan
