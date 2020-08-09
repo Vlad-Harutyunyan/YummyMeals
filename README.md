@@ -1,5 +1,5 @@
 # YummyMeals
-![Logo](https://github.com/Vlad-Harutyunyan/YummyMeals/blob/master/app/index/static/media/logo1.png)
+![Logo](https://github.com/Vlad-Harutyunyan/YummyMeals/blob/master/app/index/static/media/logo1.png =250x250)
 
 Here's our ACA second course final Flask project. 
 
