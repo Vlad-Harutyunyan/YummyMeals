@@ -1,6 +1,6 @@
 # YummyMeals
 <p align="center">
-  <img width="460" height="300" src="https://github.com/Vlad-Harutyunyan/YummyMeals/blob/master/app/index/static/media/logo1.png">
+  <img width="340" height="340" src="https://github.com/Vlad-Harutyunyan/YummyMeals/blob/master/app/index/static/media/logo1.png">
 </p>
 Here's our ACA second course final Flask project. 
 
