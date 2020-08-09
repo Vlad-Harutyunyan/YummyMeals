@@ -1,7 +1,6 @@
 <p align="center">
   <h1 style="font-size:35px; text-align:center;"> YummyMeals </h1>
 </p>
-[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
 <p align="center">
   <img width="340" height="340" src="https://github.com/Vlad-Harutyunyan/YummyMeals/blob/master/app/index/static/media/logo1.png">
 </p>
