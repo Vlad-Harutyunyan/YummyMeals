@@ -1,4 +1,7 @@
-# YummyMeals
+
+<p align="center">
+  # YummyMeals
+</p>
 <p align="center">
   <img width="340" height="340" src="https://github.com/Vlad-Harutyunyan/YummyMeals/blob/master/app/index/static/media/logo1.png">
 </p>
