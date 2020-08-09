@@ -1,7 +1,7 @@
-
 <p align="center">
   <h1 style="font-size:35px; text-align:center;"> YummyMeals </h1>
 </p>
+[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
 <p align="center">
   <img width="340" height="340" src="https://github.com/Vlad-Harutyunyan/YummyMeals/blob/master/app/index/static/media/logo1.png">
 </p>
@@ -18,19 +18,29 @@ Stable python version for application - python 3.7 - 3.7.7
 ###### —-    1 step     —-
 
 commands
+for Linux,Mac
+```sh
+pip3 install -r requirements.txt
+```
 
-``` pip3 install -r requirements.txt ``` (Linux,Mac)
 Or
-``` pip install -r requirements.txt ``` (Windows)
+for Windows
+```sh
+pip install -r requirements.txt
+```
 
 
 ###### —-    2 step     —-
 
-commands
-
-``` python3 wsgi.py ```(Linux,Mac)
+for Linux,Mac
+```sh
+python3 wsgi.py 
+```
 Or
-``` python wsgi.py ```(Windows)
+for Windows
+```sh 
+python wsgi.py 
+```
 
 
 ###### —-    3 step     —-
@@ -44,7 +54,7 @@ visit [127.0.0.1/home](http://127.0.0.1:5000/) in browser
 
 After changing database model , write this commands in project folder 
  
- [1] : ``` flask db init ``` OR -  ``` flask db stamp head ``` (if migration folder alredy exsist)
+ [1] : ```sh flask db init ``` OR -  ```sh flask db stamp head ``` (if migration folder alredy exsist)
 
  [2] : ``` flask db migrate ```
 
