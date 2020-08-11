@@ -39,7 +39,6 @@ users_bp = Blueprint(
 )
 
 
-
 @users_bp.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
@@ -241,14 +240,13 @@ def users_profiles(u_id: int):
         filter(UserComments.user_id.like(u_id)).all()
     favorite_categories = db.session.query(User_Favorite_Category).\
         filter(User_Favorite_Category.user_id.like(u_id)).all()
-    friends = db.session.query(User).join(Friendship, User.id == Friendship.requesting_user_id).add_columns(
-        Friendship.receiving_user_id, Friendship.requesting_user_id).filter(
-        or_(Friendship.requesting_user_id == u_id, Friendship.receiving_user_id == u_id)).all()
-
-    for i in friends:
-        print(i.requesting_user_id, i.receiving_user_id,u_id,i)
-        print(i[0].username)
-
+    friends = db.session.query(User).\
+                 join(Friendship, User.id == Friendship.requesting_user_id).\
+                 add_columns(Friendship.receiving_user_id,
+                             Friendship.requesting_user_id).filter(
+                             or_(Friendship.requesting_user_id == u_id,
+                                 Friendship.receiving_user_id == u_id),
+                             Friendship.status == 1).all()
     f_ship_requests = db.session.query(Friendship).\
         filter(
                 Friendship.receiving_user_id.like(current_user.id),
