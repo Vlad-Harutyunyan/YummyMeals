@@ -107,6 +107,7 @@ body {
     border-radius: 50%;
     background-color: #8a8f99;
     position: relative;
+    left: 150px;
     z-index: 2;
     border: 1px solid black;
 }
@@ -125,10 +126,10 @@ body {
 .handle {
     width: 40px;
     height: 150px;
-    position: absolute;
-    left: 263px;
-    top: 280px;
-    transform: rotate(-35deg);
+    position: relative;
+    right: -155px;
+    top: -10px;
+    transform: rotate(35deg);
     background: #232731;
     z-index: 2;
     border-radius: 2px;
@@ -141,7 +142,7 @@ body {
     position: absolute;
     left: 220px;
     top: 260px;
-    transform: rotate(-38deg);
+    transform: rotate(35deg);
     background: #8a8f99;
 }
 .egg {
@@ -171,19 +172,19 @@ body {
     box-shadow: inset #f9d010 0 0 0 4px, inset rgba(255, 255, 255, 0.3) 2px 2px 4px 6px, inset #f9d010 2px 2px 4px 16px, inset rgba(255, 255, 255, 0.3) -2px -2px 12px 12px, rgba(0, 0, 0, 0.05) 0 0 2px 2px;
 }
 .text, .center::after, .center::before {
-    font-size: 240px;
+    font-size: 200px;
     font-family: 'Satisfy', cursive;
     position: absolute;
-    top: 20%;
+    top: 10%;
     color: #232731;
 }
 .center::after {
-    content: '4';
+    content: 'R';
     right: -150px;
 }
 .center::before {
-    content: '4';
-    left: -150px;
+    content: 'ERR';
+    left: -380px;
 }
 @keyframes egg {
     0%, 100% {
