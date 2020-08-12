@@ -23,7 +23,7 @@ def joined(message):
     # print(f'join - {session.get("name")}')
     room = session.get('room')
     join_room(room)
-    emit('status', {'msg': session.get('name') + ' has entered the room.','clients_count':int(len(clients))}, room=room)
+    emit('status', {'msg': session.get('name') + ' has joined the chat','clients_count':int(len(clients))}, room=room)
 
 
 @socketio.on('text', namespace='/')
@@ -40,7 +40,7 @@ def left(message):
     A status message is broadcast to all people in the room."""
     room = session.get('room')
     leave_room(room)
-    emit('status', {'msg': session.get('name') + ' has left the room.'}, room=room)
+    emit('status', {'msg': session.get('name') + ' has left the chat'}, room=room)
 
 @socketio.on('disconnect')
 def handle_disconnect():
@@ -49,4 +49,4 @@ def handle_disconnect():
     room = session.get('room')
     leave_room(room)
     
-    emit('user_leave', {'msg': session.get('name') + ' has leave the room.','clients_count':int(len(clients))}, room=room)
+    emit('user_leave', {'msg': session.get('name') + ' has left the chat','clients_count':int(len(clients))}, room=room)
