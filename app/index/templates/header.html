@@ -4,9 +4,15 @@
 
 <header>   
   <h1 id="site-title"><a style="display:flex;" href="/">YummyMeals</a></h1>
-
+  {%if current_user.id%}
+  	   <h1> <img width="30" height="30", src="{{url_for('users.static' ,  filename='profile_pics/'+current_user.image_file) }}" alt="Avatar" class="avatar img-circle">
+  	   <a href="/user/user_profile/{{current_user.id}}">{{current_user.username}}</a></h1>
+  {% else%}
+  	   <h1> <img width="30" height="30", src="{{url_for('users.static' ,  filename='profile_pics/guest.png') }}" alt="Avatar" class="avatar img-circle">
+	   <a href="{{ url_for('users.login') }}"> guest user </a></h1>
+ {% endif
+  
 <div class="search-form">
-
 <p class="head_search_txt">Search</p>
  <form  method = 'GET' action="{{url_for('meals.meal_search')}}">
     <input  class = "head_search_sbmit"type = 'submit' value="search"></input>
