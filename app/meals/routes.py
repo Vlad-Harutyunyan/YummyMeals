@@ -80,29 +80,29 @@ def areas_list():
         areas=areas)
 
 
-@meals_bp.route('/search_by_fullname/<meal_name>/')
-def meal_search_by_fullname(meal_name):
-    meal_name = name_correct(meal_name)
-    meal = Meal.query.filter_by(name=meal_name).first()
-    if meal:
-        form = CommentForm()
-        check = False
-        page = request.args.get('page', 1, type=int)
-        comments = UserComments.query.filter(
-            UserComments.meal_id == meal.id)\
-            .paginate(per_page=2, page=page)
-        ingredients = Meal_ingredient.query.filter_by(
-            meal_id=meal.id).all()
-        return render_template(
-            'meal_info.html',
-            meal=meal,
-            ingredients=ingredients,
-            form=form,
-            check=check,
-            comments=comments,
-            page=page)
-    else:
-        return redirect('/meal')
+# @meals_bp.route('/search_by_fullname/<meal_name>/')
+# def meal_search_by_fullname(meal_name):
+#     meal_name = name_correct(meal_name)
+#     meal = Meal.query.filter_by(name=meal_name).first()
+#     if meal:
+#         form = CommentForm()
+#         check = False
+#         page = request.args.get('page', 1, type=int)
+#         comments = UserComments.query.filter(
+#             UserComments.meal_id == meal.id)\
+#             .paginate(per_page=2, page=page)
+#         ingredients = Meal_ingredient.query.filter_by(
+#             meal_id=meal.id).all()
+#         return render_template(
+#             'meal_info.html',
+#             meal=meal,
+#             ingredients=ingredients,
+#             form=form,
+#             check=check,
+#             comments=comments,
+#             page=page)
+#     else:
+#         return redirect('/meal')
 
 
 @meals_bp.route('/search/')
@@ -324,22 +324,16 @@ def add_favorite_category(category_id):
 
 
 @meals_bp.route('/search/<meal_name>/')
+@login_required
 def meal_search_name(meal_name):
-    if meal_name not in name_correct(meal_name):
-        return redirect('/meal')
+    meal = Meal.query.filter(Meal.name.contains(str(meal_name).lower())).\
+                             first()
+    print(str(meal_name).lower())
+    if meal:
+        return redirect(url_for('meals.meal_info', m_id=meal.id))
     else:
-        for name1 in name_correct(meal_name):
-            meal = Meal.query.filter_by(name=name1).first()
-            if meal:
-                form = CommentForm()
-                check = False
-                page = request.args.get('page', 1, type=int)
-                comments = UserComments.query.filter(
-                    UserComments.meal_id == meal.id).\
-                    paginate(per_page=2, page=page)
-                ingredients = Meal_ingredient.query.filter_by(
-                    meal_id=meal.id).all()
-                return redirect(url_for('meals.meal_info',  m_id=meal.id))
+        return redirect('/meal')
+
 
 
 @meals_bp.route('/ingredient/<int:ing_id>/')

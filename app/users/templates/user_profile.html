@@ -48,9 +48,61 @@
                         <p><span class="badge">{{ufm|length}}</span> Favorites Recipes</p>
                         <p><span class="badge">{{comments|length}}</span> Comments</p>
                         <p><span class="badge">{{ufc|length}}</span> Favorites Categories</p>
+			<p><span class="badge">{{friends|length}}</span> Friends</p>    
                     </div>
                     <div class="section">
                         <h3>Social</h3>
+			{%if f_ship_requests %}
+				<br>
+				<a href="{{url_for('users.user_firend_requsts')}}">A friend request is awaiting for your approval!<br><br></a>
+			{%endif%}
+			<style>	#more {display: none;}	</style>
+			<p><span id="dots"></span><span id="more">
+                         {% for usr in user_extra %}
+                          	{% if usr.id != current_user.id %}
+                          		<a href="{{url_for('users.users_profiles', u_id = usr.id)}}">{{usr.username}}<br></a>
+                          	{% endif%}
+                          {% endfor %}
+                          <br>
+                          </span></p>
+                          <button onclick="myFunction()" id="myBtn">Click to expand our users list</button>
+
+                          <script>
+                          function myFunction() {
+                            var dots = document.getElementById("dots");
+                            var moreText = document.getElementById("more");
+                            var btnText = document.getElementById("myBtn");
+                          
+                            if (dots.style.display === "none") {
+                              dots.style.display = "inline";
+                              btnText.innerHTML = "Click to expand our users list"; 
+                              moreText.style.display = "none";
+                            } else {
+                              dots.style.display = "none";
+                              btnText.innerHTML = "Close"; 
+                              moreText.style.display = "inline";
+                            }
+                          }
+                          </script>
+			    
+			    
+			    
+			    
+			    
+			    
+			    
+			    
+			    
+			    
+			    
+			    
+			    
+			    
+			    
+			    
+			    
+			    
+			    
                         <ul class="list-unstyled list-social">
 
                         </ul>
@@ -60,10 +112,11 @@
             <div class="col-md-8">
                 <div class="profile-info-right">
                     <ul class="nav nav-pills nav-pills-custom-minimal custom-minimal-bottom">
-                        <li class="active"><a href="#activities" data-toggle="tab">ACTIVITIES - comments</a></li>
+                        <li class="active"><a href="#activities" data-toggle="tab">Comments</a></li>
                         <li><a href="#followers" data-toggle="tab">My Favorite Recipes</a></li>
                         <li><a href="#following" data-toggle="tab">My Recipes</a></li>  
-                        <li><a href="#followed" data-toggle="tab">My Favorite Categories</a></li>
+                        <li><a href="#followed" data-toggle="tab">Favorite Categories</a></li>
+			<li><a href="#friendy" data-toggle="tab">Friends</a></li>
                     </ul>
                     <div class="tab-content">
                         <!-- activities -->
@@ -138,6 +191,27 @@
                         </div>
                         
                         <!-- end followed -->
+			<!-- friendy -->
+			<div class="tab-pane fade" id="friendy">
+                        {% for fellow in friends %} 
+              		<div class="media user-follower">
+			<div class="media-body">
+				{% if u_id == fellow.receiving_user_id %}
+					<img src="{{url_for('users.static' ,  filename='profile_pics/'+fellow[0].image_file) }}" alt="Avatar" class="avatar img-circle">
+					<a href="{{url_for('users.users_profiles', u_id = fellow.requesting_user_id)}}">{{fellow[0].username}}<br><span class="text-muted username"</a>
+            					{%else%}										
+							{%for usr in user_extra%}
+							{% if usr.id == fellow.receiving_user_id%}																
+								<img src="{{url_for('users.static' ,  filename='profile_pics/'+usr.image_file) }}" alt="Avatar" class="avatar img-circle">										
+								<a href="{{url_for('users.users_profiles', u_id = fellow.receiving_user_id)}}">{{usr.username}}<br><span class="text-muted username"</a>
+							{%endif%}
+							{%endfor %}			
+					{% endif%}
+				</div>                                
+                            </div>
+                        {% endfor %}
+                        </div>
+                        <!-- end friendly-->	
 
                         </div>
                     </div>

@@ -60,3 +60,9 @@ def index():
         tops=tops,
         name=name,
         room=room)
+
+
+@index_bp.route('/presentation')
+def presentation():
+    return redirect('https://view.genial.ly/5f2f99770c24590d87b624b9/presentation-yummy-meals')
+

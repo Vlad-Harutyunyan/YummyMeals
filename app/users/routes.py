@@ -9,7 +9,7 @@ from flask import (
                         render_template, url_for, redirect,
                         flash, request, Blueprint, abort)
 from flask_login import login_user, current_user, logout_user, login_required
-
+from sqlalchemy import or_
 
 from .forms import (
                             RegistrationForm, LoginForm, UpdateAccountForm,
@@ -254,6 +254,7 @@ def favourites():
 @users_bp.route('/user_profile/<int:u_id>', methods=['GET'])
 @login_required
 def users_profiles(u_id: int):
+    user_extra=db.session.query(User).all()
     user = db.session.query(User).\
         filter(User.id.like(u_id)).first()
     user_favorite_meals = db.session.query(User_Favorite).\
@@ -264,6 +265,17 @@ def users_profiles(u_id: int):
         filter(UserComments.user_id.like(u_id)).all()
     favorite_categories = db.session.query(User_Favorite_Category).\
         filter(User_Favorite_Category.user_id.like(u_id)).all()
+    friends = db.session.query(User).\
+                 join(Friendship, User.id == Friendship.requesting_user_id).\
+                 add_columns(Friendship.receiving_user_id,
+                             Friendship.requesting_user_id).filter(
+                             or_(Friendship.requesting_user_id == u_id,
+                                 Friendship.receiving_user_id == u_id),
+                             Friendship.status == 1).all()
+    f_ship_requests = db.session.query(Friendship).\
+        filter(
+                Friendship.receiving_user_id.like(current_user.id),
+                Friendship.status.is_(False)).all()
     check_fship = None
     if current_user.id != u_id :
         check_fship = db.session.query(Friendship).\
@@ -280,10 +292,14 @@ def users_profiles(u_id: int):
         ufm=user_favorite_meals,
         ufc=favorite_categories,
         user_meals=user_meals,
+        friends=friends,
+        user_extra=user_extra,
         comments=comments,
         u_id=u_id,
         check_fship=check_fship,
+        f_ship_requests=f_ship_requests
     )
+
 
 
 @users_bp.route('/friend-requests/')
