@@ -17,7 +17,7 @@ from .models import Meal, Ingredient, Category, Area, Meal_ingredient
 from .. import db
 from ..users.models import User_Favorite, User_Favorite_Category, User
 from ..users.forms import CommentForm
-from ..users.models import UserComments
+from ..users.models import UserComments, UserActivities
 
 static_path = os.path.abspath(
                                 os.path.join(
@@ -207,11 +207,13 @@ def meals_by_category(c_id):
 @meals_bp.route('/add-favorite/<int:meal_id>', methods=['GET'])
 @login_required
 def add_favorite(meal_id):
-    check = False
-
     bb = db.session.query(User_Favorite).filter(
         User_Favorite.meal_id.like(meal_id),
         User_Favorite.user_id.like(current_user.id)).first()
+
+    # User Activity
+    user_activity = UserActivities.query.filter_by(
+        user_id=current_user.id).first()
 
     if not bb:
         check = False
@@ -221,15 +223,21 @@ def add_favorite(meal_id):
         )
 
         db.session.add(user_favorite)
-        db.session.commit()
+
+        # User Activity +
+        user_activity.favorite_meals += 1
     else:
         check = True
         db.session.delete(bb)
-        db.session.commit()
+
+        # User Activity -
+        user_activity.favorite_meals -= 1
+
+    db.session.commit()
     print(request.referrer)
 
     if 'meal/meal_info' in request.referrer:
-        return redirect(url_for('meals.meal_info', m_id=meal_id))
+        return redirect(url_for('meals.meal_info', m_id=meal_id, check=check))
     else:
         return redirect(url_for('users.users_profiles', u_id=current_user.id))
 
@@ -269,6 +277,12 @@ def meal_info_post(m_id):
             user_id=current_user.id,
             meal_id=m_id)
         db.session.add(comment)
+
+        # User Activity
+        user_activity = UserActivities.query.filter_by(
+            user_id=current_user.id).first()
+        user_activity.comments += 1
+
         db.session.commit()
         return redirect(url_for('meals.meal_info',
                                 m_id=m_id))
@@ -277,25 +291,31 @@ def meal_info_post(m_id):
 @meals_bp.route('/add-favorite-category/<int:category_id>', methods=['GET'])
 @login_required
 def add_favorite_category(category_id):
-    # Check = False
-
     bb = db.session.query(User_Favorite_Category).filter(
         User_Favorite_Category.category_id.like(category_id),
         User_Favorite_Category.user_id.like(current_user.id)).first()
 
+    # User Activity
+    user_activity = UserActivities.query.filter_by(
+        user_id=current_user.id).first()
+
     if not bb:
-        check = False
         user_favorite_category = User_Favorite_Category(
             user_id=current_user.id,
             category_id=category_id
         )
 
         db.session.add(user_favorite_category)
-        db.session.commit()
+
+        # User Activity +
+        user_activity.favorite_categories += 1
     else:
-        check = True
         db.session.delete(bb)
-        db.session.commit()
+
+        # User Activity -
+        user_activity.favorite_categories -= 1
+
+    db.session.commit()
 
     if 'meal/categories' in request.referrer:
         return redirect(url_for('meals.categories_list'))

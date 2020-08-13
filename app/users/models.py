@@ -7,6 +7,7 @@ from flask_login import UserMixin
 from .. import db, login_manager
 
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -124,4 +125,20 @@ class Friendship(db.Model):
         User,
         foreign_keys=[receiving_user_id],
         backref='received')
+
+
+class UserActivities(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(
+        db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'))
+    comments = db.Column(db.Integer, nullable=False, default=0)
+    favorite_meals = db.Column(db.Integer, nullable=False, default=0)
+    favorite_categories = db.Column(db.Integer, nullable=False, default=0)
+    meal_author = db.Column(db.Integer, nullable=False, default=0)
+    friendship = db.Column(db.Integer, nullable=False, default=0)
+    support_message = db.Column(db.Integer, nullable=False, default=0)
+    profile_pict = db.Column(db.Integer, nullable=False, default=0)
+    login = db.Column(db.Integer, nullable=False, default=0)
+    pwd_reset = db.Column(db.Integer, nullable=False, default=0)
+
 

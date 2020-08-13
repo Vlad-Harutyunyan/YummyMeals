@@ -18,7 +18,7 @@ from .forms import (
 from .models import (
                             User, User_Favorite, UserComments,
                             Support_Message, User_Favorite_Category,
-                            Friendship)
+                            Friendship, UserActivities)
 from .. import bcrypt, mail, db
 from ..meals.models import Meal, Ingredient, Category, Area, Meal_ingredient
 from .scripts.logic import sort_ingrs_by_alphabet
@@ -39,7 +39,6 @@ users_bp = Blueprint(
 )
 
 
-
 @users_bp.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
@@ -51,11 +50,18 @@ def register():
         user = User(username=form.username.data,
                     email=form.email.data,
                     password=hashed_password)
+
         db.session.add(user)
         db.session.commit()
         flash(
             'Your account has been created! You are now able to log in',
             'success')
+
+        # User Activity
+        user = User.query.filter_by(email=form.email.data).first()
+        user_activity = UserActivities(user_id=user.id)
+        db.session.add(user_activity)
+        db.session.commit()
 
         return redirect(url_for('users.login'))
     return render_template('register.html',
@@ -76,6 +82,13 @@ def login():
                         form.password.data):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
+
+            # User Activity
+            user_activity = UserActivities.query.filter_by(
+                user_id=current_user.id).first()
+            user_activity.login += 1
+
+            db.session.commit()
             return redirect(next_page)\
                 if next_page\
                 else redirect(url_for('index.index'))
@@ -126,6 +139,12 @@ def account_post():
             elif form.picture.data:
                 picture_file = save_prof_picture(form.picture.data)
                 current_user.image_file = picture_file
+
+            # User Activity
+            user_activity = UserActivities.query.filter_by(
+                user_id=current_user.id).first()
+            user_activity.profile_pict += 1
+
             db.session.commit()
             flash("Your account has been updated", 'success')
         return redirect(url_for('users.account_get'))
@@ -176,14 +195,14 @@ def new_recipe_post():
     alphabetic_sorted_ingrs = sort_ingrs_by_alphabet(context['ingr'])
     meal_info = {
            'name': request.form.get('title'),
-           'inctruction': request.form.get('content'),
+           'instruction': request.form.get('content'),
            'country': request.form.get('area'),
            'category': request.form.get('category'),
            'ingredients': request.form.getlist('ingredients'),
        }
 
     # validate data
-    if meal_info['name'] and meal_info['inctruction'] and \
+    if meal_info['name'] and meal_info['instruction'] and \
             meal_info['country'] and meal_info['category'] and \
             meal_info['ingredients']:
         meal = Meal(
@@ -193,7 +212,7 @@ def new_recipe_post():
                 name=meal_info['category']).first().id,
             area_id=Area.query.filter_by(name=meal_info['country']).first().id,
             author_id=current_user.id,
-            instructions=meal_info['inctruction'],
+            instructions=meal_info['instruction'],
             tags=None,
             video_link=None,
         )
@@ -206,6 +225,11 @@ def new_recipe_post():
                                             name=x).first().id)
             db.session.add(meal_ingr)
             db.session.commit()
+
+        # User Activity
+        user_activity = UserActivities.query.filter_by(
+            user_id=current_user.id).first()
+        user_activity.meal_author += 1
         db.session.commit()
 
         return redirect(url_for('meals.meal_info', m_id=meal.id))
@@ -264,27 +288,38 @@ def users_profiles(u_id: int):
 
 @users_bp.route('/friend-requests/')
 @login_required
-def user_firend_requsts():
+def user_friend_requests():
     f_ship_requests = db.session.query(Friendship).\
         filter(
                 Friendship.receiving_user_id.like(current_user.id),
                 Friendship.status.is_(False)).all()
     return render_template(
-        'firend_requests.html',
+        'friend_requests.html',
         f_ship_requests=f_ship_requests)
 
 
-@users_bp.route('/confireme-friend-request/<f_ship_id>')
-def confirme_friend_request(f_ship_id):
+@users_bp.route('/confirm-friend-request/<f_ship_id>')
+def confirm_friend_request(f_ship_id):
     q = db.session.query(Friendship).filter(Friendship.id == f_ship_id).first()
     q.status = True
+
+    # User Activity
+    user_activity_1 = UserActivities.query.filter_by(
+        user_id=q.receiving_user_id).first()
+    user_activity_1.friendship += 1
+
+    user_activity_2 = UserActivities.query.filter_by(
+        user_id=q.requesting_user_id).first()
+    user_activity_2.friendship += 1
+
     db.session.commit()
-    return redirect(url_for('users.user_firend_requsts'))
+    return redirect(url_for('users.user_friend_requests'))
 
 
 @users_bp.route('/add-to-friends/<int:f_id>')
 @login_required
 def add_to_friends(f_id):
+    print()
     if f_id != current_user.id:
         check = db.session.query(Friendship).\
             filter(
@@ -293,28 +328,35 @@ def add_to_friends(f_id):
             filter(
                 Friendship.requesting_user_id.like(f_id),
                 Friendship.receiving_user_id.like(current_user.id)).first()
-        if not check:        
+        if not check:
             f_ship = Friendship(
-                id = f'fship{current_user.id}-{f_id}',
+                id=f'fship{current_user.id}-{f_id}',
                 requesting_user_id=current_user.id,
                 receiving_user_id=f_id,
                 status=False,
                 )
             db.session.add(f_ship)
             db.session.commit()
-        else :
+        else:
             db.session.delete(check)
+
+            # User Activity
+            user_activity_1 = UserActivities.query.filter_by(
+                user_id=current_user.id).first()
+            user_activity_1.friendship -= 1
+
+            user_activity_2 = UserActivities.query.filter_by(
+                user_id=f_id).first()
+            user_activity_2.friendship -= 1
+
             db.session.commit()
     else:
         return 'You cant add to friends yourself !'
 
     if 'user/friend-requests' in request.referrer:
-        return redirect(url_for('users.user_firend_requsts'))
+        return redirect(url_for('users.user_friend_requests'))
     else:
         return redirect(url_for('users.users_profiles', u_id=f_id))    
-
-
-
 
 
 @users_bp.route('/remove_meal/<int:m_id>/<int:u_id>', methods=['GET'])
@@ -324,6 +366,12 @@ def remove_meal(m_id: int, u_id: int):
         filter(Meal.id.like(m_id)).first()
     if meal.author_id == current_user.id:
         db.session.delete(meal)
+
+        # User Activity
+        user_activity = UserActivities.query.filter_by(
+            user_id=current_user.id).first()
+        user_activity.meal_author -= 1
+
         db.session.commit()
         return redirect(url_for(
             'users.users_profiles',
@@ -362,6 +410,12 @@ def delete_comment(comment_id):
     if comment.author != current_user:
         abort(403)
     db.session.delete(comment)
+
+    # User Activity
+    user_login_count = UserActivities.query.filter_by(
+        user_id=comment.author.id).first()
+    user_login_count.comments -= 1
+
     db.session.commit()
     flash('Your comment has been deleted!', 'success')
     return redirect(url_for('meals.meal_info', m_id=m_id))
@@ -411,6 +465,12 @@ def reset_token(token):
         hashed_password = bcrypt.generate_password_hash(
             form.password.data).decode('utf-8')
         user.password = hashed_password
+
+        # User Activity
+        user_activity = UserActivities.query.filter_by(
+            user_id=user.id).first()
+        user_activity.pwd_reset += 1
+
         db.session.commit()
         flash(
             'Your password has been updated! You are now able to log in',
@@ -438,6 +498,12 @@ def support_post():
             user_id=current_user.id,
             content=form.content.data)
         db.session.add(s)
+
+        # User Activity
+        user_activity = UserActivities.query.filter_by(
+            user_id=current_user.id).first()
+        user_activity.support_message += 1
+
         db.session.commit()
         flash(
             ' [Success] Your message send to admin ! ',

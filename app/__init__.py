@@ -47,7 +47,6 @@ def create_app(debug= False,port= 5010):
     migrate.init_app(app, db)
     socketio.init_app(app)
 
-
 # handle login_requerd for blueprint
     @login_manager.unauthorized_handler
     def unauthorized_callback():
@@ -103,7 +102,6 @@ def create_app(debug= False,port= 5010):
 # admin panel
 
     with app.app_context():
-        
 
         from .users.routes import users_bp
         from .index.routes import index_bp
@@ -127,8 +125,6 @@ def create_app(debug= False,port= 5010):
         app.register_blueprint(meals_bp)
         app.register_blueprint(mail_bp)
         app.register_blueprint(adm)
-
-        
 
         db.create_all()
         return app

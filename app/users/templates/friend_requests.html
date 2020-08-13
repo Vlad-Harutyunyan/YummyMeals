@@ -17,7 +17,7 @@
             <img src={{url_for('users.static',filename= 'profile_pics/'+fr.sender.image_file)}} height="100" width="100" alt="Avatar">
             <p id="info"><b>{{fr.sender.username}}</b> <br> <span>{{fr.request_date|timeagofilter}}</p>
             <div id="button-block">
-                <a href={{url_for('users.confirme_friend_request' , f_ship_id = fr.id)}} id="confirm">Confirm</a>
+                <a href={{url_for('users.confirm_friend_request' , f_ship_id = fr.id)}} id="confirm">Confirm</a>
                 <a href = {{url_for('users.add_to_friends' , f_id = fr.sender.id)}} id="delete">Delete Request</a>
             </div>
         </div>

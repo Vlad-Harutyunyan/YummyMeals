@@ -7,7 +7,7 @@ from ..mail.routes import mail_send
 from ..meals.fill_db import fill_all
 from .. import admin, db
 from ..users.models import User, UserComments, User_Favorite,\
-    User_Favorite_Category, Support_Message ,Friendship
+    User_Favorite_Category, Support_Message ,Friendship, UserActivities
 
 from flask import render_template, Blueprint, abort,\
     redirect, flash, current_app, request
@@ -84,4 +84,5 @@ admin.add_views(IndexView(Ingredient, db.session))
 admin.add_views(IndexView(Meal_ingredient, db.session))
 admin.add_views(IndexView(Support_Message, db.session))
 admin.add_views(IndexView(Friendship, db.session))
+admin.add_views(IndexView(UserActivities, db.session))
 
