@@ -428,9 +428,9 @@ def delete_comment(comment_id):
     db.session.delete(comment)
 
     # User Activity
-    user_login_count = UserActivities.query.filter_by(
+    user_activity = UserActivities.query.filter_by(
         user_id=comment.author.id).first()
-    user_login_count.comments -= 1
+    user_activity.comments -= 1
 
     db.session.commit()
     flash('Your comment has been deleted!', 'success')
