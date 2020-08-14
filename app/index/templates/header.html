@@ -24,13 +24,7 @@
     <div class="line l-03"></div>
     <div class="line l-04"></div>
   </div>
-  {%if current_user.is_authenticated%}
-  	   <h1> <img width="30" height="30", src="{{url_for('users.static' ,  filename='profile_pics/'+current_user.image_file) }}" alt="Avatar" class="avatar img-circle">
-  	   <a href="/user/user_profile/{{current_user.id}}">{{current_user.username}}</a></h1>
-  {% else%}
-  	   <h1> <img width="30" height="30", src="{{url_for('users.static' ,  filename='profile_pics/guest.png') }}" alt="Avatar" class="avatar img-circle">
-	   <a href="{{ url_for('users.login') }}"> guest user </a></h1>
- {% endif %}
+
   
 </header>
 
