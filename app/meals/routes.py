@@ -63,9 +63,13 @@ def test_route():
 @meals_bp.route('/categories')
 def categories_list():
     categories = Category.query.all()
-    checker = db.session.query(Category).\
-        join(User_Favorite_Category).\
-        filter_by(user_id=current_user.id).all()
+    checker = None
+
+    if current_user.is_authenticated:
+        checker = db.session.query(Category).\
+            join(User_Favorite_Category).\
+            filter_by(user_id=current_user.id).all()
+    
     return render_template(
         'category_list.html',
         categories=categories,
@@ -78,31 +82,6 @@ def areas_list():
     return render_template(
         'areas_list.html',
         areas=areas)
-
-
-# @meals_bp.route('/search_by_fullname/<meal_name>/')
-# def meal_search_by_fullname(meal_name):
-#     meal_name = name_correct(meal_name)
-#     meal = Meal.query.filter_by(name=meal_name).first()
-#     if meal:
-#         form = CommentForm()
-#         check = False
-#         page = request.args.get('page', 1, type=int)
-#         comments = UserComments.query.filter(
-#             UserComments.meal_id == meal.id)\
-#             .paginate(per_page=2, page=page)
-#         ingredients = Meal_ingredient.query.filter_by(
-#             meal_id=meal.id).all()
-#         return render_template(
-#             'meal_info.html',
-#             meal=meal,
-#             ingredients=ingredients,
-#             form=form,
-#             check=check,
-#             comments=comments,
-#             page=page)
-#     else:
-#         return redirect('/meal')
 
 
 @meals_bp.route('/search/')
