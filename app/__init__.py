@@ -1,8 +1,7 @@
-from gevent import monkey
-monkey.patch_all()
-
 import os
 from datetime import datetime
+
+from gevent import monkey
 
 from flask import Flask, Blueprint, redirect, render_template
 from flask_sqlalchemy import SQLAlchemy
@@ -16,6 +15,7 @@ from flask_socketio import SocketIO
 
 from app.config import Config
 
+monkey.patch_all()
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -23,25 +23,25 @@ bcrypt = Bcrypt()
 migrate = Migrate()
 mail = Mail()
 admin = Admin(name='Admin_panel', template_mode='bootstrap3')
-socketio = SocketIO(async_mode='gevent',always_connect=True)
+socketio = SocketIO(async_mode='gevent', always_connect=True)
 
 
-def create_app(debug= False,port= 5010):
+def create_app(debug=False, port=5010):
     """Construct the  core app object."""
 
     app = Flask(__name__)
     app.config.from_object(Config)
     app.debug = debug
-    app.port= port
+    app.port = port
     login_manager.login_view = 'users.login'
     login_manager.login_message_category = 'info'
-    
-     # Initialize Plugins
+
+# Initialize Plugins
     db.init_app(app)
     login_manager.init_app(app)
     bcrypt.init_app(app)
     mail.init_app(app)
-    
+
     manager = Manager(app)
     manager.add_command('db', MigrateCommand)
     migrate.init_app(app, db)
