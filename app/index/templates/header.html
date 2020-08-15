@@ -2,11 +2,16 @@
 
 <link rel="stylesheet" href="{{url_for('index.static',filename='css/header.css') }}">
 
-<header>   
+<header style="display:flex">   
  
   <h1><a style="display:flex;" href="/"><img width="314" height="70", src="{{url_for('users.static' ,  filename='profile_pics/Logo2-1.png') }}" ></a></h1>
-  <h1> {%if current_user.id%}<img width="30" height="30", src="{{url_for('users.static' ,  filename='profile_pics/'+current_user.image_file) }}" alt="Avatar" class="avatar img-circle">
-  	   <a href="/user/user_profile/{{current_user.id}}">{{current_user.username}}{%endif%}</a></h1>
+  <h1> 
+  {%if current_user.is_authenticated%}
+  <img width="30" height="30", src="{{url_for('users.static' ,  filename='profile_pics/'+current_user.image_file) }}" alt="Avatar" class="avatar img-circle">
+  	<a href="/user/user_profile/{{current_user.id}}">{{current_user.username}}
+  {%endif%}
+  </a>
+</h1>
 
   
 <div class="search-form">
@@ -77,3 +82,18 @@
   </div>
   <!-- socials -->
 </nav>
+
+
+<!--
+
+AdminUser
+yummymealbook@gmail.com
+987830cdd3f4d944.png
+$2b$12$hvK407pQvIftZJfat/px6OBdOPaRuNMMMnLKrVNlo.qYLAHR6Gbv6
+
+Ruzanna
+rordian@yahoo.com
+default.jpg
+$2b$12$AUJGJAR2BtP3GH.2qVWnqeOslqQ.Y.0mqHde2xuCo9ioHb20xpkaC
+
+-->
