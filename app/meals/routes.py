@@ -307,7 +307,6 @@ def add_favorite_category(category_id):
 def meal_search_name(meal_name):
     meal = Meal.query.filter(Meal.name.contains(str(meal_name).lower())).\
                              first()
-    print(str(meal_name).lower())
     if meal:
         return redirect(url_for('meals.meal_info', m_id=meal.id))
     else:
@@ -339,10 +338,8 @@ def meal_search_by_ingredient():
             mylist = []
             for j in meal_ing:
                 mylist.append(j.meal.name)
-            print(mylist)
             ing_dict[i] = mylist
         res=list(set.intersection(*map(set, list(ing_dict.values()))))
-        print(len(res))
         meallist = Meal.query.filter(Meal.name.in_(res)).paginate(page, 15 ,False)
 
     next_url = url_for('meals.meal_search_by_ingredient',
