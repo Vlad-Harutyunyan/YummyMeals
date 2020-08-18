@@ -140,5 +140,6 @@ class UserActivities(db.Model):
     profile_pict = db.Column(db.Integer, nullable=False, default=0)
     login = db.Column(db.Integer, nullable=False, default=0)
     pwd_reset = db.Column(db.Integer, nullable=False, default=0)
+    user = db.relationship('User')
 
 
