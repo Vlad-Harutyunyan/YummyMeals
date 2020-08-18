@@ -1,7 +1,8 @@
+from gevent import monkey
+monkey.patch_all()
+
 import os
 from datetime import datetime
-
-from gevent import monkey
 
 from flask import Flask, Blueprint, redirect, render_template
 from flask_sqlalchemy import SQLAlchemy
@@ -15,7 +16,6 @@ from flask_socketio import SocketIO
 
 from app.config import Config
 
-monkey.patch_all()
 
 db = SQLAlchemy()
 login_manager = LoginManager()
