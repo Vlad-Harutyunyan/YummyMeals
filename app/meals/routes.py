@@ -323,3 +323,39 @@ def ingr_info(ing_id):
         'ingredient_info.html',
         name=ingredient.name,
         description=ingredient.description)
+
+
+
+@meals_bp.route('/search_by_ingredient/')
+def meal_search_by_ingredient():
+    i_name = request.args.get('srch_ingredient')
+    page = request.args.get('page', 1, type=int)
+    meallist = None
+    if isinstance(i_name, str) and not i_name.isdecimal():
+        ing_dict={}
+        for i in list(i_name.split(",")):
+            meal_ing = db.session.query(Meal_ingredient).join(Ingredient).\
+                filter(Ingredient.name.contains(i.strip())).all()
+            mylist = []
+            for j in meal_ing:
+                mylist.append(j.meal.name)
+            print(mylist)
+            ing_dict[i] = mylist
+        res=list(set.intersection(*map(set, list(ing_dict.values()))))
+        print(len(res))
+        meallist = Meal.query.filter(Meal.name.in_(res)).paginate(page, 15 ,False)
+
+    next_url = url_for('meals.meal_search_by_ingredient',
+                       page=meallist.next_num,srch_ingredient=i_name) \
+            if meallist.has_next else None
+    prev_url = url_for('meals.meal_search_by_ingredient',
+                       page=meallist.prev_num, srch_ingredient=i_name) \
+            if meallist.has_prev else None
+
+    return render_template(
+            'main_page.html',
+            meallist=meallist,
+        next_url=next_url,
+                prev_url=prev_url
+    )
+
