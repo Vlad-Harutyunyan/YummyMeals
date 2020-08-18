@@ -15,6 +15,18 @@ from .scripts.api import thisfolder
 sys.path.append(".")
 
 
+def smart_db_update(db_table,record,check=True):
+    if check :
+        q = db.session.query(db_table).filter(db_table.name == record.name)
+        if not db.session.query(q.exists()).scalar():
+            db.session.add(record)
+            db.session.commit()
+    else:
+        q = db.session.query(db_table).filter(db_table.id == record.id)
+        if not db.session.query(q.exists()).scalar():
+            db.session.add(record)
+            db.session.commit()
+
 def read_from_txt(file_name, list_name):
     with open(file_name, 'r', encoding='raw_unicode_escape') as fd:
         mylist = []
@@ -25,60 +37,43 @@ def read_from_txt(file_name, list_name):
 
 def fill_areas_to_db():
     area = read_from_txt(f"{thisfolder}/final_lists/area.txt", 'area')
-    db.session.query(Area).delete()
-    db.session.commit()
     for i in area:
         a = Area(id=i[0], name=i[1])
-        db.session.add(a)
-        db.session.commit()
+        smart_db_update(Area,a)
 
 
 def fill_categories_to_db():
     categories = read_from_txt(f"{thisfolder}/final_lists/categories.txt",
                                'categories')
-    db.session.query(Category).delete()
-    db.session.commit()
     for i in categories:
         a = Category(id=i[0], name=i[1], img_link=i[2], description=i[3])
-        db.session.add(a)
-        db.session.commit()
+        smart_db_update(Category,a)
 
 
 def fill_ingredients_to_db():
     ingredient = read_from_txt(f"{thisfolder}/final_lists/ingredient.txt",
                                'ingredient')
-    db.session.query(Ingredient).delete()
-    db.session.commit()
     for i in ingredient:
         a = Ingredient(id=i[0], name=i[1], description=i[2])
-        db.session.add(a)
-        db.session.commit()
+        smart_db_update(Ingredient,a)
 
 
 def fill_meals_to_db():
     meals = read_from_txt(f"{thisfolder}/final_lists/meals.txt", 'meals')
-
-    db.session.query(Meal).filter(Meal.author_id == 1).delete()
-    db.session.commit()
-
     for i in meals:
         a = Meal(id=i[0], name=i[1], category_id=i[2], area_id=i[3],
                  instructions=i[5], img_link=i[6], tags=i[7], video_link=i[8])
-        db.session.add(a)
-        db.session.commit()
+        smart_db_update(Meal,a)
+
 
 
 def fill_meal_ingredient_to_db():
     meal_ingredient = read_from_txt(
         f"{thisfolder}/final_lists/meal_ingredient.txt",
         'meal_ingredient')
-    db.session.query(Meal_ingredient).filter(
-                     Meal_ingredient.by_user == 0).delete()
-    db.session.commit()
     for i in meal_ingredient:
         a = Meal_ingredient(meal_id=i[0], ingredient_id=i[1])
-        db.session.add(a)
-        db.session.commit()
+        smart_db_update(Meal_ingredient,a,check=False)
 
 
 def fill_all():
