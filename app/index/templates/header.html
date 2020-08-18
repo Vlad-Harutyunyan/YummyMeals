@@ -8,10 +8,13 @@
   <h1> 
   {%if current_user.is_authenticated%}
   <img width="30" height="30", src="{{url_for('users.static' ,  filename='profile_pics/'+current_user.image_file) }}" alt="Avatar" class="avatar img-circle">
-  	<a href="/user/user_profile/{{current_user.id}}">{{current_user.username}}
-  {%endif%}
-  </a>
-</h1>
+  	<a href="/user/user_profile/{{current_user.id}}">{{current_user.username}}  </a> 
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	   {%if f_ship_requests %}
+	      <a href="{{url_for('users.user_friend_requests')}}">	<img width="50" height="55", src="{{url_for('index.static' ,  filename='media/icon-request-152.gif') }}" alt="Avatar" class="avatar img-circle"><br><br></a>
+	   {%endif %}
+	{%endif%}
+  </h1>
 
   
 <div class="search-form">
@@ -70,8 +73,14 @@
   <!-- single-item-wrapper -->
   <hr/>
   <form class="form-inline" method = 'GET' action="{{url_for('meals.meal_search_by_username')}}">
-    <label for='srch_by_username' class = 'badge badge-primary text-wrap' style="margin:10px 0" >Search Recipe <br/> by user username</label>
-        <input id="srch_by_username" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name = "srch_user_username">
+    <label for='srch_by_username' class = 'badge badge-primary text-wrap' style="margin:10px 0" >>>> </label>
+        <input id="srch_by_username" class="form-control mr-sm-2" type="search" placeholder="Search by username" aria-label="Search" name = "srch_user_username">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+	
+	  <form class="form-inline" method = 'GET' action="{{url_for('meals.meal_search_by_ingredient')}}">
+    <label for='srch_by_uingredient' class = 'badge badge-primary text-wrap' style="margin:10px 0" >>>></label>
+        <input id="srch_by_ingredient" class="form-control mr-sm-2" type="search" placeholder="Search by ingredient" aria-label="Search" name = "srch_ingredient">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
   <div class="nav_navigation socials">
