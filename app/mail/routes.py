@@ -50,12 +50,12 @@ def mail_send():
                 'New Recipe', sender='yummymealbook@gmail.com', recipients=[
                     f'{User.query.filter(User.id ==x.user_id).first().email}'])
             msg.body = f'Hello dear' \
-           f' {User.query.filter(User.id == x.user_id).first().username}!' \
-           f' We have good news for you! A new recipe for your' \
-           f' selected category' \
+           f' {User.query.filter(User.id == x.user_id).first().username}! ' \
+           f' We have good news for you!   A new recipe for your' \
+           f' selected category ' \
            f'{Category.query.filter(Category.id==x.category_id).first().name}'\
            f' has arrived!'
-        mail.send(msg)
+            mail.send(msg)
 
     return f'mails sent {datetime.datetime.utcnow()}'
 
