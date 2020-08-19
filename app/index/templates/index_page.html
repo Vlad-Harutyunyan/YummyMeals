@@ -9,7 +9,7 @@ Home page
 <link rel="stylesheet" type="text/css" href="{{url_for('index.static',filename='css/emoji/jquery.emojipicker.css') }}">
 <div class="main_wrapper" style="display:flex; padding:20px auto;">
 
-<div class='chat_sidebar' style="width:29%; margin-top:100px;">
+<div class='chat_sidebar' style="width:25%;height:500px; margin-top:100px;">
 
 
   <script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
@@ -63,9 +63,9 @@ Home page
 
         <h1 style="font-size:30px;text-align:center;margin-bottom:10px;">Online chat</h1>
         <p id="onlineStatusChecker"></p>
-        <textarea id="chat" cols="80" rows="40" style="width:100%;" disabled></textarea><br><br>
+         <textarea id="chat" cols="20" rows="33" style="width:100%;" disabled></textarea><br><br>
         {% if current_user.is_authenticated %}
-          <input id="text" size="80" placeholder="Enter your message here" style="width:100%; height:55px;"><br><br>
+          <input id="text" size="80" placeholder="Enter your message here" style="width:100%; height:35px;"><br><br>
         {% else %}  
           <p>Please <a href="{{url_for('users.register')}}">register</a>,or  <a href="{{url_for('users.login')}}">login</a> to leave comment !!</p>
         {% endif %}
@@ -73,7 +73,7 @@ Home page
 </div>
 
 
-<div class="cont s--inactive" style="width:100%;">
+<div class="cont s--inactive" style="width:100%;height:700px; ">
   <!-- cont inner start -->
   <h1 style="font-size:30px;text-align:center;margin:20px auto;">Top Recipes</h1>
 
@@ -82,24 +82,28 @@ Home page
 
   {% for rec in range(tops|length)  %}
    <!-- el start -->
-    <div class="el">
+    <div class="el" >
       <div class="el__overflow">
         <div class="el__inner">
+		{% if tops[rec].img_link != "default.jpg"%}
           <div class="el__bg" style="background:url('{{tops[rec].img_link}}');background-size: cover"></div>
+		{% else%}
+		   <div class="el__bg" style="background:url({{url_for('meals.static' , filename = "default.jpg")}});background-size: cover"></div> 
+		{% endif %}
           <div class="el__preview-cont">
             <h2 class="el__heading">{{tops[rec].name}}</h2>
           </div>
           <div class="el__content">
             <div class="el__text">{{tops[rec].name}}</div>
             <div class="el__text_descr">{{tops[rec].instructions}}</div>
-            <div class="el__text_btn">
+            <div class="el__text_btn" >
             <a class="btn btn-info" href={{url_for('meals.meal_info' , m_id=tops[rec].id)}}> More info </a>
             </div>
             <div class="el__close-btn"></div>
           </div>
         </div>
       </div>
-      <div class="el__index">
+      <div class="el__index" style="margin-bottom: 120px;">
         <div class="el__index-back">{{rec+1}}</div>
         <div class="el__index-front">
           <div class="el__index-overlay" data-index="{{rec+1}}">{{rec+1}}</div>
