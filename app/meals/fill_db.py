@@ -1,22 +1,14 @@
-# from .scripts.api import meals, ingredient, categories, meal_ingredient, area
 import sys
 from ast import literal_eval
-# from sqlalchemy.ext.declarative import declarative_base
-# from sqlalchemy import Column, Integer, String, ForeignKey ,create_engine
-# from sqlalchemy.orm import sessionmaker , relationship
-# import os
-# from flask import Flask ,Blueprint ,redirect ,render_template
-# from flask_sqlalchemy import SQLAlchemy
-# from flask_bcrypt import Bcrypt
-# from flask_login import LoginManager
-from . models import Area, Meal_ingredient, Ingredient, Meal, Category
+from .models import Area, Meal_ingredient, Ingredient, Meal, Category
 from .. import db
 from .scripts.api import thisfolder
+
 sys.path.append(".")
 
 
-def smart_db_update(db_table,record,check=True):
-    if check :
+def smart_db_update(db_table, record, check=True):
+    if check:
         q = db.session.query(db_table).filter(db_table.name == record.name)
         if not db.session.query(q.exists()).scalar():
             db.session.add(record)
@@ -26,6 +18,7 @@ def smart_db_update(db_table,record,check=True):
         if not db.session.query(q.exists()).scalar():
             db.session.add(record)
             db.session.commit()
+
 
 def read_from_txt(file_name, list_name):
     with open(file_name, 'r', encoding='raw_unicode_escape') as fd:
@@ -39,7 +32,7 @@ def fill_areas_to_db():
     area = read_from_txt(f"{thisfolder}/final_lists/area.txt", 'area')
     for i in area:
         a = Area(id=i[0], name=i[1])
-        smart_db_update(Area,a)
+        smart_db_update(Area, a)
 
 
 def fill_categories_to_db():
@@ -47,7 +40,7 @@ def fill_categories_to_db():
                                'categories')
     for i in categories:
         a = Category(id=i[0], name=i[1], img_link=i[2], description=i[3])
-        smart_db_update(Category,a)
+        smart_db_update(Category, a)
 
 
 def fill_ingredients_to_db():
@@ -55,7 +48,7 @@ def fill_ingredients_to_db():
                                'ingredient')
     for i in ingredient:
         a = Ingredient(id=i[0], name=i[1], description=i[2])
-        smart_db_update(Ingredient,a)
+        smart_db_update(Ingredient, a)
 
 
 def fill_meals_to_db():
@@ -63,8 +56,7 @@ def fill_meals_to_db():
     for i in meals:
         a = Meal(id=i[0], name=i[1], category_id=i[2], area_id=i[3],
                  instructions=i[5], img_link=i[6], tags=i[7], video_link=i[8])
-        smart_db_update(Meal,a)
-
+        smart_db_update(Meal, a)
 
 
 def fill_meal_ingredient_to_db():
@@ -73,7 +65,7 @@ def fill_meal_ingredient_to_db():
         'meal_ingredient')
     for i in meal_ingredient:
         a = Meal_ingredient(meal_id=i[0], ingredient_id=i[1])
-        smart_db_update(Meal_ingredient,a,check=False)
+        smart_db_update(Meal_ingredient, a, check=False)
 
 
 def fill_all():
@@ -82,4 +74,4 @@ def fill_all():
     fill_categories_to_db()
     fill_ingredients_to_db()
     fill_meals_to_db()
-    print('All done successfuly!')
+    print('All done successfully!')

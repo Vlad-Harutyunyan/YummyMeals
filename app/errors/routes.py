@@ -1,5 +1,4 @@
 import os
-
 from flask import (
     Blueprint,
     render_template

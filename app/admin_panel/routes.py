@@ -1,21 +1,18 @@
 import os
-import threading as t
 
 from ..meals.models import Meal_ingredient, Meal, Category, Area, Ingredient
 from .admin_thread import FlaskThread
 from ..mail.routes import mail_send
 from ..meals.fill_db import fill_all
 from .. import admin, db
-from ..users.models import User, UserComments, User_Favorite,\
-    User_Favorite_Category, Support_Message ,Friendship, UserActivities
+from ..users.models import User, UserComments, User_Favorite, \
+    User_Favorite_Category, Support_Message, Friendship, UserActivities
 
-from flask import render_template, Blueprint, abort,\
-    redirect, flash, current_app, request
-from flask_paginate import Pagination, get_page_parameter
+from flask import Blueprint, abort, \
+    redirect, flash, request
 from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user
 from flask_admin import expose, AdminIndexView
-
 
 static_path = os.path.abspath(os.path.join(os.path.dirname(
     os.path.abspath(__file__)), 'static'))
@@ -30,10 +27,9 @@ BUFF_SIZE = 5
 class AdminIndexPage(AdminIndexView):
     @expose('/')
     def index(self):
-
         page = request.args.get('page', 1, type=int)
-        users_msgs = db.session.query(Support_Message)\
-            .order_by(Support_Message.date_posted.desc()).\
+        users_msgs = db.session.query(Support_Message) \
+            .order_by(Support_Message.date_posted.desc()). \
             paginate(per_page=5, page=page)
 
         return self.render(
@@ -52,11 +48,10 @@ class IndexView(ModelView):
 def send_mails():
     if (current_user.is_authenticated and
             current_user.is_admin):
+        FlaskThread(target=mail_send).start()
+        flash('Your request in progress . . . ', 'info')
 
-            FlaskThread(target=mail_send).start()
-            flash('Your request in progress . . . ', 'info')
-
-            return redirect('/admin')
+        return redirect('/admin')
     return abort(403)
 
 
@@ -64,11 +59,10 @@ def send_mails():
 def update_db():
     if (current_user.is_authenticated and
             current_user.is_admin):
+        FlaskThread(target=fill_all).start()
+        flash('Your request in progress . . . ', 'info')
 
-            FlaskThread(target=fill_all).start()
-            flash('Your request in progress . . . ', 'info')
-
-            return redirect('/admin')
+        return redirect('/admin')
     return abort(403)
 
 
@@ -85,4 +79,3 @@ admin.add_views(IndexView(Meal_ingredient, db.session))
 admin.add_views(IndexView(Support_Message, db.session))
 admin.add_views(IndexView(Friendship, db.session))
 admin.add_views(IndexView(UserActivities, db.session))
-

@@ -8,4 +8,4 @@ class Config:
     MAIL_PASSWORD = '789456123yummy'
     MAIL_USE_TLS = False
     MAIL_USE_SSL = True
-    SECRET_KEY = 'gjr39dkjn344_!67#'
+    # SECRET_KEY = 'gjr39dkjn344_!67#'

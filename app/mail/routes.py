@@ -1,27 +1,15 @@
 import os
-
-import schedule
-import time
-
 from flask import (
-    Flask,
-    g,
-    url_for,
-    redirect,
-    render_template,
     Blueprint, current_app
 )
-from flask_login import current_user
 from flask_mail import Mail, Message
 from ..users.models import User, User_Favorite_Category
 from ..meals.models import Meal, Category
 import datetime
 from datetime import timedelta
 
-
 satatic_path = os.path.abspath(os.path.join(os.path.dirname(
     os.path.abspath(__file__)), 'static'))
-
 
 mail_bp = Blueprint(
     'mail',
@@ -48,13 +36,13 @@ def mail_send():
             print("ok")
             msg = Message(
                 'New Recipe', sender='yummymealbook@gmail.com', recipients=[
-                    f'{User.query.filter(User.id ==x.user_id).first().email}'])
+                    f'{User.query.filter(User.id == x.user_id).first().email}'])
             msg.body = f'Hello dear' \
-           f' {User.query.filter(User.id == x.user_id).first().username}! ' \
-           f' We have good news for you!   A new recipe for your' \
-           f' selected category ' \
-           f'{Category.query.filter(Category.id==x.category_id).first().name}'\
-           f' has arrived!'
+                f' {User.query.filter(User.id == x.user_id).first().username}! ' \
+                f' We have good news for you!   A new recipe for your' \
+                f' selected category ' \
+                f'{Category.query.filter(Category.id == x.category_id).first().name}' \
+                f' has arrived!'
             mail.send(msg)
 
     return f'mails sent {datetime.datetime.utcnow()}'

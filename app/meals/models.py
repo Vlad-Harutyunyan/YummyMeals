@@ -1,11 +1,8 @@
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, ForeignKey, create_engine
-from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
 from datetime import datetime
 import os
-import json
 from .. import db
-from ..users.models import User
 
 
 class Area(db.Model):
@@ -14,7 +11,7 @@ class Area(db.Model):
     name = Column(String)
 
     def __repr__(self):
-            return f"Area '{self.name}','{self.id}' "
+        return f"Area '{self.name}','{self.id}' "
 
 
 class Category(db.Model):
@@ -25,7 +22,7 @@ class Category(db.Model):
     description = Column(String)
 
     def __repr__(self):
-            return f"Category '{self.name}','{self.description}' "
+        return f"Category '{self.name}','{self.description}' "
 
 
 class Ingredient(db.Model):
@@ -35,7 +32,7 @@ class Ingredient(db.Model):
     description = Column(String)
 
     def __repr__(self):
-            return f"Ingredient '{self.name} , {self.description}'  "
+        return f"Ingredient '{self.name} , {self.description}'  "
 
 
 class Meal_ingredient(db.Model):
@@ -49,7 +46,7 @@ class Meal_ingredient(db.Model):
     ingredient = relationship("Ingredient")
 
     def __repr__(self):
-            return f"Meal ingr '{self.meal.name}', '{self.ingredient.name}' "
+        return f"Meal ingr '{self.meal.name}', '{self.ingredient.name}' "
 
 
 class Meal(db.Model):
@@ -70,8 +67,8 @@ class Meal(db.Model):
     user = relationship("User")
 
     def __repr__(self):
-            return f"Meal '{self.id}', '{self.name}', '{self.user.username}'," \
-                   f"'{self.date_posted}'"
+        return f"Meal '{self.id}', '{self.name}', '{self.user.username}'," \
+               f"'{self.date_posted}'"
 
 
 path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
