@@ -15,7 +15,7 @@ from flask_login import current_user
 
 from .models import Meal, Ingredient, Category, Area, Meal_ingredient
 from .. import db
-from ..users.models import User_Favorite, User_Favorite_Category, User
+from ..users.models import UserFavorite, UserFavoriteCategory, User
 from ..users.forms import CommentForm
 from ..users.models import UserComments, UserActivities
 from ..index.routes import top_fives
@@ -37,9 +37,9 @@ meals_bp = Blueprint(
 
 
 def get_fav_catgories(category_id):
-    check = db.session.query(User_Favorite_Category).filter(
-        User_Favorite_Category.category_id.like(category_id),
-        User_Favorite_Category.user_id.like(current_user.id)).first()
+    check = db.session.query(UserFavoriteCategory).filter(
+        UserFavoriteCategory.category_id.like(category_id),
+        UserFavoriteCategory.user_id.like(current_user.id)).first()
     return check
 
 
@@ -69,7 +69,7 @@ def categories_list():
 
     if current_user.is_authenticated:
         checker = db.session.query(Category).\
-            join(User_Favorite_Category).\
+            join(UserFavoriteCategory).\
             filter_by(user_id=current_user.id).all()
 
     return render_template(
@@ -109,6 +109,7 @@ def meal_search():
 
 
 @meals_bp.route('/search_by_username/')
+@login_required
 def meal_search_by_username():
     u_name = request.args.get('srch_user_username')
     page = request.args.get('page', 1, type=int)
@@ -190,9 +191,9 @@ def meals_by_category(c_id):
 @meals_bp.route('/add-favorite/<int:meal_id>', methods=['GET'])
 @login_required
 def add_favorite(meal_id):
-    bb = db.session.query(User_Favorite).filter(
-        User_Favorite.meal_id.like(meal_id),
-        User_Favorite.user_id.like(current_user.id)).first()
+    bb = db.session.query(UserFavorite).filter(
+        UserFavorite.meal_id.like(meal_id),
+        UserFavorite.user_id.like(current_user.id)).first()
 
     # User Activity
     user_activity = UserActivities.query.filter_by(
@@ -200,7 +201,7 @@ def add_favorite(meal_id):
 
     if not bb:
         check = False
-        user_favorite = User_Favorite(
+        user_favorite = UserFavorite(
             user_id=current_user.id,
             meal_id=meal_id
         )
@@ -231,9 +232,9 @@ def meal_info(m_id):
         ingredients = Meal_ingredient.query.filter_by(meal_id=m_id).all()
         form = CommentForm()
         try:
-            check = db.session.query(User_Favorite).filter(
-                User_Favorite.meal_id.like(m_id),
-                User_Favorite.user_id.like(current_user.id)
+            check = db.session.query(UserFavorite).filter(
+                UserFavorite.meal_id.like(m_id),
+                UserFavorite.user_id.like(current_user.id)
             ).first()
         except:
             check = False
@@ -242,8 +243,8 @@ def meal_info(m_id):
             filter(UserComments.meal_id == m_id).\
             order_by(UserComments.date_posted.desc()).\
             paginate(per_page=2, page=page)
-        fav_count = len(db.session.query(User_Favorite).filter(
-            User_Favorite.meal_id.like(m_id)).all())
+        fav_count = len(db.session.query(UserFavorite).filter(
+            UserFavorite.meal_id.like(m_id)).all())
         if not current_user.is_authenticated:
             if m_id in [x.id for x in top_fives()]:
                 meal = Meal.query.filter_by(id=m_id).first()
@@ -281,16 +282,16 @@ def meal_info_post(m_id):
 @meals_bp.route('/add-favorite-category/<int:category_id>', methods=['GET'])
 @login_required
 def add_favorite_category(category_id):
-    bb = db.session.query(User_Favorite_Category).filter(
-        User_Favorite_Category.category_id.like(category_id),
-        User_Favorite_Category.user_id.like(current_user.id)).first()
+    bb = db.session.query(UserFavoriteCategory).filter(
+        UserFavoriteCategory.category_id.like(category_id),
+        UserFavoriteCategory.user_id.like(current_user.id)).first()
 
     # User Activity
     user_activity = UserActivities.query.filter_by(
         user_id=current_user.id).first()
 
     if not bb:
-        user_favorite_category = User_Favorite_Category(
+        user_favorite_category = UserFavoriteCategory(
             user_id=current_user.id,
             category_id=category_id
         )
@@ -335,6 +336,7 @@ def ingr_info(ing_id):
 
 
 @meals_bp.route('/search_by_ingredient/')
+@login_required
 def meal_search_by_ingredient():
     i_name = request.args.get('srch_ingredient')
     page = request.args.get('page', 1, type=int)
