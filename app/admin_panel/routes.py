@@ -5,7 +5,7 @@ from .admin_thread import FlaskThread
 from ..mail.routes import mail_send
 from ..meals.fill_db import fill_all
 from .. import admin, db
-from ..users.models import User, UserComments, User_Favorite, \
+from ..users.models import User, UserComments, UserFavorite, \
     User_Favorite_Category, Support_Message, Friendship, UserActivities
 
 from flask import Blueprint, abort, \
@@ -69,7 +69,7 @@ def update_db():
 # adding views
 admin.add_views(IndexView(User, db.session))
 admin.add_views(IndexView(UserComments, db.session))
-admin.add_views(IndexView(User_Favorite, db.session))
+admin.add_views(IndexView(UserFavorite, db.session))
 admin.add_views(IndexView(User_Favorite_Category, db.session))
 admin.add_views(IndexView(Meal, db.session))
 admin.add_views(IndexView(Category, db.session))

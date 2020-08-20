@@ -11,7 +11,7 @@ from flask_login import current_user
 
 from .models import Meal, Ingredient, Category, Area, Meal_ingredient
 from .. import db
-from ..users.models import User_Favorite, User_Favorite_Category, User
+from ..users.models import UserFavorite, User_Favorite_Category, User
 from ..users.forms import CommentForm
 from ..users.models import UserComments, UserActivities
 
@@ -182,9 +182,9 @@ def meals_by_category(c_id):
 @meals_bp.route('/add-favorite/<int:meal_id>', methods=['GET'])
 @login_required
 def add_favorite(meal_id):
-    bb = db.session.query(User_Favorite).filter(
-        User_Favorite.meal_id.like(meal_id),
-        User_Favorite.user_id.like(current_user.id)).first()
+    bb = db.session.query(UserFavorite).filter(
+        UserFavorite.meal_id.like(meal_id),
+        UserFavorite.user_id.like(current_user.id)).first()
 
     # User Activity
     user_activity = UserActivities.query.filter_by(
@@ -192,7 +192,7 @@ def add_favorite(meal_id):
 
     if not bb:
         check = False
-        user_favorite = User_Favorite(
+        user_favorite = UserFavorite(
             user_id=current_user.id,
             meal_id=meal_id
         )
@@ -223,9 +223,9 @@ def meal_info(m_id):
     ingredients = Meal_ingredient.query.filter_by(meal_id=m_id).all()
     form = CommentForm()
     try:
-        check = db.session.query(User_Favorite).filter(
-            User_Favorite.meal_id.like(m_id),
-            User_Favorite.user_id.like(current_user.id)
+        check = db.session.query(UserFavorite).filter(
+            UserFavorite.meal_id.like(m_id),
+            UserFavorite.user_id.like(current_user.id)
         ).first()
     except:
         check = False
@@ -234,8 +234,8 @@ def meal_info(m_id):
         filter(UserComments.meal_id == m_id). \
         order_by(UserComments.date_posted.desc()). \
         paginate(per_page=2, page=page)
-    fav_count = len(db.session.query(User_Favorite).filter(
-        User_Favorite.meal_id.like(m_id)).all())
+    fav_count = len(db.session.query(UserFavorite).filter(
+        UserFavorite.meal_id.like(m_id)).all())
     return render_template('meal_info.html',
                            meal=meal, ingredients=ingredients, check=check,
                            form=form, comments=comments, page=page,

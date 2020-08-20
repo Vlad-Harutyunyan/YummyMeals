@@ -15,7 +15,7 @@ from .forms import (
     CommentForm, RequestResetForm,
     ResetPasswordForm, SupportForm)
 from .models import (
-    User, User_Favorite, UserComments,
+    User, UserFavorite, UserComments,
     Support_Message, User_Favorite_Category,
     Friendship, UserActivities)
 from .. import bcrypt, mail, db
@@ -255,8 +255,8 @@ def users_profiles(u_id: int):
     user_extra = db.session.query(User).all()
     user = db.session.query(User). \
         filter(User.id.like(u_id)).first()
-    user_favorite_meals = db.session.query(User_Favorite). \
-        filter(User_Favorite.user_id.like(u_id)).all()
+    user_favorite_meals = db.session.query(UserFavorite). \
+        filter(UserFavorite.user_id.like(u_id)).all()
     user_meals = db.session.query(Meal). \
         filter(Meal.author_id.like(u_id)).all()
     comments = db.session.query(UserComments). \

@@ -45,7 +45,7 @@ class User(db.Model, UserMixin):
                f"'{self.email}','{self.image_file}')"
 
 
-class User_Favorite(db.Model):
+class UserFavorite(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(
         db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'))

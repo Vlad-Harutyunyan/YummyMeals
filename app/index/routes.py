@@ -8,7 +8,7 @@ from flask import (
 )
 from flask_login import current_user
 from ..meals.models import Meal
-from ..users.models import User_Favorite
+from ..users.models import UserFavorite
 
 static_path = os.path.abspath(os.path.join(os.path.dirname(
     os.path.abspath(__file__)), 'static'))
@@ -26,8 +26,8 @@ index_bp = Blueprint(
 @index_bp.route('/')
 def index():
     mydict = {}
-    for record in User_Favorite.query.all():
-        mydict[record.meal_id] = len(User_Favorite.query.
+    for record in UserFavorite.query.all():
+        mydict[record.meal_id] = len(UserFavorite.query.
                                      filter_by(meal_id=record.meal_id).all())
     res = dict(sorted(mydict.items(), key=itemgetter(1), reverse=True)[:5])
     tops = Meal.query.filter(Meal.id.in_(list(res.keys()))).all()
