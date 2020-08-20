@@ -73,7 +73,7 @@ class UserComments(db.Model):
                f"'{self.meal_id}','{self.user_id}')"
 
 
-class Support_Message(db.Model):
+class SupportMessage(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date_posted = db.Column(db.DateTime, nullable=False,
                             default=datetime.utcnow)

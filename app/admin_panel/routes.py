@@ -6,7 +6,7 @@ from ..mail.routes import mail_send
 from ..meals.fill_db import fill_all
 from .. import admin, db
 from ..users.models import User, UserComments, UserFavorite, \
-    UserFavoriteCategory, Support_Message, Friendship, UserActivities
+    UserFavoriteCategory, SupportMessage, Friendship, UserActivities
 
 from flask import Blueprint, abort, \
     redirect, flash, request
@@ -28,8 +28,8 @@ class AdminIndexPage(AdminIndexView):
     @expose('/')
     def index(self):
         page = request.args.get('page', 1, type=int)
-        users_msgs = db.session.query(Support_Message) \
-            .order_by(Support_Message.date_posted.desc()). \
+        users_msgs = db.session.query(SupportMessage) \
+            .order_by(SupportMessage.date_posted.desc()). \
             paginate(per_page=5, page=page)
 
         return self.render(
@@ -76,6 +76,6 @@ admin.add_views(IndexView(Category, db.session))
 admin.add_views(IndexView(Area, db.session))
 admin.add_views(IndexView(Ingredient, db.session))
 admin.add_views(IndexView(Meal_ingredient, db.session))
-admin.add_views(IndexView(Support_Message, db.session))
+admin.add_views(IndexView(SupportMessage, db.session))
 admin.add_views(IndexView(Friendship, db.session))
 admin.add_views(IndexView(UserActivities, db.session))

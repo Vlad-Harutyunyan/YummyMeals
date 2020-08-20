@@ -16,7 +16,7 @@ from .forms import (
     ResetPasswordForm, SupportForm)
 from .models import (
     User, UserFavorite, UserComments,
-    Support_Message, UserFavoriteCategory,
+    SupportMessage, UserFavoriteCategory,
     Friendship, UserActivities)
 from .. import bcrypt, mail, db
 from ..meals.models import Meal, Ingredient, Category, Area, Meal_ingredient
@@ -508,7 +508,7 @@ def support_get():
 def support_post():
     form = SupportForm()
     if form.validate_on_submit():
-        s = Support_Message(
+        s = SupportMessage(
             user_id=current_user.id,
             content=form.content.data)
         db.session.add(s)
