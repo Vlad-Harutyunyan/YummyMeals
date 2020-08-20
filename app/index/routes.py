@@ -43,7 +43,6 @@ def top_fives():
     res = dict(sorted(mydict.items(), key=itemgetter(1), reverse=True)[:5])
     tops = Meal.query.filter(Meal.id.in_(list(res.keys()))).all()
     tops = sorted(tops, key=lambda o: list(res.keys()).index(o.id))
-    print(tops)
     return tops
 
 
