@@ -11,7 +11,7 @@ from flask_login import current_user
 
 from .models import Meal, Ingredient, Category, Area, Meal_ingredient
 from .. import db
-from ..users.models import UserFavorite, User_Favorite_Category, User
+from ..users.models import UserFavorite, UserFavoriteCategory, User
 from ..users.forms import CommentForm
 from ..users.models import UserComments, UserActivities
 
@@ -31,9 +31,9 @@ meals_bp = Blueprint(
 
 
 def get_fav_catgories(category_id):
-    check = db.session.query(User_Favorite_Category).filter(
-        User_Favorite_Category.category_id.like(category_id),
-        User_Favorite_Category.user_id.like(current_user.id)).first()
+    check = db.session.query(UserFavoriteCategory).filter(
+        UserFavoriteCategory.category_id.like(category_id),
+        UserFavoriteCategory.user_id.like(current_user.id)).first()
     return check
 
 
@@ -63,7 +63,7 @@ def categories_list():
 
     if current_user.is_authenticated:
         checker = db.session.query(Category). \
-            join(User_Favorite_Category). \
+            join(UserFavoriteCategory). \
             filter_by(user_id=current_user.id).all()
 
     return render_template(
@@ -266,16 +266,16 @@ def meal_info_post(m_id):
 @meals_bp.route('/add-favorite-category/<int:category_id>', methods=['GET'])
 @login_required
 def add_favorite_category(category_id):
-    bb = db.session.query(User_Favorite_Category).filter(
-        User_Favorite_Category.category_id.like(category_id),
-        User_Favorite_Category.user_id.like(current_user.id)).first()
+    bb = db.session.query(UserFavoriteCategory).filter(
+        UserFavoriteCategory.category_id.like(category_id),
+        UserFavoriteCategory.user_id.like(current_user.id)).first()
 
     # User Activity
     user_activity = UserActivities.query.filter_by(
         user_id=current_user.id).first()
 
     if not bb:
-        user_favorite_category = User_Favorite_Category(
+        user_favorite_category = UserFavoriteCategory(
             user_id=current_user.id,
             category_id=category_id
         )

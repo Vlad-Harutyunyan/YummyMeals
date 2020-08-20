@@ -16,7 +16,7 @@ from .forms import (
     ResetPasswordForm, SupportForm)
 from .models import (
     User, UserFavorite, UserComments,
-    Support_Message, User_Favorite_Category,
+    Support_Message, UserFavoriteCategory,
     Friendship, UserActivities)
 from .. import bcrypt, mail, db
 from ..meals.models import Meal, Ingredient, Category, Area, Meal_ingredient
@@ -261,8 +261,8 @@ def users_profiles(u_id: int):
         filter(Meal.author_id.like(u_id)).all()
     comments = db.session.query(UserComments). \
         filter(UserComments.user_id.like(u_id)).all()
-    favorite_categories = db.session.query(User_Favorite_Category). \
-        filter(User_Favorite_Category.user_id.like(u_id)).all()
+    favorite_categories = db.session.query(UserFavoriteCategory). \
+        filter(UserFavoriteCategory.user_id.like(u_id)).all()
     friends = db.session.query(User). \
         join(Friendship, User.id == Friendship.requesting_user_id). \
         add_columns(Friendship.receiving_user_id,

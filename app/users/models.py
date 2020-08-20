@@ -85,7 +85,7 @@ class Support_Message(db.Model):
         return f"Support Message-'{self.id}','{self.user.id}','{self.content}'"
 
 
-class User_Favorite_Category(db.Model):
+class UserFavoriteCategory(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))

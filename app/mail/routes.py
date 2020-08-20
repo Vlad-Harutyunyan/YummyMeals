@@ -3,7 +3,7 @@ from flask import (
     Blueprint, current_app
 )
 from flask_mail import Mail, Message
-from ..users.models import User, User_Favorite_Category
+from ..users.models import User, UserFavoriteCategory
 from ..meals.models import Meal, Category
 import datetime
 from datetime import timedelta
@@ -24,7 +24,7 @@ mail_bp = Blueprint(
 def mail_send():
     app = current_app._get_current_object()
     mail = Mail(app)
-    fav = User_Favorite_Category.query.all()
+    fav = UserFavoriteCategory.query.all()
     time_trigger = datetime.datetime.utcnow() - timedelta(hours=24)
     updated_list = []
     updated = Meal.query.filter(Meal.date_posted > time_trigger).all()
