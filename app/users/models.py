@@ -7,7 +7,6 @@ from flask_login import UserMixin
 from .. import db, login_manager
 
 
-
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -60,7 +59,8 @@ class User_Favorite(db.Model):
 
 class UserComments(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date_posted = db.Column(db.DateTime, nullable=False,
+                            default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
     meal_id = db.Column(db.Integer, db.ForeignKey(
         'meal.id', ondelete='CASCADE'), nullable=False)
@@ -99,7 +99,7 @@ class User_Favorite_Category(db.Model):
 class Friendship(db.Model):
     id = db.Column(db.Text, primary_key=True)
     requesting_user_id = db.Column(
-        db.Integer, 
+        db.Integer,
         db.ForeignKey('user.id'),
         nullable=False)
     receiving_user_id = db.Column(
@@ -141,5 +141,3 @@ class UserActivities(db.Model):
     login = db.Column(db.Integer, nullable=False, default=0)
     pwd_reset = db.Column(db.Integer, nullable=False, default=0)
     user = db.relationship('User')
-
-

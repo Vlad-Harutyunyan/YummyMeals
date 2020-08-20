@@ -3,31 +3,29 @@ from PIL import Image
 import secrets
 from datetime import datetime
 
-
 from flask_mail import Message
 from flask import (
-                        render_template, url_for, redirect,
-                        flash, request, Blueprint, abort)
+    render_template, url_for, redirect,
+    flash, request, Blueprint, abort)
 from flask_login import login_user, current_user, logout_user, login_required
 from sqlalchemy import or_
 
 from .forms import (
-                            RegistrationForm, LoginForm, UpdateAccountForm,
-                            CommentForm, RequestResetForm,
-                            ResetPasswordForm, SupportForm)
+    RegistrationForm, LoginForm, UpdateAccountForm,
+    CommentForm, RequestResetForm,
+    ResetPasswordForm, SupportForm)
 from .models import (
-                            User, User_Favorite, UserComments,
-                            Support_Message, User_Favorite_Category,
-                            Friendship, UserActivities)
+    User, User_Favorite, UserComments,
+    Support_Message, User_Favorite_Category,
+    Friendship, UserActivities)
 from .. import bcrypt, mail, db
 from ..meals.models import Meal, Ingredient, Category, Area, Meal_ingredient
 from .scripts.logic import sort_ingrs_by_alphabet
 
-
 satatic_path = os.path.abspath(
-                                os.path.join(
-                                    os.path.dirname(
-                                        os.path.abspath(__file__)), 'static'))
+    os.path.join(
+        os.path.dirname(
+            os.path.abspath(__file__)), 'static'))
 
 users_bp = Blueprint(
     'users',
@@ -76,10 +74,10 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(
-                    email=form.email.data).first()
+            email=form.email.data).first()
         if user and bcrypt.check_password_hash(
-                        user.password,
-                        form.password.data):
+                user.password,
+                form.password.data):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
 
@@ -89,8 +87,8 @@ def login():
             user_activity.login += 1
 
             db.session.commit()
-            return redirect(next_page)\
-                if next_page\
+            return redirect(next_page) \
+                if next_page \
                 else redirect(url_for('index.index'))
         else:
             flash(
@@ -194,19 +192,19 @@ def new_recipe_post():
 
     alphabetic_sorted_ingrs = sort_ingrs_by_alphabet(context['ingr'])
     meal_info = {
-           'name': request.form.get('title'),
-           'instruction': request.form.get('content'),
-           'country': request.form.get('area'),
-           'category': request.form.get('category'),
-           'ingredients': request.form.getlist('ingredients'),
-       }
+        'name': request.form.get('title'),
+        'instruction': request.form.get('content'),
+        'country': request.form.get('area'),
+        'category': request.form.get('category'),
+        'ingredients': request.form.getlist('ingredients'),
+    }
 
     # validate data
     if meal_info['name'] and meal_info['instruction'] and \
             meal_info['country'] and meal_info['category'] and \
             meal_info['ingredients']:
         meal = Meal(
-            id=Meal.query.order_by(Meal.id.desc()).first().id+1,
+            id=Meal.query.order_by(Meal.id.desc()).first().id + 1,
             name=meal_info['name'],
             category_id=Category.query.filter_by(
                 name=meal_info['category']).first().id,
@@ -254,38 +252,39 @@ def favourites():
 @users_bp.route('/user_profile/<int:u_id>', methods=['GET'])
 @login_required
 def users_profiles(u_id: int):
-    user_extra=db.session.query(User).all()
-    user = db.session.query(User).\
+    user_extra = db.session.query(User).all()
+    user = db.session.query(User). \
         filter(User.id.like(u_id)).first()
-    user_favorite_meals = db.session.query(User_Favorite).\
+    user_favorite_meals = db.session.query(User_Favorite). \
         filter(User_Favorite.user_id.like(u_id)).all()
-    user_meals = db.session.query(Meal).\
+    user_meals = db.session.query(Meal). \
         filter(Meal.author_id.like(u_id)).all()
-    comments = db.session.query(UserComments).\
+    comments = db.session.query(UserComments). \
         filter(UserComments.user_id.like(u_id)).all()
-    favorite_categories = db.session.query(User_Favorite_Category).\
+    favorite_categories = db.session.query(User_Favorite_Category). \
         filter(User_Favorite_Category.user_id.like(u_id)).all()
-    friends = db.session.query(User).\
-                 join(Friendship, User.id == Friendship.requesting_user_id).\
-                 add_columns(Friendship.receiving_user_id,
-                             Friendship.requesting_user_id).filter(
-                             or_(Friendship.requesting_user_id == u_id,
-                                 Friendship.receiving_user_id == u_id),
-                             Friendship.status == 1).all()
-    f_ship_requests = db.session.query(Friendship).\
+    friends = db.session.query(User). \
+        join(Friendship, User.id == Friendship.requesting_user_id). \
+        add_columns(Friendship.receiving_user_id,
+                    Friendship.requesting_user_id).filter(
+        or_(Friendship.requesting_user_id == u_id,
+            Friendship.receiving_user_id == u_id),
+        Friendship.status == 1).all()
+    f_ship_requests = db.session.query(Friendship). \
         filter(
-                Friendship.receiving_user_id.like(current_user.id),
-                Friendship.status.is_(False)).all()
+        Friendship.receiving_user_id.like(current_user.id),
+        Friendship.status.is_(False)).all()
     check_fship = None
-    if current_user.id != u_id :
-        check_fship = db.session.query(Friendship).\
-            filter(
-                Friendship.requesting_user_id.like(current_user.id),
-                Friendship.receiving_user_id.like(u_id)).first()  or db.session.query(Friendship).\
-            filter(
-                Friendship.requesting_user_id.like(u_id),
-                Friendship.receiving_user_id.like(current_user.id)).first()
-    
+    if current_user.id != u_id:
+        check_fship = db.session.query(Friendship). \
+                          filter(
+            Friendship.requesting_user_id.like(current_user.id),
+            Friendship.receiving_user_id.like(
+                u_id)).first() or db.session.query(Friendship). \
+                          filter(
+            Friendship.requesting_user_id.like(u_id),
+            Friendship.receiving_user_id.like(current_user.id)).first()
+
     return render_template(
         'user_profile.html',
         user=user,
@@ -301,14 +300,13 @@ def users_profiles(u_id: int):
     )
 
 
-
 @users_bp.route('/friend-requests/')
 @login_required
 def user_friend_requests():
-    f_ship_requests = db.session.query(Friendship).\
+    f_ship_requests = db.session.query(Friendship). \
         filter(
-                Friendship.receiving_user_id.like(current_user.id),
-                Friendship.status.is_(False)).all()
+        Friendship.receiving_user_id.like(current_user.id),
+        Friendship.status.is_(False)).all()
     return render_template(
         'friend_requests.html',
         f_ship_requests=f_ship_requests)
@@ -335,22 +333,22 @@ def confirm_friend_request(f_ship_id):
 @users_bp.route('/add-to-friends/<int:f_id>')
 @login_required
 def add_to_friends(f_id):
-    print()
     if f_id != current_user.id:
-        check = db.session.query(Friendship).\
-            filter(
-                Friendship.requesting_user_id.like(current_user.id),
-                Friendship.receiving_user_id.like(f_id)).first() or db.session.query(Friendship).\
-            filter(
-                Friendship.requesting_user_id.like(f_id),
-                Friendship.receiving_user_id.like(current_user.id)).first()
+        check = db.session.query(Friendship). \
+                    filter(
+            Friendship.requesting_user_id.like(current_user.id),
+            Friendship.receiving_user_id.like(
+                f_id)).first() or db.session.query(Friendship). \
+                    filter(
+            Friendship.requesting_user_id.like(f_id),
+            Friendship.receiving_user_id.like(current_user.id)).first()
         if not check:
             f_ship = Friendship(
                 id=f'fship{current_user.id}-{f_id}',
                 requesting_user_id=current_user.id,
                 receiving_user_id=f_id,
                 status=False,
-                )
+            )
             db.session.add(f_ship)
             db.session.commit()
         else:
@@ -372,13 +370,13 @@ def add_to_friends(f_id):
     if 'user/friend-requests' in request.referrer:
         return redirect(url_for('users.user_friend_requests'))
     else:
-        return redirect(url_for('users.users_profiles', u_id=f_id))    
+        return redirect(url_for('users.users_profiles', u_id=f_id))
 
 
 @users_bp.route('/remove_meal/<int:m_id>/<int:u_id>', methods=['GET'])
 @login_required
 def remove_meal(m_id: int, u_id: int):
-    meal = db.session.query(Meal).\
+    meal = db.session.query(Meal). \
         filter(Meal.id.like(m_id)).first()
     if meal.author_id == current_user.id:
         db.session.delete(meal)
