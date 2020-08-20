@@ -46,15 +46,16 @@ class User(db.Model, UserMixin):
 
 
 class UserFavorite(db.Model):
+    __tablename__ = 'user__favorite'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(
         db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'))
     meal_id = db.Column(db.Integer, db.ForeignKey('meal.id'))
-    meal = db.relationship('Meal', backref="user_favorite")
+    meal = db.relationship('Meal', backref="userfavorite")
     user = db.relationship('User')
 
     def __repr__(self):
-        return f"User_Favorite('{self.user_id}','{self.meal_id}')"
+        return f"UserFavorite('{self.user_id}','{self.meal_id}')"
 
 
 class UserComments(db.Model):
@@ -74,6 +75,7 @@ class UserComments(db.Model):
 
 
 class SupportMessage(db.Model):
+    __tablename__ = 'support__message'
     id = db.Column(db.Integer, primary_key=True)
     date_posted = db.Column(db.DateTime, nullable=False,
                             default=datetime.utcnow)
@@ -86,6 +88,7 @@ class SupportMessage(db.Model):
 
 
 class UserFavoriteCategory(db.Model):
+    __tablename__ = 'user__favorite__category'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
