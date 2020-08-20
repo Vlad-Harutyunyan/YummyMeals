@@ -1,7 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="content-section">
-        <div class="media">
+    <div class="content-section" style = "width:50%;margin:0 auto;">
+        <div class="media" style = "display: flex;
+                                                justify-content: center;
+                                                align-items: center;">
+                                                
             <img class="rounded-circle account-img" src="{{ image_file }}">
             <div class="media-body">
                 <h2 class="account-heading">{{ current_user.username }}</h2>
