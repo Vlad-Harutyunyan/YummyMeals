@@ -18,7 +18,7 @@ from sqlalchemy import func, desc, and_, select
 
 from .. import db
 from ..meals.models import Meal
-from ..users.models import UserComments, User_Favorite, User
+from ..users.models import UserComments, UserFavorite, User
 from ..chat import events
 
 
@@ -37,8 +37,8 @@ index_bp = Blueprint(
 
 def top_fives():
     mydict = {}
-    for record in User_Favorite.query.all():
-        mydict[record.meal_id] = len(User_Favorite.query.
+    for record in UserFavorite.query.all():
+        mydict[record.meal_id] = len(UserFavorite.query.
                                      filter_by(meal_id=record.meal_id).all())
     res = dict(sorted(mydict.items(), key=itemgetter(1), reverse=True)[:5])
     tops = Meal.query.filter(Meal.id.in_(list(res.keys()))).all()
