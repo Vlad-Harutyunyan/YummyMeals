@@ -2,6 +2,13 @@
 
 {% block content %}
 
+<style>
+.content-section{width:40%;margin:0 auto; }
+
+</style>
+
+<div class="content-section">
+
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
     <ul class=flashes>
@@ -11,11 +18,12 @@
     </ul>
   {% endif %}
 {% endwith %}
-
+<div class="profile-header-background" style="background:url({{url_for('users.static' , filename = "profile_pics/Login3.png")}}); width:100%; height:420px;background-size:cover;margin:0px auto;opacity:0.8;"></div> 
+<br><br>
  <form method="POST" action="" enctype="multipart/form-data">
                 {{ form.hidden_tag() }} 
                 <fieldset class="form-group">
-                    <legend class="border-bottom mb-4">Contact with support </legend>
+                    <legend class="border-bottom mb-4">Contact for support </legend>
                     <div class="form-group">
                         {{ form.content.label(class="form-control-label") }}
 
@@ -36,5 +44,5 @@
                     {{ form.submit(class="btn btn-outline-info") }}
                 </div>
             </form> 
-
+</div>
 {% endblock content %}
