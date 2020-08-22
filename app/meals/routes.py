@@ -343,7 +343,7 @@ def meal_search_by_ingredient():
     meallist = None
     if isinstance(i_name, str) and not i_name.isdecimal():
         ing_dict = {}
-        for i in list(i_name.split(",")):
+        for i in re.split('[; |, -=\* ]', i_name):
             meal_ing = db.session.query(Meal_ingredient).join(Ingredient).\
                 filter(Ingredient.name.contains(i.strip())).all()
             mylist = []
