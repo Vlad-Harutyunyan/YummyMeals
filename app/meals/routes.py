@@ -45,6 +45,8 @@ def get_fav_catgories(category_id):
 
 @meals_bp.route('/')
 def test_route():
+    if not current_user.is_authenticated:
+        return redirect('/')
     page = request.args.get('page', 1, type=int)
     meallist = Meal.query.paginate(page, 6, False)
     next_url = url_for('meals.test_route', page=meallist.next_num) \
@@ -138,17 +140,17 @@ def meal_search_by_username():
 
 @meals_bp.route('/areas/<int:a_id>/')
 @login_required
-def meals_by_countrys(a_id: int):
+def meals_by_countries(a_id: int):
     page = request.args.get('page', 1, type=int)
 
     meallist = Meal.query.filter_by(area_id=a_id).paginate(page, 6, False)
     next_url = url_for(
-        'meals.meals_by_countrys',
+        'meals.meals_by_countries',
         a_id=a_id,
         page=meallist.next_num)\
         if meallist.has_next else None
     prev_url = url_for(
-        'meals.meals_by_countrys',
+        'meals.meals_by_countries',
         a_id=a_id,
         page=meallist.prev_num)\
         if meallist.has_prev else None
