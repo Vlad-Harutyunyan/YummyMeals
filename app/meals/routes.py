@@ -369,3 +369,17 @@ def meal_search_by_ingredient():
             next_url=next_url,
             prev_url=prev_url
     )
+
+
+@meals_bp.route('/video-link/<int:m_id>/')
+def video_link(m_id):
+    if not current_user.is_authenticated:
+        if m_id in [x.id for x in top_fives()]:
+            meal = Meal.query.filter_by(id=m_id).first()
+        else:
+            return redirect(url_for('users.login'))
+    else:
+        meal = Meal.query.filter_by(id=m_id).first()
+    meal = Meal.query.filter(Meal.id == m_id).first()
+    print(meal.video_link)
+    return redirect(f'{meal.video_link}')
