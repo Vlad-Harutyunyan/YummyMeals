@@ -32,30 +32,17 @@ Meal main page
                     {% endif %}
                     
                     {{fav_count}} </p>
-					<p></p> <p> <i  class="fa fa-youtube-play" style="font-size:20px; color:red"><a href="{{ url_for('meals.video_link', m_id=meal.id) }}">YouTube</a></i></p>
 			 </div>
 		</div> 
-			
-			
-			
         <div class="pie-recipe__ingredients">
             <div class="pie-recipe__ingredients__item">
                 <h4>Area</h4>
                 <ul>
                     <li>{{meal.area.name}}</li>
                 </ul>
-				
-				<!-- 
-				
-                <h4>Mesure</h4>
-                <ul>
-                    <li>. . .</li>
-                    <li>. . .</li>
-                </ul>   
-				
-				-->
             </div>
             <div class="pie-recipe__ingredients__item">
+            
                 <h4>Ingredients</h4>
                 <ul>
                     {% for ingredient in ingredients %}
@@ -64,13 +51,16 @@ Meal main page
 					      {% else %}
 						         <li>    {{ingredient.ingredient.name}} </li>
 					      {% endif%}		
-						  
-																						 
                     {% endfor %}
                 </ul> 
             </div> 
         </div>
-
+         <div class="pie-recipe__subtitle">Video instruction</div>
+            {% if meal.video_link %}
+                	<iframe width="700px" height='400px'
+                        src="{{meal.video_link|correctLink}}">
+                    </iframe>
+                {% endif %}
 	    <div class="pie-recipe__subtitle">Instructions</div>
         <div class="pie-recipe__number">&#10003</div>
         <div class="pie-recipe__steps"> {{meal.instructions}} </div>
