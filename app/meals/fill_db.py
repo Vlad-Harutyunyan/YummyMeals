@@ -1,6 +1,6 @@
 import sys
 from ast import literal_eval
-from .models import Area, Meal_ingredient, Ingredient, Meal, Category
+from .models import Area, MealIngredient, Ingredient, Meal, Category
 from .. import db
 from .scripts.api import thisfolder
 
@@ -64,8 +64,8 @@ def fill_meal_ingredient_to_db():
         f"{thisfolder}/final_lists/meal_ingredient.txt",
         'meal_ingredient')
     for i in meal_ingredient:
-        a = Meal_ingredient(meal_id=i[0], ingredient_id=i[1])
-        smart_db_update(Meal_ingredient, a, check=False)
+        a = MealIngredient(meal_id=i[0], ingredient_id=i[1])
+        smart_db_update(MealIngredient, a, check=False)
 
 
 def fill_all():

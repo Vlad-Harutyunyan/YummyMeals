@@ -19,7 +19,7 @@ from .models import (
     SupportMessage, UserFavoriteCategory,
     Friendship, UserActivities)
 from .. import bcrypt, mail, db
-from ..meals.models import Meal, Ingredient, Category, Area, Meal_ingredient
+from ..meals.models import Meal, Ingredient, Category, Area, MealIngredient
 from .scripts.logic import sort_ingrs_by_alphabet
 
 satatic_path = os.path.abspath(
@@ -216,7 +216,7 @@ def new_recipe_post():
         )
         db.session.add(meal)
         for x in meal_info['ingredients']:
-            meal_ingr = Meal_ingredient(by_user=1,
+            meal_ingr = MealIngredient(by_user=1,
                                         meal_id=meal.id,
                                         ingredient_id=Ingredient.query.
                                         filter_by(

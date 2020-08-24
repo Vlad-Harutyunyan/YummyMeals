@@ -1,6 +1,6 @@
 import os
 
-from ..meals.models import Meal_ingredient, Meal, Category, Area, Ingredient
+from ..meals.models import MealIngredient, Meal, Category, Area, Ingredient
 from .admin_thread import FlaskThread
 from ..mail.routes import mail_send
 from ..meals.fill_db import fill_all
@@ -75,7 +75,7 @@ admin.add_views(IndexView(Meal, db.session))
 admin.add_views(IndexView(Category, db.session))
 admin.add_views(IndexView(Area, db.session))
 admin.add_views(IndexView(Ingredient, db.session))
-admin.add_views(IndexView(Meal_ingredient, db.session))
+admin.add_views(IndexView(MealIngredient, db.session))
 admin.add_views(IndexView(SupportMessage, db.session))
 admin.add_views(IndexView(Friendship, db.session))
 admin.add_views(IndexView(UserActivities, db.session))

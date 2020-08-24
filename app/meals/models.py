@@ -7,6 +7,7 @@ from .. import db
 
 class Area(db.Model):
     __tablename__ = 'area'
+
     id = Column(Integer, primary_key=True)
     name = Column(String)
 
@@ -16,6 +17,7 @@ class Area(db.Model):
 
 class Category(db.Model):
     __tablename__ = 'category'
+
     id = Column(Integer, primary_key=True)
     name = Column(String)
     img_link = Column(String)
@@ -27,6 +29,7 @@ class Category(db.Model):
 
 class Ingredient(db.Model):
     __tablename__ = 'ingredient'
+
     id = Column(Integer, primary_key=True)
     name = Column(String)
     description = Column(String)
@@ -35,7 +38,7 @@ class Ingredient(db.Model):
         return f"Ingredient '{self.name} , {self.description}'  "
 
 
-class Meal_ingredient(db.Model):
+class MealIngredient(db.Model):
     __tablename__ = 'meal_ingredient'
 
     id = Column(Integer, primary_key=True)

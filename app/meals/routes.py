@@ -13,7 +13,7 @@ from flask_login import login_required
 from flask_mail import Mail, Message
 from flask_login import current_user
 
-from .models import Meal, Ingredient, Category, Area, Meal_ingredient
+from .models import Meal, Ingredient, Category, Area, MealIngredient
 from .. import db
 from ..users.models import UserFavorite, UserFavoriteCategory, User
 from ..users.forms import CommentForm
@@ -231,7 +231,7 @@ def add_favorite(meal_id):
 @meals_bp.route('/meal_info/<int:m_id>/', methods=['GET'])
 def meal_info(m_id):
         meal = Meal.query.filter_by(id=m_id).first()
-        ingredients = Meal_ingredient.query.filter_by(meal_id=m_id).all()
+        ingredients = MealIngredient.query.filter_by(meal_id=m_id).all()
         form = CommentForm()
         try:
             check = db.session.query(UserFavorite).filter(
@@ -346,7 +346,7 @@ def meal_search_by_ingredient():
     if isinstance(i_name, str) and not i_name.isdecimal():
         ing_dict = {}
         for i in re.split('[; |, -=\* ]', i_name):
-            meal_ing = db.session.query(Meal_ingredient).join(Ingredient).\
+            meal_ing = db.session.query(MealIngredient).join(Ingredient).\
                 filter(Ingredient.name.contains(i.strip())).all()
             mylist = []
             for j in meal_ing:

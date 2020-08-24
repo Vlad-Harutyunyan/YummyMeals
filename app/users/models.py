@@ -13,6 +13,8 @@ def load_user(user_id):
 
 
 class User(db.Model, UserMixin):
+    __tablename__ = 'user'
+
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -47,6 +49,7 @@ class User(db.Model, UserMixin):
 
 class UserFavorite(db.Model):
     __tablename__ = 'user__favorite'
+
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(
         db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'))
@@ -59,6 +62,8 @@ class UserFavorite(db.Model):
 
 
 class UserComments(db.Model):
+    __tablename__ = 'user_comments'
+
     id = db.Column(db.Integer, primary_key=True)
     date_posted = db.Column(db.DateTime, nullable=False,
                             default=datetime.utcnow)
@@ -76,6 +81,7 @@ class UserComments(db.Model):
 
 class SupportMessage(db.Model):
     __tablename__ = 'support__message'
+
     id = db.Column(db.Integer, primary_key=True)
     date_posted = db.Column(db.DateTime, nullable=False,
                             default=datetime.utcnow)
@@ -89,6 +95,7 @@ class SupportMessage(db.Model):
 
 class UserFavoriteCategory(db.Model):
     __tablename__ = 'user__favorite__category'
+
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
@@ -100,6 +107,8 @@ class UserFavoriteCategory(db.Model):
 
 
 class Friendship(db.Model):
+    __tablename__ = 'friendship'
+
     id = db.Column(db.Text, primary_key=True)
     requesting_user_id = db.Column(
         db.Integer,
@@ -131,6 +140,8 @@ class Friendship(db.Model):
 
 
 class UserActivities(db.Model):
+    __tablename__ = 'user_activities'
+
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(
         db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'))
