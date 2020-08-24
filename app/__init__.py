@@ -58,7 +58,13 @@ def create_app(debug=False, port=5010):
         if value is None:
             return ""
         return value.strftime(format)
-
+        
+    @app.template_filter('correctLink')
+    def correctLink(url):
+        url = 'https://www.youtube.com/watch?v=UIcuiU1kV8I'
+        p = url.split('watch')[1].split('v=')[1]
+        res = f"https://www.youtube.com/embed/{p}"
+        return res
     @app.template_filter('timeagofilter')
     def humanize_ts(time, timestamp=False):
         """
