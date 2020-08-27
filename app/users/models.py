@@ -192,4 +192,4 @@ class UserMessages(db.Model):
     send_date = db.Column(
         db.DateTime,
         nullable=False,
-        default=datetime.now)
+        default=datetime.utcnow)
