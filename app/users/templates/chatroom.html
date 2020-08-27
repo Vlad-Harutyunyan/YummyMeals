@@ -6,14 +6,60 @@
     color:#393939;
     font-family:sans-serif;
     font-weight:400;
-    font-size:17px;
+    font-size:14px;
+    margin :10px;
+    line-height:17px;
+}
+.chatleft{
+   margin-left:250px;
+   background:#455394;
+   width:200px;
+   height:60px;
+   border-radius:15px;
+   padding:10px;
+   color:#fff;
+}
+.chatright{
+    background:#393939;
+   width:200px;
+   height:60px;
+   border-radius:10px;
+   padding:10px;
+   color:#fff;
+}
+.posttime{
+    font-size:12px;
+    display:block;
+}
+.img_file{
+    width: 32px;
+    height: 32px;
+    margin-top: -22px;
+    margin-left: -18px;
+}
+.chatnow{
+    background:#72d69a;
+    margin-left:100px;
+   width:200px;
+   height:60px;
+   border-radius:10px;
+   padding:10px;
+   color:#fff;
 }
 </style>
 
 <div id = "messagelist"style="width:500px;margin:0px auto;height:300px;overflow-y:scroll">
 {% for m in messagesList %}
+    <div class="chatmsg 
+        {% if m.sender.username == current_user.username %}chatleft{% else %} chatright{% endif %}">
 
-    <p class="chatmsg">{{m.sender.username}}:{{m.content}}</p>
+    <a href="{{url_for('users.users_profiles',u_id=m.sender.id)}}"><img class = "img_file" src={{url_for('users.static' ,filename="profile_pics/"+m.sender.image_file)}}></img></a>
+    
+    <span>
+        {{m.content}}
+    </span>
+    <span class="posttime">{{m.send_date|timeagofilter}}</span>
+    </div>
 
 {% endfor %}
 </div>
@@ -31,7 +77,8 @@
                 });
                 socket.on('user_text', function(data) { 
                     console.log(123)
-                        $('#messagelist').append($('<p class="chatmsg">').append($('<em>').text(data.msg))); 
+                        
+                        $('#messagelist').append($('<p class="chatmsg chatnow">').append($('<em>').text(data.msg))); 
                         $('#messagelist').scrollTop($('#messagelist')[0].scrollHeight)
                 });
                 $('#text').keypress(function(e) {
