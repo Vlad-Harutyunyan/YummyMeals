@@ -6,9 +6,10 @@ from datetime import datetime
 from flask_mail import Message
 from flask import (
     render_template, url_for, redirect,
-    flash, request, Blueprint, abort)
+    flash, request, Blueprint, abort,
+    jsonify,session)
 from flask_login import login_user, current_user, logout_user, login_required
-from sqlalchemy import or_
+from sqlalchemy import or_ , and_
 
 from .forms import (
     RegistrationForm, LoginForm, UpdateAccountForm,
@@ -17,7 +18,7 @@ from .forms import (
 from .models import (
     User, UserFavorite, UserComments,
     SupportMessage, UserFavoriteCategory,
-    Friendship, UserActivities)
+    Friendship, UserActivities, UserMessages)
 from .. import bcrypt, mail, db
 from ..meals.models import Meal, Ingredient, Category, Area, MealIngredient
 from .scripts.logic import sort_ingrs_by_alphabet
@@ -525,3 +526,102 @@ def support_post():
     return redirect(
         url_for(
             'users.support_get'))
+
+@users_bp.route('/messages' , methods=['GET'])
+@login_required
+def messages_get():
+    friends = db.session.query(User). \
+        join(Friendship, User.id == Friendship.requesting_user_id). \
+        add_columns(Friendship.receiving_user_id,
+                    Friendship.requesting_user_id).filter(
+        or_(Friendship.requesting_user_id == current_user.id,
+            Friendship.receiving_user_id == current_user.id),
+        Friendship.status == 1).all()
+    user_extra = db.session.query(User).all()
+    return render_template(
+        'messages.html',
+        friends=friends,
+        user_extra=user_extra)
+
+@users_bp.route('/chatroom/<int:user_id>to<int:friend_id>/')
+@login_required
+def chatroom_get(user_id,friend_id):
+    if current_user.id != user_id :
+        if current_user.id != friend_id :
+            abort(404)
+
+    name = current_user.username
+    room = f'{user_id}to{friend_id}'
+    session['name'] = name
+    session['room'] = room
+
+
+    u1 = user_id
+    u2 = friend_id
+    if current_user.id == u2 :
+            u2,u1 = u1,u2
+    
+    test = db.session.query(UserMessages).\
+       filter(UserMessages.sender_user_id.like(u2), 
+              UserMessages.reciver_user_id.like(u1)).all()
+    test1 = db.session.query(UserMessages).\
+       filter(UserMessages.sender_user_id.like(u1), 
+              UserMessages.reciver_user_id.like(u2)).all()
+
+    arr = test+ test1
+    for i in range(len(arr)) :
+        n = len(arr) 
+        for j in range(0, n-i-1): 
+            if arr[j].id > arr[j+1].id : 
+                arr[j], arr[j+1] = arr[j+1], arr[j] 
+    print(arr)
+    from flask_socketio import emit, join_room, leave_room
+    from .. import socketio
+
+    @socketio.on('joined', namespace=f'/user/chatroom/{room}/')
+    def joined(message):
+        """Sent by clients when they enter a room.
+        A status message is broadcast to all people in the room."""
+        # clients.append(request.sid)
+        # print(f'join - {session.get("name")}')
+        room = session.get('room')
+        join_room(room)
+        emit('status', {'msg': session.get('name') + ' has joined the chat'}, room=room)
+    
+
+    @socketio.on('text', namespace=f'/user/chatroom/{room}/')
+    def text(message):
+        """Sent by a client when the user entered a new message.
+        The message is sent to all people in the room."""
+        room = session.get('room')
+        u1 = user_id
+        u2 = friend_id
+        if current_user.id == u2 :
+            u2,u1 = u1,u2
+        #add to db
+        db_message = UserMessages(
+            sender_user_id=u1,
+            reciver_user_id=u2,
+            content=message['msg'])
+        db.session.add(db_message)
+        db.session.commit()
+
+        emit('user_text', {'msg': session.get('name') + ':' + message['msg']},
+            room=room)
+
+
+    @socketio.on('left', namespace=f'/user/chatroom/{room}/')
+    def left(message):
+        """Sent by clients when they leave a room.
+        A status message is broadcast to all people in the room."""
+        room = session.get('room')
+        leave_room(room)
+        emit('status', {'msg': session.get('name') + ' has left the chat'},
+            room=room)
+
+
+    return render_template(
+        'chatroom.html',
+        name=name,
+        room=room,
+        messagesList=arr)

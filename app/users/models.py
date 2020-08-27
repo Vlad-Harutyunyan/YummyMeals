@@ -3,6 +3,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from datetime import datetime
 from flask import current_app
 from flask_login import UserMixin
+from sqlalchemy.orm import validates
 
 from .. import db, login_manager
 
@@ -89,6 +90,7 @@ class SupportMessage(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = db.relationship('User')
 
+
     def __repr__(self):
         return f"Support Message-'{self.id}','{self.user.id}','{self.content}'"
 
@@ -139,6 +141,7 @@ class Friendship(db.Model):
         backref='received')
 
 
+
 class UserActivities(db.Model):
     __tablename__ = 'user_activities'
 
@@ -154,4 +157,39 @@ class UserActivities(db.Model):
     profile_pict = db.Column(db.Integer, nullable=False, default=0)
     login = db.Column(db.Integer, nullable=False, default=0)
     pwd_reset = db.Column(db.Integer, nullable=False, default=0)
+    total = db.Column(db.Integer, nullable=False, default=0)
     user = db.relationship('User')
+    
+    @validates('comments','favorite_meals','')
+    def update_state(self , key, value):
+        self.total = 0
+        for_comments = self.commants * 10
+        for_favorite_meals = self.favorite_meals * 20
+        self.total += for_comments + for_favorite_meals
+        return 1
+
+class UserMessages(db.Model):
+    __tablename__ = 'user_messages'
+
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    sender_user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('user.id'),
+        nullable=False)
+    reciver_user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('user.id'),
+        nullable=False)
+    sender = db.relationship(
+        User,
+        foreign_keys=[sender_user_id],
+        backref='message_sender')
+    receiver = db.relationship(
+        User,
+        foreign_keys=[reciver_user_id],
+        backref='message_reciever')
+    send_date = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=datetime.now)
