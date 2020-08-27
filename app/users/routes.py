@@ -574,7 +574,7 @@ def chatroom_get(user_id,friend_id):
         for j in range(0, n-i-1): 
             if arr[j].id > arr[j+1].id : 
                 arr[j], arr[j+1] = arr[j+1], arr[j] 
-    print(arr)
+                
     from flask_socketio import emit, join_room, leave_room
     from .. import socketio
 
