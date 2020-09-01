@@ -21,7 +21,7 @@ from .models import (
     Friendship, UserActivities, UserMessages)
 from .. import bcrypt, mail, db
 from ..meals.models import Meal, Ingredient, Category, Area, MealIngredient
-from .scripts.logic import sort_ingrs_by_alphabet
+from .scripts.logic import sort_ingrs_by_alphabet , calculate_user_status
 
 satatic_path = os.path.abspath(
     os.path.join(
@@ -271,6 +271,10 @@ def users_profiles(u_id: int):
         or_(Friendship.requesting_user_id == u_id,
             Friendship.receiving_user_id == u_id),
         Friendship.status == 1).all()
+    activitie = db.session.query(UserActivities).\
+        filter(UserActivities.user_id==u_id).first()
+    status = calculate_user_status(activitie.total)
+    
     f_ship_requests = db.session.query(Friendship). \
         filter(
         Friendship.receiving_user_id.like(current_user.id),
@@ -297,7 +301,8 @@ def users_profiles(u_id: int):
         comments=comments,
         u_id=u_id,
         check_fship=check_fship,
-        f_ship_requests=f_ship_requests
+        f_ship_requests=f_ship_requests,
+        status=status
     )
 
 

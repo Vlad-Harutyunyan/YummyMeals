@@ -12,7 +12,15 @@
                 <div class="profile-info-left">
                     <div class="text-center">
                         <img src="{{url_for('users.static' ,filename='profile_pics/'+user.image_file) }}" alt="Avatar" class="avatar img-circle">
-                        <h2>{{user.username}}</h2>
+                                
+                          <h2>{{user.username}} 
+                            {% if status %}
+                                 <span class="badge badge-primary" style="color: #72d69a;
+                                                                                                background: #011b1fd9;">
+                                    {{status}}
+                                </span>
+                            {% endif %}
+                        </h2>
                     </div>
                      <div class="action-buttons">
                         <div class="row">
