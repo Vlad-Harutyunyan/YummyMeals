@@ -7,6 +7,9 @@ from sqlalchemy.orm import validates
 
 from .. import db, login_manager
 
+from sqlalchemy import event
+
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -42,6 +45,7 @@ class User(db.Model, UserMixin):
         except:
             return None
         return User.query.get(user_id)
+
 
     def __repr__(self):
         return f"User('{self.id}','{self.username}'," \
@@ -259,3 +263,26 @@ class UserMessages(db.Model):
         db.DateTime,
         nullable=False,
         default=datetime.utcnow)
+
+
+
+@event.listens_for(UserActivities.__table__, 'after_create')
+def receive_after_create(target, connection, **kw):
+    u_a =UserActivities(user_id=1)
+    db.session.add(u_a)
+    db.session.commit()
+
+
+@event.listens_for(UserActivitiesWeights.__table__, 'after_create')
+def receive_after_create(target, connection, **kw):
+    w = UserActivitiesWeights(id=1)
+    db.session.add(w)
+    db.session.commit()
+
+
+@event.listens_for(User.__table__, 'after_create')
+def receive_after_create(target, connection, **kw):
+    u = User(username='admin' , email='yummymealbook@gmail.com',password='$2b$12$hvK407pQvIftZJfat/px6OBdOPaRuNMMMnLKrVNlo.qYLAHR6Gbv6',is_admin=True)
+    db.session.add(u)
+    db.session.commit()
+
