@@ -49,7 +49,7 @@ visit [127.0.0.1/home](http://127.0.0.1:5000/) in browser
 
 
 
-## ------- Migration System -------
+##  Migration System 
 
 After changing database model , write this commands in project folder 
  
