@@ -38,6 +38,8 @@
 
 <!-- main-content -->
 
+
+
 <nav id="side-nav">
   <ul class="nav_navigation">
     <li class="item-has-children">
@@ -48,9 +50,13 @@
       <li><a href="{{ url_for('users.account_get') }}">Settings</a></li>
       <li><a href="{{ url_for('users.users_profiles' , u_id = current_user.id) }}">My profile</a></li>
       <li><a href="{{ url_for('users.new_recipe_get') }}">New Recipe</a></li>
-      <li><a href="{{ url_for('users.user_friend_requests') }}">Friend
-        Requests</a></li>
-      <li><a href="{{ url_for('users.messages_get') }}">Private Messages (PM) </a></li>
+      <li><a href="{{ url_for('users.user_friend_requests') }}">Friend Requests</a></li>
+      <li><a href="{{ url_for('users.messages_get') }}" target="popup" onclick="window.open('http://127.0.0.1:5000/user/messages','popup','width=600,height=400'); return false;"> Private Messages (PM) </a></li>
+
+	  
+	  
+	  
+	  
     {% else %}
       <li><a href="{{ url_for('users.login') }}">Login</a></li>
       <li><a href="{{ url_for('users.register') }}">Register</a></li>
