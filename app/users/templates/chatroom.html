@@ -1,6 +1,4 @@
-{% extends 'base.html' %}
 
-{% block content %}
 <style>
 .chatmsg{
     color:#393939;
@@ -48,6 +46,11 @@
 }
 </style>
 
+<head>
+  <title>YummyMeals - Private Messages</title>
+</head>
+
+<h2>Friends chat</h2>
 <div id = "messagelist"style="width:500px;margin:0px auto;height:300px;overflow-y:scroll">
 {% for m in messagesList %}
     <div class="chatmsg 
@@ -94,4 +97,3 @@
 
     <input  id="text" size="80" placeholder="Enter your message here" style="width:200px; height:35px;margin:0 35%;"><br><br>
 
-{% endblock content %}
