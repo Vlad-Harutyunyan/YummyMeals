@@ -1,6 +1,6 @@
-{% extends 'base.html' %}
-
-{% block content %}
+<head>
+  <title>YummyMeals - Private Messages</title>
+</head>
 
 total {{friends|length}} friends <br/>
 {% for fellow in friends %} 
@@ -16,5 +16,3 @@ total {{friends|length}} friends <br/>
 					{%endfor %}			
 				{% endif%}
 {% endfor %}
-
-{% endblock content %}
