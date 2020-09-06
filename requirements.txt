@@ -18,4 +18,3 @@ alembic==1.4.2
 Flask==1.0.2
 Flask_Migrate==2.5.3
 Pillow==7.2.0
-secrets==1.0.2
