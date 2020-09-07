@@ -7,6 +7,7 @@
 
 .main-content{
   margin-bottom: 200px;
+  margin-top:70px ;
   z-index: 2;
 }
 ::-webkit-scrollbar {
@@ -61,12 +62,14 @@ top: 0;
 width: 100%;
 z-index: 9999;
 }
-
+.main-content{}
 .ctn-preloader .animation-preloader {
 position: absolute;
 z-index: 100;
 }
-
+.comments-container{
+  width: 100% !important;
+}
 /* Spinner loading */
 .ctn-preloader .animation-preloader .spinner {
 -webkit-animation: spinner 1s infinite linear;

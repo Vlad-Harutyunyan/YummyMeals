@@ -432,16 +432,3 @@ footer a .icons {
 /** =====================
  * Responsive
  ========================*/
-@media only screen and (max-width: 766px) {
-	.comments-container {
-		width: 480px;
-	}
-
-	.comments-list .comment-box {
-		width: 390px;
-	}
-
-	.reply-list .comment-box {
-		width: 320px;
-	}
-}

@@ -102,10 +102,8 @@ Main styles
   position: relative;
   background-color: #f5f5f5;
   z-index: 2;
-  padding-top: 50px;
   /* Force Hardware Acceleration in WebKit */
-  
-  -webkit-transform: translateZ(0);
+  -webkit-transform: translateZ(0); 
   -webkit-backface-visibility: hidden;
   -webkit-transition-property: -webkit-transform;
   -moz-transition-property: -moz-transform;
@@ -125,20 +123,15 @@ Main styles
   transform: translateX(-260px);
 }
 
-@media only screen and (min-width: 768px) {
-  .main-content {
-    padding-top: 70px;
-  }
-}
-
 header {
   position: fixed;
   top: 0;
   left: 0;
-  height: 50px;
+  height: 70px;
   width: 100%;
   background: #f9f9f9;
   z-index: 3;
+  
   /* Force Hardware Acceleration in WebKit */
   
   -webkit-transform: translateZ(0);

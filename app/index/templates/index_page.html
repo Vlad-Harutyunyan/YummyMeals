@@ -6,10 +6,10 @@ Home page
 
 {% block content %}
 <link rel="stylesheet" href="{{url_for('index.static',filename='css/index.css') }}">
-<link rel="stylesheet" type="text/css" href="{{url_for('index.static',filename='css/emoji/jquery.emojipicker.css') }}">
-<div class="main_wrapper" style="display:flex; padding:20px auto;">
 
-<div class='chat_sidebar' style="width:25%;height:500px; margin-top:100px;">
+<div class="main_wrapper">
+
+<div class='chat_sidebar' >
 
 
   <script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
@@ -70,7 +70,7 @@ Home page
 </div>
 
 
-<div class="cont s--inactive" style="width:100%;height:700px; ">
+<div class="cont s--inactive" >
   <!-- cont inner start -->
   <h1 style="font-size:30px;text-align:center;margin:20px auto;">Top Recipes</h1>
 
@@ -111,6 +111,25 @@ Home page
   
   {% endfor %}
 
+  </div>
+  
+  <div class="responsive_top5">
+  {% for rec in range(tops|length)  %}
+   <!-- el start -->
+   <div class="resp_item_main_block">
+           <h3>{{tops[rec].name}} -(top {{rec+1}})</h3>
+		{% if tops[rec].img_link != "default.jpg"%}
+        <img class="top_sect_img" src="{{tops[rec].img_link}}" />
+		{% else%}
+        <img class="top_sect_img" src="{{url_for('meals.static' , filename = "default.jpg")}}" />
+		{% endif %}
+          <br/>
+          <a class="btn btn-info" href={{url_for('meals.meal_info' , m_id=tops[rec].id)}}> More info </a>
+   </div>
+
+  {% endfor %}
+
+  
   </div>
   <!-- cont inner end -->
 </div>

@@ -397,3 +397,26 @@ body {
 .chat_sidebar h1 {
     margin-bottom: 10px;
 }
+
+.top_sect_img{
+    width: 100px;
+    height: 83px;
+    margin: 15px auto;
+}
+.resp_item_main_block h3{
+    font-size: 20px;
+    line-height: 41px;
+    font-weight: 800;
+    font-style: italic;
+    font-family: sans-serif;
+}
+.resp_item_main_block {
+    text-align: center;
+    margin: 20px auto;
+    -webkit-box-shadow: 3px 3px 12px 0px rgba(44, 103, 122, 0.67);
+    -moz-box-shadow:    3px 3px 12px 0px rgba(44, 103, 122, 0.67);
+    box-shadow:         3px 3px 12px 0px rgba(44, 103, 122, 0.67);
+}
+.resp_item_main_block a{
+ margin-bottom: 20px;
+}
