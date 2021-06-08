@@ -17,6 +17,6 @@ Flask_Script==2.0.6
 alembic==1.4.2
 Flask==1.0.2
 Flask_Migrate==2.5.3
-Pillow==7.2.0
+Pillow==8.2.0
 gunicorn==19.9.0
 gevent-websocket==0.10.1
